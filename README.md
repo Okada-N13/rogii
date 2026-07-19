@@ -26,6 +26,8 @@ For Stage 2, run [`notebooks/30_run_stage2_pf.ipynb`](notebooks/30_run_stage2_pf
 
 For Stage 3, run the self-contained [`notebooks/40_run_stage3_residual.ipynb`](notebooks/40_run_stage3_residual.ipynb). It reuses Stage 2 when available and cross-fits the promoted residual sequence ensemble. Results are recorded in [`docs/stage3_results.md`](docs/stage3_results.md).
 
+For Stage 4, run the self-contained [`notebooks/50_run_stage4_tail_path.ipynb`](notebooks/50_run_stage4_tail_path.ipynb). It adds a fixed uncertainty guard and a small deterministic trellis component. Results are recorded in [`docs/stage4_results.md`](docs/stage4_results.md).
+
 ## Local commands
 
 ```bash

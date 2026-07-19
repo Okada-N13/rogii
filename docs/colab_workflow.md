@@ -90,4 +90,10 @@ The promoted model is a fixed blend of 75% two-batch multi-seed particle filter 
 
 Open `notebooks/40_run_stage3_residual.ipynb`. Like every notebook from Stage 2 onward, it is self-contained: it mounts Drive, clones or updates the repository, syncs dependencies, copies data, and creates its prerequisite Stage 2 run automatically when missing. When `stage2_pf_trend_blend_full_v001` already exists, it is reused without rerunning PF.
 
-Stage 3 cross-fits a two-seed lightweight residual ensemble on multi-scale GR, PF surface, typewell mismatch, trajectory, and known-prefix robust-trend features. No hidden TVT is used to construct features. The expected development OOF RMSE is `12.299725`, versus `12.565438` for Stage 2. With Stage 2 already present, allow approximately 3--10 minutes on a Colab CPU runtime.
+Stage 3 cross-fits a two-seed lightweight residual ensemble on multi-scale GR, PF surface, typewell mismatch, trajectory, and known-prefix robust-trend features. No hidden TVT is used to construct features. The native Colab reproduction OOF RMSE is `12.339250`, versus `12.565438` for Stage 2; the locally composed development reference was `12.299725`. With Stage 2 already present, allow approximately 3--10 minutes on a Colab CPU runtime.
+
+## Stage 4 tail guard and trellis
+
+Open `notebooks/50_run_stage4_tail_path.ipynb`. It is self-contained and creates Stage 2 and Stage 3 automatically only when their expected Drive artifacts are missing. With `stage3_residual_hgb_full_v001` already present, only the deterministic Stage 4 pass runs.
+
+Stage 4 caps the Stage 3 correction to ±1 ft for the 20% of wells with the highest mean PF seed uncertainty. It then adds 10% of a deterministic GR/typewell trellis correction. The local reference OOF improved from `12.299725` to `12.204505`, while median, P90, and maximum well RMSE also improved. Because the locally composed Stage 3 diagnostics produced a slightly different score from native Colab, treat the first native Colab Stage 4 result as the canonical reproduction value. Allow approximately 2--8 minutes on a Colab CPU runtime when Stage 3 is present.

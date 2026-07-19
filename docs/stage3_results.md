@@ -10,8 +10,11 @@ Stage 3 trains a lightweight nonlinear residual model on top of the fixed Stage 
 | Stage 3 seed 42 | 12.316941 | 7.5674 | 17.2720 | 65.2789 |
 | Stage 3 seed 43 | 12.306563 | 7.5685 | 17.1068 | 65.2968 |
 | Stage 3 two-seed ensemble | **12.299725** | 7.6068 | **17.2828** | 65.2876 |
+| Stage 3 native Colab reproduction | **12.339250** | 7.6360 | **17.5013** | 65.0101 |
 
 The two-seed ensemble improves pooled RMSE by `0.265714`. It improves 463 of 773 wells, and its well-paired bootstrap mean RMSE delta is `-0.212787` with a 95% interval of `[-0.324422, -0.102951]`.
+
+The first native Colab run scored `12.339250`, an improvement of `0.226188` over its exact Stage 2 input. The roughly `0.0395` difference from the local reference is attributed to PF likelihood-spread diagnostics: the local Stage 2 reference was reconstructed from two separately stored PF runs, while Colab used the native integrated two-batch artifact. Native Colab is the canonical reproduction value.
 
 Every fold improves:
 

@@ -1,0 +1,18 @@
+experiment_name: stage4_tail_path
+seed: 42
+
+guard:
+  uncertainty_quantile: 0.80
+  correction_cap: 1.0
+
+trellis:
+  tracking_stride: 4
+  maximum_offset: 40.0
+  offset_step: 1.0
+  evidence_window: 9
+  emission_clip: 16.0
+  max_jump_states: 2
+  transition_penalty: 0.3
+  zero_penalty: 0.0005
+  initial_penalty: 0.2
+  blend_weight: 0.10
