@@ -24,6 +24,8 @@ After reproducing the anchor baseline, run [`notebooks/20_run_stage1_trends.ipyn
 
 For Stage 2, run [`notebooks/30_run_stage2_pf.ipynb`](notebooks/30_run_stage2_pf.ipynb) after the setup notebook. It evaluates the promoted particle-filter + guarded-trend blend. Measured results and leakage controls are recorded in [`docs/stage2_results.md`](docs/stage2_results.md).
 
+For Stage 3, run the self-contained [`notebooks/40_run_stage3_residual.ipynb`](notebooks/40_run_stage3_residual.ipynb). It reuses Stage 2 when available and cross-fits the promoted residual sequence ensemble. Results are recorded in [`docs/stage3_results.md`](docs/stage3_results.md).
+
 ## Local commands
 
 ```bash

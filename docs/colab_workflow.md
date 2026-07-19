@@ -85,3 +85,9 @@ The standalone linear and quadratic configs are diagnostic controls and are not 
 Open `notebooks/30_run_stage2_pf.ipynb`. It is self-contained and can initialize a fresh Colab runtime by mounting Drive, cloning or updating the repository, syncing dependencies, and copying the input data. It then runs an eight-well smoke test before the complete 773-well evaluation. It is not necessary to rerun the Stage 1 notebook first: the promoted Stage 1 component is included in `configs/experiment/pf_trend_blend.yaml`. An existing Stage 1 artifact is used only for the final comparison report.
 
 The promoted model is a fixed blend of 75% two-batch multi-seed particle filter and 25% Stage 1 guarded trend blend. The PF averages two independent 16-seed batches to reduce its material random-seed variance. It uses the complete visible GR/trajectory sequence, the known `TVT_input` prefix, and the paired typewell, and never reads hidden target TVT while predicting. The expected development OOF RMSE is approximately `12.565438`; each 16-seed full CPU pass took about 15 minutes on the local reference machine, so allow roughly 30--45 minutes in Colab.
+
+## Stage 3 residual sequence ensemble
+
+Open `notebooks/40_run_stage3_residual.ipynb`. Like every notebook from Stage 2 onward, it is self-contained: it mounts Drive, clones or updates the repository, syncs dependencies, copies data, and creates its prerequisite Stage 2 run automatically when missing. When `stage2_pf_trend_blend_full_v001` already exists, it is reused without rerunning PF.
+
+Stage 3 cross-fits a two-seed lightweight residual ensemble on multi-scale GR, PF surface, typewell mismatch, trajectory, and known-prefix robust-trend features. No hidden TVT is used to construct features. The expected development OOF RMSE is `12.299725`, versus `12.565438` for Stage 2. With Stage 2 already present, allow approximately 3--10 minutes on a Colab CPU runtime.

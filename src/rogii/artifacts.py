@@ -14,7 +14,7 @@ import sklearn
 import yaml
 
 
-def write_json(path: str | Path, payload: dict[str, Any]) -> None:
+def write_json(path: str | Path, payload: Any) -> None:
     output = Path(path)
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("w", encoding="utf-8") as handle:
@@ -48,4 +48,3 @@ def environment_report() -> dict[str, Any]:
         "pandas": pd.__version__,
         "scikit_learn": sklearn.__version__,
     }
-

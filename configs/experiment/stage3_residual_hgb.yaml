@@ -1,0 +1,19 @@
+experiment_name: stage3_residual_hgb
+seed: 42
+model_seeds: [42, 43]
+
+training:
+  sequence_windows: [9, 33, 129]
+  max_rows_per_well: 256
+  target_clip: 80.0
+  correction_weight: 0.60
+
+model:
+  name: hist_gradient_boosting_residual
+  loss: squared_error
+  learning_rate: 0.04
+  max_iter: 160
+  max_leaf_nodes: 15
+  min_samples_leaf: 40
+  l2_regularization: 10.0
+  max_bins: 127
