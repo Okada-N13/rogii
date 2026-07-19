@@ -1,0 +1,33 @@
+[project]
+name = "rogii-wellbore"
+version = "0.1.0"
+description = "Reproducible experiments for the ROGII Wellbore Geology Prediction competition"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy>=2.0,<2.1",
+    "pandas>=2.2,<3",
+    "pyarrow>=18,<24",
+    "pyyaml>=6,<7",
+    "scikit-learn>=1.6,<2",
+]
+
+[dependency-groups]
+archive = ["kaggle>=2.2.0,<3"]
+dev = ["pytest>=8,<10"]
+
+[project.scripts]
+rogii-prepare = "rogii.cli.prepare:main"
+rogii-train = "rogii.cli.train:main"
+rogii-evaluate = "rogii.cli.evaluate:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rogii"]
+
+[tool.pytest.ini_options]
+addopts = "-p no:cacheprovider"
+pythonpath = ["src"]
+testpaths = ["tests"]

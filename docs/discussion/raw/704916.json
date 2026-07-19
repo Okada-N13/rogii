@@ -1,0 +1,28 @@
+{
+  "id": 704916,
+  "title": "submission file shape",
+  "authorName": "Iambruce",
+  "postDate": "2026-06-07 12:31:06.693000",
+  "votes": 1,
+  "commentCount": 2,
+  "content": "<p>Can anyyou tell what will be the submission.csv file shape?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/704916",
+  "comments": [
+    {
+      "id": 3467900,
+      "authorName": "Ayush Khaire",
+      "postDate": "2026-06-07 21:42:35.647000",
+      "votes": 0,
+      "content": "<p><a href=\"https://www.kaggle.com/mahboobbiswas\" target=\"_blank\">@mahboobbiswas</a> </p>\n<p>Currently , on public , the size was ( 14151 rows , 2 columns ) but on private it will vary , so just make sure you deliver the correct and robust structure .</p>",
+      "replies": []
+    },
+    {
+      "id": 3467872,
+      "authorName": "OpPrime",
+      "postDate": "2026-06-07 19:00:12.893000",
+      "votes": 0,
+      "content": "<p>sure: <a href=\"https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/data\" target=\"_blank\">https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/data</a> \nIt is a code submission but your code will provide a csv as described and exemplified in the above link.</p>",
+      "replies": []
+    }
+  ]
+}

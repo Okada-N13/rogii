@@ -1,0 +1,20 @@
+{
+  "id": 711758,
+  "title": "Notebooks have been running for 6 hours",
+  "authorName": "CurveCowboy",
+  "postDate": "2026-06-22 01:14:05.366000",
+  "votes": 2,
+  "commentCount": 1,
+  "content": "<p>Submitted two notebooks, it's been 6 hours and still running. No error log. How do I get it to score?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/711758",
+  "comments": [
+    {
+      "id": 3482618,
+      "authorName": "cx",
+      "postDate": "2026-06-27 14:33:41.923000",
+      "votes": 0,
+      "content": "<p>I've been scoring it for 6 hours now too. How did you fix it?</p>",
+      "replies": []
+    }
+  ]
+}

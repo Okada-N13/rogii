@@ -1,0 +1,54 @@
+{
+  "id": 697507,
+  "title": "Test well 000d7d20 also exists in train/  (intentional?)",
+  "authorName": "Maher el Ouahabi",
+  "postDate": "2026-05-06 12:49:35.680000",
+  "votes": 3,
+  "commentCount": 5,
+  "content": "<p>Hi <a href=\"https://www.kaggle.com/igorkuvaev\" target=\"_blank\">@igorkuvaev</a> <a href=\"https://www.kaggle.com/sergeyalyaev\" target=\"_blank\">@sergeyalyaev</a>,</p>\n<p>While exploring the data I noticed that the well_id <code>000d7d20</code> appears\nboth in <code>train/</code> and in <code>test/</code>. The horizontal trajectory (MD, X, Y, Z)\nmatches row-for-row across the two folders for all 5,278 rows; the GR\nlog differs in ~43% of rows (likely intentional noise).</p>\n<p>Two questions:</p>\n<ol>\n<li>Is the visible test/000d7d20 a duplicate of train/000d7d20 by design\n(e.g., a sanity sample for kernel debugging), or is it an accidental\ncarry-over that will be re-mounted as a new well at hidden-test\nscoring time?</li>\n<li>The other two visible test wells (00bbac68, 00e12e8b) do not appear\nin train/. Is the hidden test set composed of mostly new wells, or\nis some overlap with train expected (consistent with synchronous\nreruns + held-out split)?</li>\n</ol>\n<p>Asking because this directly affects whether the right strategy is to\ncondition predictions on <code>train/&lt;well_id&gt;</code> existence, or to ignore that\npath entirely. Want to make sure we're modeling the right problem.</p>\n<p>Thanks!</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/697507",
+  "comments": [
+    {
+      "id": 3454052,
+      "authorName": "Ryan Holbrook",
+      "postDate": "2026-05-06 14:00:02.230000",
+      "votes": 5,
+      "content": "<p>Hi <a href=\"https://www.kaggle.com/maherelouahabi\" target=\"_blank\">@maherelouahabi</a>,</p>\n<p>The wells you see in <code>test/</code> are are just example data to help you author your submissions. When you submit your notebook, the example test data will be replaced with the actual test data, which does not contain wells in the training set.</p>",
+      "replies": [
+        {
+          "id": 3471639,
+          "authorName": "MasonLeSaint",
+          "postDate": "2026-06-12 02:56:49.123000",
+          "votes": 0,
+          "content": "<p>Hi <a href=\"https://www.kaggle.com/ryanholbrook\" target=\"_blank\">@ryanholbrook</a>!\nCould you share how many well in the actual test dataset will run? If I know that information I can optimize my scoring code because now I see that scoring time is more than 2 hours but it still doesnt finish. I want to investigate where is problem.\nThank you.</p>",
+          "replies": [
+            {
+              "id": 3471641,
+              "authorName": "MasonLeSaint",
+              "postDate": "2026-06-12 03:00:37.497000",
+              "votes": 0,
+              "content": "<p>I created some function in .py file, upload it and use it to run notebook. So it is acceptable when I run the submission?</p>",
+              "replies": []
+            },
+            {
+              "id": 3474692,
+              "authorName": "Houngnibo Jaouen",
+              "postDate": "2026-06-18 14:32:11.053000",
+              "votes": 0,
+              "content": "<p>Environ 200 puits</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3454020,
+      "authorName": "lingyu07",
+      "postDate": "2026-05-06 12:51:29.767000",
+      "votes": 0,
+      "content": "<p>3 wells :</p>\n<p>000d7d20: 3836 hidden rows</p>\n<p>00bbac68: 6014 hidden rows</p>\n<p>00e12e8b: 4301 hidden rows</p>",
+      "replies": []
+    }
+  ]
+}

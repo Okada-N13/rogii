@@ -1,0 +1,95 @@
+{
+  "id": 720701,
+  "title": "Final Gold and Silver Medal Cutoff Predictions",
+  "authorName": "k256.dev",
+  "postDate": "2026-07-06 02:21:42.619000",
+  "votes": 5,
+  "commentCount": 10,
+  "content": "<p>With only one month left, I think this competition is about to become much more intense.</p>\n<p>What do you think the final <strong>public leaderboard</strong> cutoff scores for Gold and Silver medals will be?</p>\n<p>My guess is that the Silver medal cutoff will depend heavily on the quality of future public notebooks. If some of the top competitors decide to share strong methods, it could become much harder to predict. Even considering that, I currently expect the Silver cutoff to end up around <strong>6.5</strong>.</p>\n<p>For Gold, I think the cutoff will be around <strong>5.5</strong>. I expect the prize-winning positions to be somewhere around <strong>4.8–4.7</strong>, and I wouldn't be surprised if first place eventually reaches <strong>4.5</strong>.</p>\n<p>The reason I think this is that someone suddenly jumped to <strong>2nd place</strong> today. That makes me suspect there may be a method capable of dramatically improving performance, and anyone who discovers it could gain a significant advantage. (Of course, it's also possible that the solution is simply overfitting to the public leaderboard.)</p>\n<p>I'm curious to hear everyone else's predictions.</p>\n<p>What do you think? I'd love to hear your predictions.</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/720701",
+  "comments": [
+    {
+      "id": 3490578,
+      "authorName": "Rob Boyd",
+      "postDate": "2026-07-06 11:05:58.913000",
+      "votes": 3,
+      "content": "<p>2nd place with 2 submissions is wild</p>",
+      "replies": []
+    },
+    {
+      "id": 3490751,
+      "authorName": "Chris Deotte",
+      "postDate": "2026-07-06 12:59:26.930000",
+      "votes": 4,
+      "content": "<p>I think there will be a large shakeup. So someone can be low on public LB but jump into private LB Gold.</p>",
+      "replies": [
+        {
+          "id": 3490806,
+          "authorName": "Connor Tynan",
+          "postDate": "2026-07-06 13:30:25.167000",
+          "votes": 1,
+          "content": "<p>Does your thinking stem from the discussion posts detailing varied CV-LB correlation?</p>",
+          "replies": []
+        },
+        {
+          "id": 3493092,
+          "authorName": "k256.dev",
+          "postDate": "2026-07-07 07:08:09.507000",
+          "votes": 2,
+          "content": "<p>My CV is 7.0, while my LB is 6.0. 😂</p>\n<p>I focused on CV, and this is what I ended up with. 😭</p>\n<p>Seriously, someone save me.</p>\n<p>At this rate, I'm going to drop hard after the shake-up. 😭</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3490605,
+      "authorName": "Shrey Gandhi",
+      "postDate": "2026-07-06 11:24:59.907000",
+      "votes": 2,
+      "content": "<p>Maybe they are (2nd place) using the same approach as Rishi and tucker, Both of them reached their scores pretty fast, but have been stuck on them for some time.</p>",
+      "replies": [
+        {
+          "id": 3490637,
+          "authorName": "SpeedSci",
+          "postDate": "2026-07-06 11:49:29.267000",
+          "votes": 0,
+          "content": "<p>I'm really curious—how did you guys manage to break 6.0? Was it through data processing, or purely model-driven?</p>",
+          "replies": [
+            {
+              "id": 3490642,
+              "authorName": "Shrey Gandhi",
+              "postDate": "2026-07-06 11:53:30.003000",
+              "votes": 0,
+              "content": "<p>I feel like everyone has their own approach. And they are building on their own assumptions. </p>",
+              "replies": []
+            },
+            {
+              "id": 3490842,
+              "authorName": "Tucker Arrants",
+              "postDate": "2026-07-06 13:47:14.740000",
+              "votes": 0,
+              "content": "<p>Purely model driven. But honestly, public leaderboard ranking is irrelevant. Get your CV as low as possible and pray you survive the shakeup. </p>",
+              "replies": []
+            },
+            {
+              "id": 3492072,
+              "authorName": "k256.dev",
+              "postDate": "2026-07-06 21:09:45.373000",
+              "votes": 0,
+              "content": "<p>I think everyone has their own unique approach. I've mainly focused on improving the features, and my solution primarily relies on tabular models.</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3489983,
+      "authorName": "k256.dev",
+      "postDate": "2026-07-06 02:22:45.283000",
+      "votes": 0,
+      "content": "<p>Also, based on other discussions, it seems that the public leaderboard rankings could change significantly after the private leaderboard is revealed.</p>\n<p>So these predictions are really just for fun.</p>",
+      "replies": []
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": 698599,
+  "title": "Scoring times",
+  "authorName": "Kanchana1990",
+  "postDate": "2026-05-10 19:34:31.996000",
+  "votes": 0,
+  "commentCount": 1,
+  "content": "<p>Any idea on the typical scoring times? Thanks.</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/698599",
+  "comments": [
+    {
+      "id": 3456270,
+      "authorName": "PC Jimmmy",
+      "postDate": "2026-05-11 15:57:27.030000",
+      "votes": 3,
+      "content": "<p>Catboost with close to 300 features around 20 minutes for the prediction code only and models in a dataset.  </p>\n<p>Training done local.</p>",
+      "replies": []
+    }
+  ]
+}

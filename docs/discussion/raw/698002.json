@@ -1,0 +1,53 @@
+{
+  "id": 698002,
+  "title": "Is online learning / test-time fine-tuning allowed?",
+  "authorName": "Kh0a",
+  "postDate": "2026-05-08 04:09:03.521000",
+  "votes": 25,
+  "commentCount": 5,
+  "content": "<p>With the current evaluation setup, participants can train the model offline and then fine-tune it using the test dataset at submission time by peeking at the actual test dataset. They can only extract the available TVT_input (calibration reference) and other features but can make a solid improvement through domain adaptation.</p>\n<p>Specifically, at submission time in a Kaggle notebook:</p>\n<ol>\n<li>Load the hidden test data (wellbores + GR, formation parameters, TVT_input)</li>\n<li>Fine-tune the pre-trained model using test features as input (self-supervised learning using TVT_input as calibration targets)</li>\n<li>Generate final predictions on the adapted model</li>\n</ol>\n<p>Is this approach considered allowed under the competition rules? Looking forward to feedback from organizers.</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/698002",
+  "comments": [
+    {
+      "id": 3458816,
+      "authorName": "hengck23",
+      "postDate": "2026-05-16 17:55:59.460000",
+      "votes": 1,
+      "content": "<p>it should be allowed. Such methods had been used in previous kaggle competitions before.<br>\nit also includes things like</p>\n<ul>\n<li>finding statistic  like mean, std of test data  </li>\n<li>creating multiple window templates for matching  </li>\n<li>self-supervsied learning or fine-tuning or adaptation etc  </li>\n</ul>",
+      "replies": []
+    },
+    {
+      "id": 3458029,
+      "authorName": "Tucker Arrants",
+      "postDate": "2026-05-14 20:37:59.090000",
+      "votes": 2,
+      "content": "<p>Thank you for sharing your augmentation + online training technique. I consistently get about a 0.15 - 0.2 improvement from it. </p>\n<p>Most recent training run:</p>\n<p>5 fold LGB without -&gt; 9.812</p>\n<p>5 fold LGB, n_aug_splits = 1, online_training = True -&gt; 9.649</p>\n<p>5 fold CatBoost without -&gt; 9.869</p>\n<p>5 fold CatBoost, n_aug_splits = 1, online_training = True -&gt; 9.713</p>",
+      "replies": [
+        {
+          "id": 3458074,
+          "authorName": "Kh0a",
+          "postDate": "2026-05-15 02:01:06.993000",
+          "votes": 1,
+          "content": "<p>Well done, although i am not sure if this is allowed yet. </p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3455094,
+      "authorName": "Kh0a",
+      "postDate": "2026-05-08 15:49:55.707000",
+      "votes": 2,
+      "content": "<p>I have tested with same training setup:</p>\n<p><a href=\"https://www.kaggle.com/code/llkh0a/rogii-lgbm-aug-online-training\" target=\"_blank\">online training</a>: 10.953</p>\n<p><a href=\"https://www.kaggle.com/code/llkh0a/rogii-lgbm-aug\" target=\"_blank\">no online training</a>: 11.323 </p>\n<p>The features processing idea was from <a href=\"https://www.kaggle.com/code/shinyanagai123/triple-signal-beam-search-dual-pf-lightgbm\" target=\"_blank\">https://www.kaggle.com/code/shinyanagai123/triple-signal-beam-search-dual-pf-lightgbm</a></p>",
+      "replies": []
+    },
+    {
+      "id": 3458763,
+      "authorName": "PC Jimmmy",
+      "postDate": "2026-05-16 15:42:41.920000",
+      "votes": 0,
+      "content": "<p>Test time learning has been an acceptable method for all the years I have been on kaggle.  The only issue I ever had was the compute time limit - in some past competitions my methods were too slow for the compute/time that was available.</p>",
+      "replies": []
+    }
+  ]
+}

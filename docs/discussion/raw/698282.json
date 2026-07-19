@@ -1,0 +1,121 @@
+{
+  "id": 698282,
+  "title": "Defintion of tvt",
+  "authorName": "Moonimonster",
+  "postDate": "2026-05-09 06:29:46.065000",
+  "votes": 21,
+  "commentCount": 13,
+  "content": "<p>Hope y'all enjoying this competition!</p>\n<p>I was wondering what you all defined this 'tvt', the target.\nIt seams like it means just literal 'depth' as described in typewell.\nbut I don't really think it is true meaning of tvt.. I searched up on internet, and I found out it means thickness of 'something'., but I'm not really sure what 'something' is in this competition.</p>\n<p>Pretty sure, it would mean something more than 'depth', cause.. what would be the meaning of finding tvt where we have z right? \nI'm still working on this issue.\nHope some of you can share ideas about it. Thank you!</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/698282",
+  "comments": [
+    {
+      "id": 3458945,
+      "authorName": "Tom",
+      "postDate": "2026-05-17 02:46:29.920000",
+      "votes": 25,
+      "content": "<p>Here are some cheetsheets I made. Hope this can help you understand. </p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2F1d43062d4baecad36ff39704c868f1f1%2Ff55e3557-e345-4263-8de0-eadcad56d4b7.png?generation=1778985960300442&amp;alt=media\" alt=\"\"></p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2F6693b872d7340d187710fecf95555b57%2F9ef506e8-414e-4f1f-87d4-036883191086.png?generation=1778985972519640&amp;alt=media\" alt=\"\"></p>",
+      "replies": [
+        {
+          "id": 3460835,
+          "authorName": "Moonimonster",
+          "postDate": "2026-05-19 06:40:58.090000",
+          "votes": 0,
+          "content": "<p>Thank you!!😀</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3455416,
+      "authorName": "PatrickAIForFun",
+      "postDate": "2026-05-09 11:14:22.527000",
+      "votes": 3,
+      "content": "<p>Please correct me if I am wrong here.\nBased on my EDA and other discussions it seems that TVT in this case is the vertical distance to a virtual/imaginery reference line. This aligns somewhat with the usual notion of it being the vertical thickness measured from the upper part of a geological layer. The position of thie virtual 0 TVT layer is not known to us and varies per well and location but it follows the general geological structure. This is furthermore supported by the fact that ANCC - Z = TVT + , where some offset is a constant per well -&gt; meaning that the TVT reference perfectly follows the geological structure and that the thickness of the uppermost layer (between TVT=0 and ANCC) is a fixed constant per well.\nMy believe is, that TVT=0 is referencing the ground level which is tilted in the same way as the geological structure.</p>\n<p>These are all just suspicions and I am no domain expert nor did I do extensive EDA -&gt; please correct me if I am wrong and discuss your thoughts.</p>",
+      "replies": [
+        {
+          "id": 3455675,
+          "authorName": "Igor Kuvaev",
+          "postDate": "2026-05-10 04:02:10.810000",
+          "votes": 6,
+          "content": "<p>PatrickAIForFun\nyou are correct - TVT is vertical distance to a virtual/imaginery reference line\nTVT=0 is referencing the ground level - this may not be the case. \nMost importantly TVT in the lateral corresponds to certain TVT in the typewell (for given lateral-typewell pair).\nLateral XYZ are correct - so laterals have a true spatial representation, while typewell is a vertical definition of the geology (GR values)</p>",
+          "replies": [
+            {
+              "id": 3455888,
+              "authorName": "Evdilos_Ikaria",
+              "postDate": "2026-05-10 15:34:29.527000",
+              "votes": 0,
+              "content": "<p>Is it possible to give us a small sketch of TVT , Z  in a horizontal drill\nThanks</p>",
+              "replies": []
+            },
+            {
+              "id": 3456382,
+              "authorName": "PatrickAIForFun",
+              "postDate": "2026-05-11 19:24:51.663000",
+              "votes": 0,
+              "content": "<p>Dear <a href=\"https://www.kaggle.com/igorakuvaev\" target=\"_blank\">@igorakuvaev</a> \nThank you for the info and confirmation - this helps a lot.\nA quick follow up question:\nAre the TVT scales aligned across lateral and typewells? I.e. would it also be possible to steer a well against another nearby well instead of the linked typewell and get the correct TVT values (e.g. in a multi-steering setting)?\nMy first EDA regarding this is a bit suspicious:</p>\n<ul>\n<li>Plotting the TVT level from the topsets of given typewells across the full site does seem to make sense and follow the general stratigraphic dip.</li>\n<li>Calculating where the virtual TVT=0 would be in Z space by calculating TVT + Z for each position and plotting these seems to show some discrepancies / offsets between wells which are not using the same typewell.\n(See attached two images for this)</li>\n</ul>\n<p>Is this as expected or is multi-well steering not really an option here due to mismatched offsets between the TVT scales?</p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F12887254%2F8ff5a8080e9b82cd9a93a46580a5ca20%2FFigure%2012.png?generation=1778527442861121&amp;alt=media\" alt=\"\">\n<img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F12887254%2Fa3d55d68cf2775f501e537c2c2d7f21d%2FFigure%2014.png?generation=1778527452559133&amp;alt=media\" alt=\"\"></p>",
+              "replies": []
+            },
+            {
+              "id": 3457680,
+              "authorName": "Igor Kuvaev",
+              "postDate": "2026-05-14 06:10:16.320000",
+              "votes": 3,
+              "content": "<p>TVT is not aligned between different wells, it is only aligned between well and typewell</p>",
+              "replies": []
+            },
+            {
+              "id": 3459851,
+              "authorName": "Dmitry Stadnik",
+              "postDate": "2026-05-18 11:13:13.573000",
+              "votes": 0,
+              "content": "<p>are well and typewell different physical wells drilled close to each other?</p>",
+              "replies": []
+            },
+            {
+              "id": 3462725,
+              "authorName": "Brian Lynch",
+              "postDate": "2026-05-24 17:59:57.370000",
+              "votes": 0,
+              "content": "<p>This conflicts with what I’ve found online, but of course as the host what you say should be taken as truth for the competition!<img src=\"https://wiki.aapg.org/images/f/fd/Conversion-of-well-log-data-to-subsurface-stratigraphic-and-structural-information_fig2.png\" alt=\"\"></p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3456504,
+      "authorName": "hengck23",
+      "postDate": "2026-05-12 03:08:39.847000",
+      "votes": -1,
+      "content": "<p>this is chatgpt interpretation (from <a href=\"https://github.com/rogii-com/Python-SDK/tree/examples/tvt_rop_heatmap\" target=\"_blank\">https://github.com/rogii-com/Python-SDK/tree/examples/tvt_rop_heatmap</a>)</p>\n<pre><code>XYZ = real spatial trajectory\nGR = real log along trajectory\nTVT = interpreted coordinate tied to linked typewell/interpretation\n</code></pre>",
+      "replies": [
+        {
+          "id": 3456539,
+          "authorName": "Moonimonster",
+          "postDate": "2026-05-12 05:51:03.723000",
+          "votes": 0,
+          "content": "<p>Thank you for sharing! 😀</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3455519,
+      "authorName": "PC Jimmmy",
+      "postDate": "2026-05-09 15:32:47.693000",
+      "votes": 0,
+      "content": "<p>Using one of the AI's to help with coding I realized that it was confused about the meaning of tvt also :)</p>\n<p>A general meaning could be that it was the thickness of the geological layer.  That's the assumption that the AI was using to write some code for me that was not working.</p>\n<p>For us, not's not the correct definition, but rather its the distance from current drill bit point up.</p>",
+      "replies": [
+        {
+          "id": 3456461,
+          "authorName": "Moonimonster",
+          "postDate": "2026-05-11 23:44:43.967000",
+          "votes": 0,
+          "content": "<p>Thank you for sharing your idea!😀</p>",
+          "replies": []
+        }
+      ]
+    }
+  ]
+}

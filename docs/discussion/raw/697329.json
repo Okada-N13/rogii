@@ -1,0 +1,269 @@
+{
+  "id": 697329,
+  "title": "Submission Scoring Error — Is the scorer live yet?",
+  "authorName": "Abdessamed Zetroni",
+  "postDate": "2026-05-05 19:23:46.344000",
+  "votes": 10,
+  "commentCount": 31,
+  "content": "<p>Hi, I've been trying to submit but keep getting a \"Submission Scoring Error\". My submission file matches the <code>sample_submission.csv</code> exactly 14,151 rows, correct <code>id</code> and <code>tvt</code> columns, no <code>NaN</code> values, all IDs verified against the sample.</p>\n<p>Since this competition just launched and the leaderboard is empty, I'm wondering if the scorer isn't active yet on Kaggle's side. Can the organizers confirm whether submissions are open and the evaluation script is live?</p>\n<p>Thanks</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/697329",
+  "comments": [
+    {
+      "id": 3453771,
+      "authorName": "Ryan Holbrook",
+      "postDate": "2026-05-05 22:12:50.100000",
+      "votes": 3,
+      "content": "<p>Apologies for the scoring problems. The issue should be resolved now. Please let us know if you continue to have trouble or if anything else comes up.</p>",
+      "replies": [
+        {
+          "id": 3453776,
+          "authorName": "Santiago Maniches",
+          "postDate": "2026-05-05 22:27:27.450000",
+          "votes": 0,
+          "content": "<p>Thank you! Working on it :) </p>",
+          "replies": []
+        },
+        {
+          "id": 3454689,
+          "authorName": "",
+          "postDate": "2026-05-07 17:45:18.867000",
+          "votes": 0,
+          "content": "",
+          "replies": []
+        },
+        {
+          "id": 3456110,
+          "authorName": "Gideon Adom Boateng",
+          "postDate": "2026-05-11 08:49:45.470000",
+          "votes": 0,
+          "content": "<p>Still facing scoring issues. My notebook successfully rans and generates the submission.csv but the scorer always fails this is my fifth time and the issue still persists. Kindly help out.</p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F33604740%2F97dab98b7b48550b07b0d42ed1bc936e%2FScreenshot%20from%202026-05-11%2008-46-11.png?generation=1778489331623087&amp;alt=media\" alt=\"\"></p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F33604740%2Fc51e6781b17ff185da77711c81ff9b79%2FScreenshot%20from%202026-05-11%2008-46-01.png?generation=1778489357162169&amp;alt=media\" alt=\"\"></p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3454501,
+      "authorName": "parijit",
+      "postDate": "2026-05-07 11:26:32.837000",
+      "votes": 1,
+      "content": "<p>Hi\nI dont see any errors when submitting the file however i have problems during the scoring process. The scoring process is still running and it has been a bit over 4 hours, that the scoring has not been completed. \nThe kaggle notebook was completed in 6 hours.</p>",
+      "replies": [
+        {
+          "id": 3454547,
+          "authorName": "Gideon Adom Boateng",
+          "postDate": "2026-05-07 12:46:50.050000",
+          "votes": 0,
+          "content": "<p>Facing similar issue here</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3453744,
+      "authorName": "Santiago Maniches",
+      "postDate": "2026-05-05 21:31:32.903000",
+      "votes": 1,
+      "content": "<p>Same situation here. Can you please check? Thank you!</p>",
+      "replies": []
+    },
+    {
+      "id": 3453707,
+      "authorName": "inversion",
+      "postDate": "2026-05-05 20:22:32.520000",
+      "votes": 1,
+      "content": "<p>Investigating . . .</p>",
+      "replies": []
+    },
+    {
+      "id": 3453689,
+      "authorName": "takaito",
+      "postDate": "2026-05-05 20:00:14.760000",
+      "votes": 1,
+      "content": "<p>I also failed to submit it.</p>",
+      "replies": []
+    },
+    {
+      "id": 3453688,
+      "authorName": "Chris Deotte",
+      "postDate": "2026-05-05 19:56:00.617000",
+      "votes": 1,
+      "content": "<p>I agree something seems wrong. I have tried multiple times to get my XGB starter to submit but i keep getting scoring errors. </p>\n<p>Has anyone tried to just submit the sample submission? If that fails, there is certainly a problem.</p>\n<pre><code>pd.read_csv(\"sample_submission.csv\").to_csv(\"submission.csv\",index=False)\n</code></pre>\n<p>UPDATE: Fixed</p>",
+      "replies": [
+        {
+          "id": 3453693,
+          "authorName": "Chris Deotte",
+          "postDate": "2026-05-05 20:06:45.197000",
+          "votes": 3,
+          "content": "<p>I tried submitting the sample submission, it failed <a href=\"https://www.kaggle.com/code/cdeotte/submit-sample-submission\" target=\"_blank\">here</a></p>\n<p>Admins, can you fix the LB? Thanks <a href=\"https://www.kaggle.com/addisonhoward\" target=\"_blank\">@addisonhoward</a> <a href=\"https://www.kaggle.com/inversion\" target=\"_blank\">@inversion</a> <a href=\"https://www.kaggle.com/sohiermse\" target=\"_blank\">@sohiermse</a></p>\n<p>UPDATE: Fixed</p>",
+          "replies": [
+            {
+              "id": 3453695,
+              "authorName": "Abdessamed Zetroni",
+              "postDate": "2026-05-05 20:08:58.640000",
+              "votes": 1,
+              "content": "<p>Thanks for the validation Chris</p>",
+              "replies": []
+            }
+          ]
+        },
+        {
+          "id": 3483993,
+          "authorName": "",
+          "postDate": "2026-06-29 20:50:20.060000",
+          "votes": 0,
+          "content": "",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3453757,
+      "authorName": "Pavlo Ivanin",
+      "postDate": "2026-05-05 21:52:35.293000",
+      "votes": 2,
+      "content": "<p>Yes, I also failed to submit</p>",
+      "replies": []
+    },
+    {
+      "id": 3464705,
+      "authorName": "Sean",
+      "postDate": "2026-05-31 02:07:42.907000",
+      "votes": 0,
+      "content": "<p>I am also facing the Submission Scoring Error as of May 30. The column names, row numbers and so on are exactly the same as the sample submission file though. Is there someone who hits the same problem?</p>",
+      "replies": []
+    },
+    {
+      "id": 3455013,
+      "authorName": "POR160893",
+      "postDate": "2026-05-08 12:11:08.410000",
+      "votes": 0,
+      "content": "<p>Hello again,</p>\n<p>I wanted to provide a more detailed update because I am STILL consistently getting “Submission Scoring Error” despite extensive debugging and validation.</p>\n<p>At this point I do not believe the issue is caused by my actual model predictions.</p>\n<p>I reviewed this entire thread carefully and noticed several important things:</p>\n<p>• Multiple users reported the exact same issue<br>\n• Chris Deotte confirmed even the untouched sample submission failed initially<br>\n• Kaggle staff acknowledged scorer problems existed<br>\n• Other users are still reporting scoring-related issues and stuck submissions</p>\n<p>Because of this, I performed a very extensive set of validation tests on my side.</p>\n<p>Here is everything I have verified:</p>\n<p>SUBMISSION STRUCTURE CHECKS\n• Exactly 14,151 rows\n• Exactly 2 columns\n• Columns are:</p>\n<ul>\n<li>id</li>\n<li>tvt\n• Column order matches sample_submission.csv exactly\n• ID order matches sample_submission.csv exactly\n• No duplicate IDs\n• No missing IDs\n• No NaN values\n• tvt column is numeric float64\n• submission.csv successfully written to:\n/kaggle/working/submission.csv</li>\n</ul>\n<p>I also wrote validation scripts to compare my submission directly against sample_submission.csv including:\n• shape checks\n• dtype checks\n• missing value checks\n• duplicate checks\n• ID set checks\n• ID order checks\n• numeric validity checks\n• infinity/NaN checks</p>\n<p>Everything passes.</p>\n<p>Originally I suspected my actual model output (Phase 6 Delta Method) might be causing the issue because it produced only a few unique prediction values.</p>\n<p>However, after further debugging I discovered that EVEN COMPLETELY TRIVIAL submissions still fail.</p>\n<p>I tested all of the following:</p>\n<ol>\n<li>Original Phase 6 model submission</li>\n<li>Simplified/cleaned Phase 6 submission</li>\n<li>Submission with constant numeric values only</li>\n<li>Submission generated directly from sample_submission.csv</li>\n<li>Completely brand-new minimal notebook with only a few lines of code</li>\n</ol>\n<p>Example of the minimal notebook I tested:</p>\n<p>import pandas as pd</p>\n<p>sample = pd.read_csv(\n    \"/kaggle/input/competitions/rogii-wellbore-geology-prediction/sample_submission.csv\"\n)</p>\n<p>sub = sample.copy()\nsub[\"tvt\"] = 11750.0</p>\n<p>sub.to_csv(\"/kaggle/working/submission.csv\", index=False)</p>\n<p>print(sub.shape)\nprint(sub.isnull().sum())</p>\n<p>This STILL results in:\n“Submission Scoring Error”</p>\n<p>I also confirmed:\n• notebook execution completes\n• submission.csv exists\n• file is readable\n• row count is correct\n• IDs match perfectly\n• no nulls exist</p>\n<p>At this stage, it seems unlikely that my actual model predictions are the root cause.</p>\n<p>Could Kaggle staff or the competition hosts please confirm:</p>\n<ol>\n<li>Is the scorer definitely fully operational right now?</li>\n<li>Have any recent submissions successfully scored?</li>\n<li>Are there any hidden validation rules beyond the documented CSV format?</li>\n<li>Is there any known intermittent issue with the leaderboard/scoring backend?</li>\n</ol>\n<p>I’ve now used 11+ submission attempts debugging this and wanted to provide as much technical detail as possible.</p>\n<p>Thanks very much for any clarification.</p>",
+      "replies": []
+    },
+    {
+      "id": 3454925,
+      "authorName": "Navneet",
+      "postDate": "2026-05-08 07:52:49.770000",
+      "votes": 0,
+      "content": "<p>Thanks for the information on Submission Scoring Error <a href=\"https://www.kaggle.com/abdessamedzetroni\" target=\"_blank\">@abdessamedzetroni</a> </p>",
+      "replies": []
+    },
+    {
+      "id": 3454546,
+      "authorName": "Gideon Adom Boateng",
+      "postDate": "2026-05-07 12:45:59.430000",
+      "votes": 0,
+      "content": "<p>Same issue here. Code was able to generate the submission.csv but I could not get a score because it failed. Kindly help out</p>",
+      "replies": []
+    },
+    {
+      "id": 3454499,
+      "authorName": "POR160893",
+      "postDate": "2026-05-07 11:22:39.343000",
+      "votes": 0,
+      "content": "<p>Hi everyone,</p>\n<p>I’m still experiencing persistent “Submission Scoring Error” issues in this competition after making 11 submissions up to this stage and wanted to provide a detailed summary of everything I have tested so far.</p>\n<p>At this point, I no longer think the issue is caused by my actual model predictions, because even extremely simplified submissions are failing.</p>\n<p>Here is everything I have checked:</p>\n<p>• Verified the exact expected submission format using sample_submission.csv\n• Confirmed my submission has exactly 14,151 rows and 2 columns\n• Confirmed columns are exactly:</p>\n<ul>\n<li>id</li>\n<li>tvt</li>\n</ul>\n<p>• Confirmed column order matches sample_submission.csv exactly\n• Confirmed ID order matches sample_submission.csv exactly\n• Confirmed all IDs are present with no duplicates\n• Confirmed there are no missing values or NaNs\n• Confirmed tvt is numeric float64\n• Confirmed submission.csv is written to:\n/kaggle/working/submission.csv</p>\n<p>I also built validation code to compare my submission against sample_submission.csv directly, including:</p>\n<ul>\n<li>shape checks</li>\n<li>dtype checks</li>\n<li>duplicate checks</li>\n<li>missing value checks</li>\n<li>ID set/order checks</li>\n<li>numeric validity checks</li>\n</ul>\n<p>Everything passes.</p>\n<p>I originally suspected my Phase 6 Delta Method model predictions might be the issue because the predictions only had a few unique values. However, after further testing, I discovered the same scoring error occurs even when I completely bypass the model.</p>\n<p>I tested all of the following:</p>\n<ol>\n<li>Original Phase 6 submission</li>\n<li>Cleaned Phase 6 submission with simplified float formatting</li>\n<li>Submission using constant values only</li>\n<li>Submission created directly from sample_submission.csv</li>\n<li>Brand new minimal notebook with only a few lines of code</li>\n</ol>\n<p>For example, I tested this extremely minimal notebook:</p>\n<p>import pandas as pd</p>\n<p>sample = pd.read_csv(\n\"/kaggle/input/competitions/rogii-wellbore-geology-prediction/sample_submission.csv\"\n)</p>\n<p>sub = sample.copy()\nsub[\"tvt\"] = 11750.0</p>\n<p>sub.to_csv(\"/kaggle/working/submission.csv\", index=False)</p>\n<p>This still produces:\n“Submission Scoring Error”</p>\n<p>I also confirmed:</p>\n<ul>\n<li>the notebook completes successfully</li>\n<li>submission.csv exists</li>\n<li>the file is readable</li>\n<li>row counts are correct</li>\n<li>there are no nulls</li>\n</ul>\n<p>Additionally, I noticed older discussion threads where multiple users reported the same issue, including failures when submitting the untouched sample_submission.csv itself.</p>\n<p>Because of this, I’m wondering if:</p>\n<ul>\n<li>the scorer may still have intermittent issues,</li>\n<li>hidden validation rules may exist beyond the documented format,</li>\n<li>or there is some backend evaluation problem still occurring.</li>\n</ul>\n<p>Can Kaggle staff or competition hosts confirm:</p>\n<ol>\n<li>that the scorer is fully operational now,</li>\n<li>whether additional hidden constraints exist for tvt values,</li>\n<li>and whether anyone has successfully submitted a minimal constant-value submission recently?</li>\n</ol>\n<p>Thanks — I wanted to provide as much debugging detail as possible before continuing to rewrite my pipeline.</p>",
+      "replies": [
+        {
+          "id": 3455004,
+          "authorName": "Ryan Holbrook",
+          "postDate": "2026-05-08 11:47:38.907000",
+          "votes": 0,
+          "content": "<p>Hi <a href=\"https://www.kaggle.com/por160893\" target=\"_blank\">@por160893</a>,</p>\n<p>The scoring issue should be fully resolved now; it was only present for a few hours after launch. Have you tried your minimal submission that just submits the <code>sample_submission.csv</code> lately? I imagine it should work. Another option is to copy one of the community notebooks (like <a href=\"https://www.kaggle.com/code/cdeotte/xgb-starter-cv-15\" target=\"_blank\">this one</a>, say) and try submitting it.</p>",
+          "replies": [
+            {
+              "id": 3455036,
+              "authorName": "POR160893",
+              "postDate": "2026-05-08 13:07:47.580000",
+              "votes": 0,
+              "content": "<p>Hi <a href=\"https://www.kaggle.com/RyanHolbrook\" target=\"_blank\">@RyanHolbrook</a> and organizers,</p>\n<p>I am still encountering a submission scoring error even after rebuilding the notebook from scratch and validating the submission file extensively.</p>\n<p>What I tested:</p>\n<ul>\n<li>I deleted all previous notebook cells and created a completely clean notebook.</li>\n<li>I successfully submitted the sample submission earlier using the same notebook workflow.</li>\n<li>I generated my actual predictions in RStudio locally and uploaded the CSV to Kaggle as a dataset.</li>\n<li>In the Kaggle Python notebook, I simply load the uploaded CSV and write it directly to /kaggle/working/submission.csv.</li>\n</ul>\n<p>Validation checks completed successfully:</p>\n<ul>\n<li>Shape matches sample exactly: (14151, 2)</li>\n<li>Columns exactly match: id, tvt</li>\n<li>No missing values</li>\n<li>No duplicate IDs</li>\n<li>ID order matches sample submission</li>\n<li>id dtype = object</li>\n<li>tvt dtype = float64</li>\n<li>Output file exists successfully before submission</li>\n</ul>\n<p>Notebook output confirms:</p>\n<ul>\n<li>submission.csv is written correctly</li>\n<li>Kaggle notebook execution completes normally</li>\n<li>No runtime errors occur</li>\n</ul>\n<p>Example predictions:\ntext 000d7d20_1442    11749.007289 000d7d20_1443    11749.007289 000d7d20_1444    11749.007289 </p>\n<p>One thing I noticed:</p>\n<ul>\n<li>My Phase 6B model currently produces only 4 unique prediction values across all 14,151 rows.</li>\n<li>However, the values are numeric and valid floats.</li>\n</ul>\n<p>The confusing part is:</p>\n<ul>\n<li>the sample submission workflow succeeds,</li>\n<li>but this actual prediction file still produces a scoring error.</li>\n</ul>\n<p>Could the scorer be rejecting submissions with low prediction variance or certain value ranges?</p>\n<p>Any guidance would be greatly appreciated, because structurally the submission appears fully valid now.</p>",
+              "replies": []
+            },
+            {
+              "id": 3455071,
+              "authorName": "Ryan Holbrook",
+              "postDate": "2026-05-08 14:47:10.790000",
+              "votes": 1,
+              "content": "<p>Hi <a href=\"https://www.kaggle.com/por160893\" target=\"_blank\">@por160893</a>,</p>\n<blockquote>\n  <p>I generated my actual predictions in RStudio locally and uploaded the CSV to Kaggle as a dataset.</p>\n</blockquote>\n<p>In this competition, you need to submit a notebook that creates your submission file. The test set you see on the Data page isn't the actual test set; those are just some examples drawn from the training set. When your submitted notebook is scored, this example data is replaced with the actual hidden test set. Your submissions are failing because you're making predictions on the wrong test data; the prediction ids don't match and there aren't enough of them.</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3454420,
+      "authorName": "Nikita Shevyrev",
+      "postDate": "2026-05-07 05:18:24.297000",
+      "votes": 0,
+      "content": "<p>Hi everyone,</p>\n<p>I’m trying to understand the submission behavior for this code competition.</p>\n<p>Yesterday I had 5 failed submission attempts. Today I launched a new submission and noticed what looks like two separate processes:</p>\n<ol>\n<li>one process running my notebook computation;</li>\n<li>another one already showing the competition submission as “Scoring…”</li>\n</ol>\n<p>The confusing part is that the notebook is still running and has not produced <code>submission.csv</code> yet, but it already looks like one submission attempt has been used.</p>\n<p>Could someone clarify whether this is expected behavior? Does Kaggle start the scoring/submission process in parallel with the notebook rerun, and does this still count as only one submission attempt?</p>\n<p><a href=\"https://www.kaggle.com/ryanholbrook\" target=\"_blank\">@ryanholbrook</a> Sorry to bother you directly, but I wanted to check whether I may have done something wrong on my side or if this is normal for code competitions.</p>\n<p>Thank you!</p>",
+      "replies": [
+        {
+          "id": 3455007,
+          "authorName": "Ryan Holbrook",
+          "postDate": "2026-05-08 11:50:38.467000",
+          "votes": 0,
+          "content": "<p>There are two runs kicked off when you submit from the notebook editor. One of them is a run on the published data that you see on the Data page. The other is the rerun on the hidden test data; that's the run showing as \"Scoring…\". These two sessions run in parallel, but only the run on the hidden test set counts against your submission attempts.</p>\n<p>It's also possible to do these separately. You would just commit the notebook normally, and after it's finished, go to the notebook viewer and submit from there. That would kick off the rerun on the hidden test set only.</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3454362,
+      "authorName": "Chattso-GPT (Yasuhito Yanagisawa)",
+      "postDate": "2026-05-07 01:16:40.407000",
+      "votes": 0,
+      "content": "<p>I couldn’t even submit because of an error lol</p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F9304974%2F5fb6fae17f104dafb3333942e1f6b133%2Ferror.png?generation=1778116536533794&amp;alt=media\" alt=\"\"></p>",
+      "replies": [
+        {
+          "id": 3454670,
+          "authorName": "Chattso-GPT (Yasuhito Yanagisawa)",
+          "postDate": "2026-05-07 16:56:54.843000",
+          "votes": 0,
+          "content": "<p>I’ve been stuck with this error all day and can’t get anything done… even in other competitions.</p>",
+          "replies": [
+            {
+              "id": 3454675,
+              "authorName": "Ryan Holbrook",
+              "postDate": "2026-05-07 17:10:20.680000",
+              "votes": 0,
+              "content": "<p>Where are you seeing this error and what were you doing at the time?</p>",
+              "replies": []
+            },
+            {
+              "id": 3454690,
+              "authorName": "Chattso-GPT (Yasuhito Yanagisawa)",
+              "postDate": "2026-05-07 17:52:03.403000",
+              "votes": 0,
+              "content": "<p>I always get this error whenever I try to create or operate a notebook. It’s been happening constantly since yesterday.</p>",
+              "replies": []
+            },
+            {
+              "id": 3455139,
+              "authorName": "Ryan Holbrook",
+              "postDate": "2026-05-08 17:04:45.627000",
+              "votes": 0,
+              "content": "<p>I'm almost wondering if this is an authentication issue or something to do with a stale cache. Maybe try logging out and logging in again, or try logging in under an incognito session and see if that helps.</p>",
+              "replies": []
+            },
+            {
+              "id": 3455558,
+              "authorName": "Chattso-GPT (Yasuhito Yanagisawa)",
+              "postDate": "2026-05-09 17:07:39.793000",
+              "votes": 0,
+              "content": "<p>Re-logging in didn’t help, but using an incognito session fixed it. Thank you very much!</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3454355,
+      "authorName": "Bryce Chambers",
+      "postDate": "2026-05-07 00:45:07.830000",
+      "votes": 0,
+      "content": "<p>Can we upload just a .csv file?  Or is command line only required?</p>",
+      "replies": []
+    }
+  ]
+}

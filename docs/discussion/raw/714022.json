@@ -1,0 +1,20 @@
+{
+  "id": 714022,
+  "title": "submission file id column",
+  "authorName": "vijay thurimella",
+  "postDate": "2026-06-25 13:57:49.504000",
+  "votes": 1,
+  "commentCount": 1,
+  "content": "<p>how is the row_idx generated for submission\nor should we be using the sample_submission.csv</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/714022",
+  "comments": [
+    {
+      "id": 3481804,
+      "authorName": "PC Jimmmy",
+      "postDate": "2026-06-26 13:01:50.943000",
+      "votes": 0,
+      "content": "<p>Most competitions the sample submission file is very useable - except for a recent one were it did not even exist during the private test.  Check out how all the shared notebooks are generating submissions.</p>",
+      "replies": []
+    }
+  ]
+}

@@ -1,0 +1,933 @@
+{
+  "competition": "rogii-wellbore-geology-prediction",
+  "archivedAt": "2026-07-19T10:41:00.959253+00:00",
+  "expectedTopicCount": 132,
+  "archivedTopicCount": 132,
+  "failedTopics": {},
+  "topics": [
+    {
+      "id": 727171,
+      "title": "Working Note Award - winners!!!",
+      "file": "727171_working-note-award-winners.md",
+      "rawFile": "raw/727171.json",
+      "commentCount": 0
+    },
+    {
+      "id": 727149,
+      "title": "Is the sub-6 regime end-to-end learned, or engineered alignment? (and is it field-grouped-CV-safe?)",
+      "file": "727149_is-the-sub-6-regime-end-to-end-learned-or-engineered-alignment-and-is-it-field-g.md",
+      "rawFile": "raw/727149.json",
+      "commentCount": 0
+    },
+    {
+      "id": 726932,
+      "title": "Least RMSE Expectation",
+      "file": "726932_least-rmse-expectation.md",
+      "rawFile": "raw/726932.json",
+      "commentCount": 0
+    },
+    {
+      "id": 726834,
+      "title": "Six independently-trained architectures, same blind spot — anyone else seeing this?",
+      "file": "726834_six-independently-trained-architectures-same-blind-spot-anyone-else-seeing-this.md",
+      "rawFile": "raw/726834.json",
+      "commentCount": 1
+    },
+    {
+      "id": 726751,
+      "title": "New to ROGII? A beginner's map — 7 visuals + an honest look at why row-wise ML fails",
+      "file": "726751_new-to-rogii-a-beginner-s-map-7-visuals-an-honest-look-at-why-row-wise-ml-fails.md",
+      "rawFile": "raw/726751.json",
+      "commentCount": 2
+    },
+    {
+      "id": 726626,
+      "title": "submission error",
+      "file": "726626_submission-error.md",
+      "rawFile": "raw/726626.json",
+      "commentCount": 1
+    },
+    {
+      "id": 726588,
+      "title": "Toe-end TVT: GR correlation vs trajectory features?",
+      "file": "726588_toe-end-tvt-gr-correlation-vs-trajectory-features.md",
+      "rawFile": "raw/726588.json",
+      "commentCount": 0
+    },
+    {
+      "id": 726465,
+      "title": "Where does the top-team signal come from below the per-well line-oracle?",
+      "file": "726465_where-does-the-top-team-signal-come-from-below-the-per-well-line-oracle.md",
+      "rawFile": "raw/726465.json",
+      "commentCount": 19
+    },
+    {
+      "id": 725086,
+      "title": "inverted Transformer",
+      "file": "725086_inverted-transformer.md",
+      "rawFile": "raw/725086.json",
+      "commentCount": 0
+    },
+    {
+      "id": 724669,
+      "title": "Should we move these bad wells? Or have better way to use them.",
+      "file": "724669_should-we-move-these-bad-wells-or-have-better-way-to-use-them.md",
+      "rawFile": "raw/724669.json",
+      "commentCount": 2
+    },
+    {
+      "id": 724026,
+      "title": "scoring takes very long time",
+      "file": "724026_scoring-takes-very-long-time.md",
+      "rawFile": "raw/724026.json",
+      "commentCount": 1
+    },
+    {
+      "id": 723815,
+      "title": "What is your worst performing well?",
+      "file": "723815_what-is-your-worst-performing-well.md",
+      "rawFile": "raw/723815.json",
+      "commentCount": 20
+    },
+    {
+      "id": 723647,
+      "title": "What's the lowest CV you have achieved?",
+      "file": "723647_what-s-the-lowest-cv-you-have-achieved.md",
+      "rawFile": "raw/723647.json",
+      "commentCount": 2
+    },
+    {
+      "id": 722236,
+      "title": "Does anyone use complex neural networks?",
+      "file": "722236_does-anyone-use-complex-neural-networks.md",
+      "rawFile": "raw/722236.json",
+      "commentCount": 4
+    },
+    {
+      "id": 722041,
+      "title": "  **\"What's working beyond the public baseline for hidden test wells?\"**",
+      "file": "722041_what-s-working-beyond-the-public-baseline-for-hidden-test-wells.md",
+      "rawFile": "raw/722041.json",
+      "commentCount": 1
+    },
+    {
+      "id": 721578,
+      "title": "Gaussian Process + Typewell-Constrained TVT Warping",
+      "file": "721578_gaussian-process-typewell-constrained-tvt-warping.md",
+      "rawFile": "raw/721578.json",
+      "commentCount": 0
+    },
+    {
+      "id": 721549,
+      "title": "Does pattern matching solutions (no ML) work here?",
+      "file": "721549_does-pattern-matching-solutions-no-ml-work-here.md",
+      "rawFile": "raw/721549.json",
+      "commentCount": 3
+    },
+    {
+      "id": 721343,
+      "title": "Does submissions work?",
+      "file": "721343_does-submissions-work.md",
+      "rawFile": "raw/721343.json",
+      "commentCount": 3
+    },
+    {
+      "id": 720701,
+      "title": "Final Gold and Silver Medal Cutoff Predictions",
+      "file": "720701_final-gold-and-silver-medal-cutoff-predictions.md",
+      "rawFile": "raw/720701.json",
+      "commentCount": 10
+    },
+    {
+      "id": 719439,
+      "title": "which model is best for this ?",
+      "file": "719439_which-model-is-best-for-this.md",
+      "rawFile": "raw/719439.json",
+      "commentCount": 10
+    },
+    {
+      "id": 719389,
+      "title": "Does CV correlates with LB？",
+      "file": "719389_does-cv-correlates-with-lb.md",
+      "rawFile": "raw/719389.json",
+      "commentCount": 15
+    },
+    {
+      "id": 719235,
+      "title": "Question about the geologists' analysis",
+      "file": "719235_question-about-the-geologists-analysis.md",
+      "rawFile": "raw/719235.json",
+      "commentCount": 0
+    },
+    {
+      "id": 718670,
+      "title": "A top-kernel teardown report generated by nvidia-kaggle",
+      "file": "718670_a-top-kernel-teardown-report-generated-by-nvidia-kaggle.md",
+      "rawFile": "raw/718670.json",
+      "commentCount": 2
+    },
+    {
+      "id": 718088,
+      "title": "Typewell and horizontal. How to match?",
+      "file": "718088_typewell-and-horizontal-how-to-match.md",
+      "rawFile": "raw/718088.json",
+      "commentCount": 4
+    },
+    {
+      "id": 717573,
+      "title": "Score Without Tabular Models",
+      "file": "717573_score-without-tabular-models.md",
+      "rawFile": "raw/717573.json",
+      "commentCount": 19
+    },
+    {
+      "id": 717445,
+      "title": "Write-UP: ROGII Wellbore Prediction: Anchors, GR Alignment, and Guarded Geosteering ",
+      "file": "717445_write-up-rogii-wellbore-prediction-anchors-gr-alignment-and-guarded-geosteering.md",
+      "rawFile": "raw/717445.json",
+      "commentCount": 3
+    },
+    {
+      "id": 717212,
+      "title": "why train set and test set are exactly same except rock formation data is missing in test set rest everything is exact same 100% why?",
+      "file": "717212_why-train-set-and-test-set-are-exactly-same-except-rock-formation-data-is-missin.md",
+      "rawFile": "raw/717212.json",
+      "commentCount": 1
+    },
+    {
+      "id": 716699,
+      "title": "How to submit your Writeup for the Working Note Award",
+      "file": "716699_how-to-submit-your-writeup-for-the-working-note-award.md",
+      "rawFile": "raw/716699.json",
+      "commentCount": 42
+    },
+    {
+      "id": 716289,
+      "title": "Pointwise GR Makes No Sense",
+      "file": "716289_pointwise-gr-makes-no-sense.md",
+      "rawFile": "raw/716289.json",
+      "commentCount": 1
+    },
+    {
+      "id": 714514,
+      "title": "What wrong with TVT",
+      "file": "714514_what-wrong-with-tvt.md",
+      "rawFile": "raw/714514.json",
+      "commentCount": 11
+    },
+    {
+      "id": 714022,
+      "title": "submission file id column",
+      "file": "714022_submission-file-id-column.md",
+      "rawFile": "raw/714022.json",
+      "commentCount": 1
+    },
+    {
+      "id": 713987,
+      "title": "Clarification on X,Y coordinate system and potential transformation to geographic coordinates",
+      "file": "713987_clarification-on-x-y-coordinate-system-and-potential-transformation-to-geographi.md",
+      "rawFile": "raw/713987.json",
+      "commentCount": 2
+    },
+    {
+      "id": 713298,
+      "title": "About submitting the prediction files.",
+      "file": "713298_about-submitting-the-prediction-files.md",
+      "rawFile": "raw/713298.json",
+      "commentCount": 1
+    },
+    {
+      "id": 712037,
+      "title": "Fork the ruler, not the model — where the error actually lives",
+      "file": "712037_fork-the-ruler-not-the-model-where-the-error-actually-lives.md",
+      "rawFile": "raw/712037.json",
+      "commentCount": 29
+    },
+    {
+      "id": 711878,
+      "title": "The ±15 ft datum: why some wells are unsolvable",
+      "file": "711878_the-15-ft-datum-why-some-wells-are-unsolvable.md",
+      "rawFile": "raw/711878.json",
+      "commentCount": 14
+    },
+    {
+      "id": 711758,
+      "title": "Notebooks have been running for 6 hours",
+      "file": "711758_notebooks-have-been-running-for-6-hours.md",
+      "rawFile": "raw/711758.json",
+      "commentCount": 1
+    },
+    {
+      "id": 711308,
+      "title": "Cluster wells by dz offset",
+      "file": "711308_cluster-wells-by-dz-offset.md",
+      "rawFile": "raw/711308.json",
+      "commentCount": 7
+    },
+    {
+      "id": 710044,
+      "title": "Question on Acellerators",
+      "file": "710044_question-on-acellerators.md",
+      "rawFile": "raw/710044.json",
+      "commentCount": 1
+    },
+    {
+      "id": 709764,
+      "title": "Look Ahead and Data Leakage on Horizontal Well Train and Test Data",
+      "file": "709764_look-ahead-and-data-leakage-on-horizontal-well-train-and-test-data.md",
+      "rawFile": "raw/709764.json",
+      "commentCount": 6
+    },
+    {
+      "id": 709495,
+      "title": "New: Working Note Awards! Submit by July 6",
+      "file": "709495_new-working-note-awards-submit-by-july-6.md",
+      "rawFile": "raw/709495.json",
+      "commentCount": 14
+    },
+    {
+      "id": 709331,
+      "title": "who can help me submit the result",
+      "file": "709331_who-can-help-me-submit-the-result.md",
+      "rawFile": "raw/709331.json",
+      "commentCount": 3
+    },
+    {
+      "id": 708367,
+      "title": "Problem Breakdown",
+      "file": "708367_problem-breakdown.md",
+      "rawFile": "raw/708367.json",
+      "commentCount": 28
+    },
+    {
+      "id": 708167,
+      "title": "Formation Columns Are Derived from Typewell, Not Independent 3D Surfaces",
+      "file": "708167_formation-columns-are-derived-from-typewell-not-independent-3d-surfaces.md",
+      "rawFile": "raw/708167.json",
+      "commentCount": 9
+    },
+    {
+      "id": 708084,
+      "title": "Horizontal well geology layers data",
+      "file": "708084_horizontal-well-geology-layers-data.md",
+      "rawFile": "raw/708084.json",
+      "commentCount": 0
+    },
+    {
+      "id": 707915,
+      "title": "Are Public Notebooks Overfitting to the LB?",
+      "file": "707915_are-public-notebooks-overfitting-to-the-lb.md",
+      "rawFile": "raw/707915.json",
+      "commentCount": 6
+    },
+    {
+      "id": 707913,
+      "title": "What is the relationship between Horizontal_well.csv and type well.csv?",
+      "file": "707913_what-is-the-relationship-between-horizontal-well-csv-and-type-well-csv.md",
+      "rawFile": "raw/707913.json",
+      "commentCount": 0
+    },
+    {
+      "id": 707695,
+      "title": "Private Test Update and Rescore",
+      "file": "707695_private-test-update-and-rescore.md",
+      "rawFile": "raw/707695.json",
+      "commentCount": 5
+    },
+    {
+      "id": 707615,
+      "title": "How to submit notebook for csv file",
+      "file": "707615_how-to-submit-notebook-for-csv-file.md",
+      "rawFile": "raw/707615.json",
+      "commentCount": 1
+    },
+    {
+      "id": 707613,
+      "title": "PF baseline got LB 8.863 - any ideas to make it learnable with NN?",
+      "file": "707613_pf-baseline-got-lb-8-863-any-ideas-to-make-it-learnable-with-nn.md",
+      "rawFile": "raw/707613.json",
+      "commentCount": 8
+    },
+    {
+      "id": 705417,
+      "title": "Notebook Threw Exception on submission despite successful local run",
+      "file": "705417_notebook-threw-exception-on-submission-despite-successful-local-run.md",
+      "rawFile": "raw/705417.json",
+      "commentCount": 4
+    },
+    {
+      "id": 705210,
+      "title": "PNG files don't match the data",
+      "file": "705210_png-files-don-t-match-the-data.md",
+      "rawFile": "raw/705210.json",
+      "commentCount": 12
+    },
+    {
+      "id": 705042,
+      "title": "I want to join a team",
+      "file": "705042_i-want-to-join-a-team.md",
+      "rawFile": "raw/705042.json",
+      "commentCount": 2
+    },
+    {
+      "id": 704916,
+      "title": "submission file shape",
+      "file": "704916_submission-file-shape.md",
+      "rawFile": "raw/704916.json",
+      "commentCount": 2
+    },
+    {
+      "id": 704881,
+      "title": "I am a Geologist, participating in my first Kaggle competition.",
+      "file": "704881_i-am-a-geologist-participating-in-my-first-kaggle-competition.md",
+      "rawFile": "raw/704881.json",
+      "commentCount": 11
+    },
+    {
+      "id": 704839,
+      "title": "When will Typewell data generated?",
+      "file": "704839_when-will-typewell-data-generated.md",
+      "rawFile": "raw/704839.json",
+      "commentCount": 5
+    },
+    {
+      "id": 704800,
+      "title": "About ML + Physics notebook.",
+      "file": "704800_about-ml-physics-notebook.md",
+      "rawFile": "raw/704800.json",
+      "commentCount": 1
+    },
+    {
+      "id": 704771,
+      "title": "How are you using the lithology labels?",
+      "file": "704771_how-are-you-using-the-lithology-labels.md",
+      "rawFile": "raw/704771.json",
+      "commentCount": 1
+    },
+    {
+      "id": 704707,
+      "title": "Can I trust public lb？",
+      "file": "704707_can-i-trust-public-lb.md",
+      "rawFile": "raw/704707.json",
+      "commentCount": 2
+    },
+    {
+      "id": 704663,
+      "title": "Like anyone please tell why my score keeps on varying even though I submit the same notebook?",
+      "file": "704663_like-anyone-please-tell-why-my-score-keeps-on-varying-even-though-i-submit-the-s.md",
+      "rawFile": "raw/704663.json",
+      "commentCount": 6
+    },
+    {
+      "id": 704588,
+      "title": "Open literature / keywords for domain understanding?",
+      "file": "704588_open-literature-keywords-for-domain-understanding.md",
+      "rawFile": "raw/704588.json",
+      "commentCount": 0
+    },
+    {
+      "id": 704383,
+      "title": "Handling Rolling and Lag features for Testing data",
+      "file": "704383_handling-rolling-and-lag-features-for-testing-data.md",
+      "rawFile": "raw/704383.json",
+      "commentCount": 7
+    },
+    {
+      "id": 704273,
+      "title": "How much should we trust the LB score?",
+      "file": "704273_how-much-should-we-trust-the-lb-score.md",
+      "rawFile": "raw/704273.json",
+      "commentCount": 6
+    },
+    {
+      "id": 704001,
+      "title": "EGFDU, ANCC, ASTNL, ASTNU, EGFDL, BUDA and Geology ?",
+      "file": "704001_egfdu-ancc-astnl-astnu-egfdl-buda-and-geology.md",
+      "rawFile": "raw/704001.json",
+      "commentCount": 2
+    },
+    {
+      "id": 703883,
+      "title": "[practical notes] from reproducing and stress-testing notebooks",
+      "file": "703883_practical-notes-from-reproducing-and-stress-testing-notebooks.md",
+      "rawFile": "raw/703883.json",
+      "commentCount": 0
+    },
+    {
+      "id": 703867,
+      "title": "Notebook Timeout run",
+      "file": "703867_notebook-timeout-run.md",
+      "rawFile": "raw/703867.json",
+      "commentCount": 2
+    },
+    {
+      "id": 703830,
+      "title": "What am I missing?",
+      "file": "703830_what-am-i-missing.md",
+      "rawFile": "raw/703830.json",
+      "commentCount": 1
+    },
+    {
+      "id": 703558,
+      "title": "Geology in typewell files in test",
+      "file": "703558_geology-in-typewell-files-in-test.md",
+      "rawFile": "raw/703558.json",
+      "commentCount": 1
+    },
+    {
+      "id": 703534,
+      "title": "MD and Horizontal Distance",
+      "file": "703534_md-and-horizontal-distance.md",
+      "rawFile": "raw/703534.json",
+      "commentCount": 0
+    },
+    {
+      "id": 703532,
+      "title": "Difference in train and test files",
+      "file": "703532_difference-in-train-and-test-files.md",
+      "rawFile": "raw/703532.json",
+      "commentCount": 2
+    },
+    {
+      "id": 703519,
+      "title": "GPU vs TPU",
+      "file": "703519_gpu-vs-tpu.md",
+      "rawFile": "raw/703519.json",
+      "commentCount": 1
+    },
+    {
+      "id": 703374,
+      "title": "A small ROGII lesson: my “model” submission silently became a Null baseline",
+      "file": "703374_a-small-rogii-lesson-my-model-submission-silently-became-a-null-baseline.md",
+      "rawFile": "raw/703374.json",
+      "commentCount": 0
+    },
+    {
+      "id": 703344,
+      "title": "be careful if you are using transformer and bfloat16",
+      "file": "703344_be-careful-if-you-are-using-transformer-and-bfloat16.md",
+      "rawFile": "raw/703344.json",
+      "commentCount": 1
+    },
+    {
+      "id": 703335,
+      "title": "Notebook libraries",
+      "file": "703335_notebook-libraries.md",
+      "rawFile": "raw/703335.json",
+      "commentCount": 1
+    },
+    {
+      "id": 703208,
+      "title": "Submission timeout after successful Notebook run",
+      "file": "703208_submission-timeout-after-successful-notebook-run.md",
+      "rawFile": "raw/703208.json",
+      "commentCount": 1
+    },
+    {
+      "id": 703204,
+      "title": "Signal Processing & XGBoost Baseline (No Leaks)",
+      "file": "703204_signal-processing-xgboost-baseline-no-leaks.md",
+      "rawFile": "raw/703204.json",
+      "commentCount": 0
+    },
+    {
+      "id": 703181,
+      "title": "Using test_df from my dataset, does it not work??",
+      "file": "703181_using-test-df-from-my-dataset-does-it-not-work.md",
+      "rawFile": "raw/703181.json",
+      "commentCount": 2
+    },
+    {
+      "id": 703074,
+      "title": "Type-well and horizontal well Overlap.",
+      "file": "703074_type-well-and-horizontal-well-overlap.md",
+      "rawFile": "raw/703074.json",
+      "commentCount": 5
+    },
+    {
+      "id": 703038,
+      "title": "The battle for LB9.0↓",
+      "file": "703038_the-battle-for-lb9-0.md",
+      "rawFile": "raw/703038.json",
+      "commentCount": 11
+    },
+    {
+      "id": 702919,
+      "title": "Dynamic Programming for TVT Tracking: What Worked, What Didn't, and What the Gap Tells Us",
+      "file": "702919_dynamic-programming-for-tvt-tracking-what-worked-what-didn-t-and-what-the-gap-te.md",
+      "rawFile": "raw/702919.json",
+      "commentCount": 3
+    },
+    {
+      "id": 702892,
+      "title": "LOOKING FOR TEAMATE",
+      "file": "702892_looking-for-teamate.md",
+      "rawFile": "raw/702892.json",
+      "commentCount": 1
+    },
+    {
+      "id": 702859,
+      "title": "Does the submission need gpu quota from my account?",
+      "file": "702859_does-the-submission-need-gpu-quota-from-my-account.md",
+      "rawFile": "raw/702859.json",
+      "commentCount": 1
+    },
+    {
+      "id": 702636,
+      "title": " GPU notebook commits stuck in a long queue (position 264) despite available quota, anyone else right now?",
+      "file": "702636_gpu-notebook-commits-stuck-in-a-long-queue-position-264-despite-available-quota.md",
+      "rawFile": "raw/702636.json",
+      "commentCount": 2
+    },
+    {
+      "id": 702539,
+      "title": "Images in DataSets",
+      "file": "702539_images-in-datasets.md",
+      "rawFile": "raw/702539.json",
+      "commentCount": 4
+    },
+    {
+      "id": 702474,
+      "title": "ML to learn generator for forward simulation",
+      "file": "702474_ml-to-learn-generator-for-forward-simulation.md",
+      "rawFile": "raw/702474.json",
+      "commentCount": 27
+    },
+    {
+      "id": 702449,
+      "title": "Does anyone randomly get really bad LB score (686)?",
+      "file": "702449_does-anyone-randomly-get-really-bad-lb-score-686.md",
+      "rawFile": "raw/702449.json",
+      "commentCount": 3
+    },
+    {
+      "id": 702308,
+      "title": "Issues with submission format",
+      "file": "702308_issues-with-submission-format.md",
+      "rawFile": "raw/702308.json",
+      "commentCount": 3
+    },
+    {
+      "id": 702306,
+      "title": "Question: What learning materials should I use to improve my skills?",
+      "file": "702306_question-what-learning-materials-should-i-use-to-improve-my-skills.md",
+      "rawFile": "raw/702306.json",
+      "commentCount": 0
+    },
+    {
+      "id": 702131,
+      "title": "A geophysicist's take: domain priors + Q-3D tortuosity (public notebook + repo)",
+      "file": "702131_a-geophysicist-s-take-domain-priors-q-3d-tortuosity-public-notebook-repo.md",
+      "rawFile": "raw/702131.json",
+      "commentCount": 0
+    },
+    {
+      "id": 701995,
+      "title": "Is the public LB test set (26%) fixed? ",
+      "file": "701995_is-the-public-lb-test-set-26-fixed.md",
+      "rawFile": "raw/701995.json",
+      "commentCount": 13
+    },
+    {
+      "id": 701691,
+      "title": "cv and lb correlations .....",
+      "file": "701691_cv-and-lb-correlations.md",
+      "rawFile": "raw/701691.json",
+      "commentCount": 16
+    },
+    {
+      "id": 701045,
+      "title": "Searching for teammates",
+      "file": "701045_searching-for-teammates.md",
+      "rawFile": "raw/701045.json",
+      "commentCount": 0
+    },
+    {
+      "id": 701041,
+      "title": "Why naive XGBoost hits a wall here — and what the literature suggests instead",
+      "file": "701041_why-naive-xgboost-hits-a-wall-here-and-what-the-literature-suggests-instead.md",
+      "rawFile": "raw/701041.json",
+      "commentCount": 0
+    },
+    {
+      "id": 701034,
+      "title": "Surface columns (ANCC, ASTNU, etc.) are in TVD (Z), NOT in TVT",
+      "file": "701034_surface-columns-ancc-astnu-etc-are-in-tvd-z-not-in-tvt.md",
+      "rawFile": "raw/701034.json",
+      "commentCount": 2
+    },
+    {
+      "id": 700871,
+      "title": "Horizontal distance along azimuth is wrong, or I am wrong?",
+      "file": "700871_horizontal-distance-along-azimuth-is-wrong-or-i-am-wrong.md",
+      "rawFile": "raw/700871.json",
+      "commentCount": 3
+    },
+    {
+      "id": 700827,
+      "title": "Any Advice on Cross-Validation Strategy?",
+      "file": "700827_any-advice-on-cross-validation-strategy.md",
+      "rawFile": "raw/700827.json",
+      "commentCount": 3
+    },
+    {
+      "id": 700792,
+      "title": "What is difference between 'TVT' and 'TVT_input' ",
+      "file": "700792_what-is-difference-between-tvt-and-tvt-input.md",
+      "rawFile": "raw/700792.json",
+      "commentCount": 4
+    },
+    {
+      "id": 700424,
+      "title": "Share an UI visualizer ",
+      "file": "700424_share-an-ui-visualizer.md",
+      "rawFile": "raw/700424.json",
+      "commentCount": 63
+    },
+    {
+      "id": 700340,
+      "title": "OOF vs LB: should we track worst-well improvements instead of only global RMSE?",
+      "file": "700340_oof-vs-lb-should-we-track-worst-well-improvements-instead-of-only-global-rmse.md",
+      "rawFile": "raw/700340.json",
+      "commentCount": 0
+    },
+    {
+      "id": 700285,
+      "title": "Curious how others are handling outlier wells in the spatial ANCC index",
+      "file": "700285_curious-how-others-are-handling-outlier-wells-in-the-spatial-ancc-index.md",
+      "rawFile": "raw/700285.json",
+      "commentCount": 0
+    },
+    {
+      "id": 699883,
+      "title": "What transformations improve TVT RMSE without breaking TVT scale?",
+      "file": "699883_what-transformations-improve-tvt-rmse-without-breaking-tvt-scale.md",
+      "rawFile": "raw/699883.json",
+      "commentCount": 2
+    },
+    {
+      "id": 699853,
+      "title": "multi-trajectory prediction (MTP) with deep CNN for welllog inversion",
+      "file": "699853_multi-trajectory-prediction-mtp-with-deep-cnn-for-welllog-inversion.md",
+      "rawFile": "raw/699853.json",
+      "commentCount": 93
+    },
+    {
+      "id": 699835,
+      "title": "I have one year experience in Data Science",
+      "file": "699835_i-have-one-year-experience-in-data-science.md",
+      "rawFile": "raw/699835.json",
+      "commentCount": 2
+    },
+    {
+      "id": 699528,
+      "title": "The Significance of Missing Gamma Ray Values",
+      "file": "699528_the-significance-of-missing-gamma-ray-values.md",
+      "rawFile": "raw/699528.json",
+      "commentCount": 2
+    },
+    {
+      "id": 699326,
+      "title": "stage.1 : global search using linear prior tvt = linear(md,z)",
+      "file": "699326_stage-1-global-search-using-linear-prior-tvt-linear-md-z.md",
+      "rawFile": "raw/699326.json",
+      "commentCount": 5
+    },
+    {
+      "id": 699289,
+      "title": "Paradigm Shift: Why pure Tabular Models might be hitting a wall (Spatial & Sequential Context)",
+      "file": "699289_paradigm-shift-why-pure-tabular-models-might-be-hitting-a-wall-spatial-sequentia.md",
+      "rawFile": "raw/699289.json",
+      "commentCount": 4
+    },
+    {
+      "id": 699207,
+      "title": "Can a single model achieve LB/CV below 10.0?",
+      "file": "699207_can-a-single-model-achieve-lb-cv-below-10-0.md",
+      "rawFile": "raw/699207.json",
+      "commentCount": 11
+    },
+    {
+      "id": 699110,
+      "title": "Issue after submission file !! Need Help !",
+      "file": "699110_issue-after-submission-file-need-help.md",
+      "rawFile": "raw/699110.json",
+      "commentCount": 1
+    },
+    {
+      "id": 698925,
+      "title": "Sharing my CV and LB scores",
+      "file": "698925_sharing-my-cv-and-lb-scores.md",
+      "rawFile": "raw/698925.json",
+      "commentCount": 1
+    },
+    {
+      "id": 698860,
+      "title": "rmse_vs_ssr_error",
+      "file": "698860_rmse-vs-ssr-error.md",
+      "rawFile": "raw/698860.json",
+      "commentCount": 1
+    },
+    {
+      "id": 698825,
+      "title": "How Geologists Interpret Wells: Some Helpful Tips",
+      "file": "698825_how-geologists-interpret-wells-some-helpful-tips.md",
+      "rawFile": "raw/698825.json",
+      "commentCount": 3
+    },
+    {
+      "id": 698644,
+      "title": "Over fitting on well",
+      "file": "698644_over-fitting-on-well.md",
+      "rawFile": "raw/698644.json",
+      "commentCount": 2
+    },
+    {
+      "id": 698599,
+      "title": "Scoring times",
+      "file": "698599_scoring-times.md",
+      "rawFile": "raw/698599.json",
+      "commentCount": 1
+    },
+    {
+      "id": 698562,
+      "title": "got stuck at 9.944 score on lb how to improve further ??",
+      "file": "698562_got-stuck-at-9-944-score-on-lb-how-to-improve-further.md",
+      "rawFile": "raw/698562.json",
+      "commentCount": 2
+    },
+    {
+      "id": 698449,
+      "title": "Duplicate type wells for different horizontal wells",
+      "file": "698449_duplicate-type-wells-for-different-horizontal-wells.md",
+      "rawFile": "raw/698449.json",
+      "commentCount": 6
+    },
+    {
+      "id": 698282,
+      "title": "Defintion of tvt",
+      "file": "698282_defintion-of-tvt.md",
+      "rawFile": "raw/698282.json",
+      "commentCount": 13
+    },
+    {
+      "id": 698266,
+      "title": "Clarification on duplicate well IDs between train and sample_submission",
+      "file": "698266_clarification-on-duplicate-well-ids-between-train-and-sample-submission.md",
+      "rawFile": "raw/698266.json",
+      "commentCount": 1
+    },
+    {
+      "id": 698185,
+      "title": "Unable to submit my submission file",
+      "file": "698185_unable-to-submit-my-submission-file.md",
+      "rawFile": "raw/698185.json",
+      "commentCount": 7
+    },
+    {
+      "id": 698002,
+      "title": "Is online learning / test-time fine-tuning allowed?",
+      "file": "698002_is-online-learning-test-time-fine-tuning-allowed.md",
+      "rawFile": "raw/698002.json",
+      "commentCount": 5
+    },
+    {
+      "id": 697857,
+      "title": "Is 'Geology' feature included in actual test set?",
+      "file": "697857_is-geology-feature-included-in-actual-test-set.md",
+      "rawFile": "raw/697857.json",
+      "commentCount": 2
+    },
+    {
+      "id": 697552,
+      "title": "Submission time confimation",
+      "file": "697552_submission-time-confimation.md",
+      "rawFile": "raw/697552.json",
+      "commentCount": 6
+    },
+    {
+      "id": 697507,
+      "title": "Test well 000d7d20 also exists in train/  (intentional?)",
+      "file": "697507_test-well-000d7d20-also-exists-in-train-intentional.md",
+      "rawFile": "raw/697507.json",
+      "commentCount": 5
+    },
+    {
+      "id": 697506,
+      "title": "Starter guidance needed for this competition",
+      "file": "697506_starter-guidance-needed-for-this-competition.md",
+      "rawFile": "raw/697506.json",
+      "commentCount": 2
+    },
+    {
+      "id": 697500,
+      "title": "Coding platform",
+      "file": "697500_coding-platform.md",
+      "rawFile": "raw/697500.json",
+      "commentCount": 3
+    },
+    {
+      "id": 697433,
+      "title": "I did a quick EDA for the well TVT competition",
+      "file": "697433_i-did-a-quick-eda-for-the-well-tvt-competition.md",
+      "rawFile": "raw/697433.json",
+      "commentCount": 0
+    },
+    {
+      "id": 697431,
+      "title": "besides regression, also dwt (time warping)! ",
+      "file": "697431_besides-regression-also-dwt-time-warping.md",
+      "rawFile": "raw/697431.json",
+      "commentCount": 36
+    },
+    {
+      "id": 697418,
+      "title": "Diagram of the problem",
+      "file": "697418_diagram-of-the-problem.md",
+      "rawFile": "raw/697418.json",
+      "commentCount": 11
+    },
+    {
+      "id": 697416,
+      "title": "Welcome to ROGII - Wellbore Geology Prediction!",
+      "file": "697416_welcome-to-rogii-wellbore-geology-prediction.md",
+      "rawFile": "raw/697416.json",
+      "commentCount": 15
+    },
+    {
+      "id": 697406,
+      "title": "Geological Formations on well Geology (region: Texas)",
+      "file": "697406_geological-formations-on-well-geology-region-texas.md",
+      "rawFile": "raw/697406.json",
+      "commentCount": 2
+    },
+    {
+      "id": 697400,
+      "title": "[EDIT] Dataset issue - Fixed!",
+      "file": "697400_edit-dataset-issue-fixed.md",
+      "rawFile": "raw/697400.json",
+      "commentCount": 5
+    },
+    {
+      "id": 697329,
+      "title": "Submission Scoring Error — Is the scorer live yet?",
+      "file": "697329_submission-scoring-error-is-the-scorer-live-yet.md",
+      "rawFile": "raw/697329.json",
+      "commentCount": 31
+    },
+    {
+      "id": 697300,
+      "title": "Some question",
+      "file": "697300_some-question.md",
+      "rawFile": "raw/697300.json",
+      "commentCount": 3
+    },
+    {
+      "id": 694973,
+      "title": "How to get started + Competition's Official Discord",
+      "file": "694973_how-to-get-started-competition-s-official-discord.md",
+      "rawFile": "raw/694973.json",
+      "commentCount": 21
+    }
+  ]
+}

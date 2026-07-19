@@ -1,0 +1,20 @@
+{
+  "id": 699110,
+  "title": "Issue after submission file !! Need Help !",
+  "authorName": "Yash Kumar Saini",
+  "postDate": "2026-05-12 19:02:20.820000",
+  "votes": 2,
+  "commentCount": 1,
+  "content": "<p>Hello, \nWhy it's failed after this, can anyone help me on this ?</p>\n<p>`</p>\n<p>77.5s    40                id           tvt\n77.5s    41  0  000d7d20_0000  11244.527899\n77.5s    42  1  000d7d20_0001  11244.527899\n77.5s    43  2  000d7d20_0002  11244.510133\n77.5s    44  3  000d7d20_0003  11244.638217\n77.5s    45  4  000d7d20_0004  11244.621056\n77.5s    46  submission.csv created successfully!\n80.5s    47  /usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '|'\n80.5s    48    cells[i][c] = re.sub('\\\\|', '|', cell)\n80.6s    49  /usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '_'\n80.6s    50    text = re.sub(r'_', '_', text) # Escape underscores in display text</p>\n<p>`</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/699110",
+  "comments": [
+    {
+      "id": 3468346,
+      "authorName": "Aly Ayman",
+      "postDate": "2026-06-08 20:25:14.890000",
+      "votes": -1,
+      "content": "<p>Hi! Good news first: based on what you've pasted, your code actually ran fine. The lines you're seeing are not the cause of the failure:</p>\n<ul>\n<li><code>submission.csv created successfully!</code> confirms your file was written correctly, with the right id/tvt format.</li>\n<li>The<code>SyntaxWarning: invalid escape sequence</code> messages from <code>mistune.py</code> and <code>nbconvert</code>are just harmless warnings from Kaggle's internal notebook-rendering tools (they're unrelated to your code). They never cause a submission to fail.</li>\n</ul>\n<p>So whatever made it \"fail\" is happening after these lines.</p>\n<p>What I'd do: scroll to the end of the full commit log and check My Submissions for the exact status. The actual error message will be further down.</p>\n<p>If you paste the last few lines of the log (or the status under My Submissions), I can pinpoint it for you. Good luck!</p>",
+      "replies": []
+    }
+  ]
+}

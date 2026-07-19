@@ -1,0 +1,20 @@
+{
+  "id": 702859,
+  "title": "Does the submission need gpu quota from my account?",
+  "authorName": "Yield Smarter",
+  "postDate": "2026-05-27 06:39:35.659000",
+  "votes": 2,
+  "commentCount": 1,
+  "content": "<p>Just a quick question, as I blew through my quota in no time with 3 submission without even noticing, or did i do something wrong?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/702859",
+  "comments": [
+    {
+      "id": 3463535,
+      "authorName": "PatrickAIForFun",
+      "postDate": "2026-05-27 07:22:27.183000",
+      "votes": 0,
+      "content": "<p>The submission scoring itself does not take GPU quota. However when submitting it does run the submission beforehand on your own quota with the dummy test set to check whether it prodcues a valid submission.csv.\nOne way to go around this would be to check whether there are more than 3 test cases and only then run the full code, otherwise just submit a dummy submission.</p>",
+      "replies": []
+    }
+  ]
+}

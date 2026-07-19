@@ -1,0 +1,20 @@
+{
+  "id": 703335,
+  "title": "Notebook libraries",
+  "authorName": "Alchemist",
+  "postDate": "2026-05-29 23:49:20.073000",
+  "votes": 2,
+  "commentCount": 1,
+  "content": "<p>Hi,</p>\n<p>how can we know the list of libraries and their versions installed in the env in which the submission will run ? \nI've found this link: <a href=\"https://github.com/Kaggle/docker-python/blob/main/README.md\" target=\"_blank\">https://github.com/Kaggle/docker-python/blob/main/README.md</a></p>\n<p>but there is no <code>pandas</code> or <code>polars</code> for example, although I see them when I launch a notebook.</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/703335",
+  "comments": [
+    {
+      "id": 3464533,
+      "authorName": "PatrickAIForFun",
+      "postDate": "2026-05-30 07:35:00.147000",
+      "votes": 1,
+      "content": "<p>The environment during submission is the same as in the kaggle notebook session. Thus, if it works there, it will also work in the submission. If wamt a list of these, just run <code>!pip freeze</code> in a notebook.\nIf you need additional libraries, there is button/menu where you can add dependencies in the notebook editor (right side, near he submission button). This will then create dependencies which are also installed duri g submission.</p>",
+      "replies": []
+    }
+  ]
+}

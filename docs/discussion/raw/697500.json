@@ -1,0 +1,37 @@
+{
+  "id": 697500,
+  "title": "Coding platform",
+  "authorName": "David Ubuara",
+  "postDate": "2026-05-06 12:14:27.746000",
+  "votes": 2,
+  "commentCount": 3,
+  "content": "<p>Hi everyone, \nPlease should I run my code locally on my PC or use the Kaggle Notebook for this competition. And do we have to submit the Notebook here if I run my code locally. Thank you</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/697500",
+  "comments": [
+    {
+      "id": 3468331,
+      "authorName": "Aly Ayman",
+      "postDate": "2026-06-08 20:03:47.997000",
+      "votes": 1,
+      "content": "<p>Hello David,</p>\n<p>I recommend Develop and train locally on your PC.</p>\n<p>By this you can write clean code in our shared repo (with Git, proper testing, and experiment tracking). Local is much better for actually building things — Kaggle Notebooks are painful for collaboration and iteration.</p>\n<p>And for the final submission:</p>\n<ol>\n<li>Train your model locally &amp; you get a model file (e.g. model.pkl)</li>\n<li>Upload that trained model to Kaggle as a private Dataset</li>\n<li>Upload our src/ code as another Dataset</li>\n<li>Write a small inference notebook on Kaggle that loads the model, predicts on the test data, and saves submission.csv</li>\n<li>Commit And run that notebook then Submit</li>\n</ol>\n<p>This will help you professionaly in the experimentation phase and if you have a team you can do proper team work.</p>\n<p>Wish you all the luck</p>",
+      "replies": []
+    },
+    {
+      "id": 3454364,
+      "authorName": "PC Jimmmy",
+      "postDate": "2026-05-07 01:31:29.283000",
+      "votes": 1,
+      "content": "<p>I am running all training local - I have lots of compute so it makes sense for me.  It does require that I save trained models in kaggle datasets for the prediction code.</p>\n<p>The prediction and generation of the submission must be made on kaggle.</p>",
+      "replies": [
+        {
+          "id": 3454480,
+          "authorName": "David Ubuara",
+          "postDate": "2026-05-07 10:07:05.687000",
+          "votes": 0,
+          "content": "<p>Thank you Jimmmy for that clarification. </p>",
+          "replies": []
+        }
+      ]
+    }
+  ]
+}

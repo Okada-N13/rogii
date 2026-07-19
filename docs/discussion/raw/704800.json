@@ -1,0 +1,20 @@
+{
+  "id": 704800,
+  "title": "About ML + Physics notebook.",
+  "authorName": "Ulrich G.",
+  "postDate": "2026-06-06 10:08:28.516000",
+  "votes": 5,
+  "commentCount": 1,
+  "content": "<p>Hi everyone, I hope you're enjoying  the competition.</p>\n<p>Yet I have a question concerning <a href=\"https://www.kaggle.com/code/aidensong123/rogii-sel15-rerun\" target=\"_blank\">this notebook</a>. I want to be sure that I understand. If there is no common well between train and test, what is the interest of the physical model function in the prediction loop ?</p>\n<p><a href=\"https://www.kaggle.com/aidensong123\" target=\"_blank\">@aidensong123</a> <a href=\"https://www.kaggle.com/all\" target=\"_blank\">@all</a></p>\n<p>Best,</p>\n<p>Ulrich</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/704800",
+  "comments": [
+    {
+      "id": 3467463,
+      "authorName": "Ogurtsov",
+      "postDate": "2026-06-06 10:27:24.270000",
+      "votes": 0,
+      "content": "<blockquote>\n  <p>If there is no common well between train and test</p>\n</blockquote>\n<p>between train and <strong>public</strong> test. Anyway it doesn't hurt.</p>",
+      "replies": []
+    }
+  ]
+}

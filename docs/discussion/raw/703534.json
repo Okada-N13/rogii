@@ -1,0 +1,11 @@
+{
+  "id": 703534,
+  "title": "MD and Horizontal Distance",
+  "authorName": "Maracatu Atômico",
+  "postDate": "2026-06-01 02:45:00.501000",
+  "votes": 3,
+  "commentCount": 0,
+  "content": "<p>On the well <code>0a57a29c</code> the maximum MD is 17905 ft (path length).</p>\n<p>When we look at the .png image we see the maximum Horizontal Distance Along Azimuth (HDAA) around 6900 m (approx 22600 ft).</p>\n<p>How can a projection (22.6k ft) be larger than the current path (17.9k ft)?</p>\n<p>How can I replicate the .png plot?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/703534",
+  "comments": []
+}

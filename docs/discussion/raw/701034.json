@@ -1,0 +1,29 @@
+{
+  "id": 701034,
+  "title": "Surface columns (ANCC, ASTNU, etc.) are in TVD (Z), NOT in TVT",
+  "authorName": "Nicolas Bridelance",
+  "postDate": "2026-05-18 14:37:17.928000",
+  "votes": 13,
+  "commentCount": 2,
+  "content": "<p>Hi everyone,</p>\n<p>I spent some time debugging a visualization issue that might trip up someone somewhere, so sharing it here.</p>\n<h3>The issue</h3>\n<p>The six geological surface columns in the horizontal well files:</p>\n<p>ANCC, ASTNU, ASTNL, EGFDU, EGFDL, BUDA </p>\n<p>are stored as <strong>negative TVD values</strong> (same unit as the <code>Z</code> column, typically ranging from <code>-9500</code> to <code>-7500</code> ft), <strong>not</strong> in TVT.</p>\n<p>If you try to plot them directly against TVT (which ranges from ~<code>11000</code> to <code>12000</code> ft), they'll appear completely off-scale and useless.</p>\n<h3>Quick fix</h3>\n<p>Map each surface value from Z-space to TVT-space using the well's own Z→TVT relationship. Since Z and TVT are almost perfectly correlated (|r| ≈ 0.999), a simple linear interpolation works well:</p>\n<pre><code>from scipy.interpolate import interp1d\n\nhw_clean = hw.dropna(subset=['Z', 'TVT']).sort_values('Z')\nz_to_tvt = interp1d(hw_clean['Z'].values, hw_clean['TVT'].values,\n                    kind='linear', bounds_error=False, fill_value='extrapolate')\n\nsurface_tvt = float(z_to_tvt(hw['ANCC'].dropna().iloc[0]))\n</code></pre>\n<p>Why it matters for modeling\nUsing raw Z values as if they were TVT will introduce an error of ~20,000 ft (the offset between negative TVD and positive TVT).</p>\n<p>Hope this saves someone a few hours! 🙂</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/701034",
+  "comments": [
+    {
+      "id": 3460850,
+      "authorName": "shanzhong8",
+      "postDate": "2026-05-19 07:04:28.703000",
+      "votes": 0,
+      "content": "<p>Does this preprocessing strategy result in information leakage?</p>",
+      "replies": [
+        {
+          "id": 3461909,
+          "authorName": "Nicolas Bridelance",
+          "postDate": "2026-05-21 18:34:59.290000",
+          "votes": 0,
+          "content": "<p>Good question. The mapping doesn't introduce leakage because:</p>\n<p>Z (TVD) is fully provided for all wells including test — it's the borehole trajectory, independent of the TVT target\nThe interpolator uses Z ↔ TVT_input pairs from the known (non-masked) portion of the well\nThe geological surface depths (ANCC etc.) are formation tops in the vertical section, well within the range covered by TVT_input\nThe transformation is purely geometric (coordinate conversion), not predictive. The TVT values you're actually predicting are at intermediate MD positions along the lateral, not at the surface depths.</p>",
+          "replies": []
+        }
+      ]
+    }
+  ]
+}

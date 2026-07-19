@@ -1,0 +1,20 @@
+{
+  "id": 726626,
+  "title": "submission error",
+  "authorName": "Dalia Mowafy",
+  "postDate": "2026-07-15 22:04:21.555000",
+  "votes": -3,
+  "commentCount": 1,
+  "content": "<p>Your notebook hit an unhandled error while rerunning your code. Note that the hidden dataset can be larger/smaller/different than the public dataset; when submitting this error occur; Is the hidden dataset is a new training and test data or only a new test data?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/726626",
+  "comments": [
+    {
+      "id": 3498932,
+      "authorName": "PatrickAIForFun",
+      "postDate": "2026-07-16 07:29:55.140000",
+      "votes": 0,
+      "content": "<p>It is only a new test set with ~200 wells (if I remember correctly); If your notebook runs fine on the given dummy test wells but fails during submission it is most likely related to some out of memory error (as there are many more &amp; larger wells)</p>",
+      "replies": []
+    }
+  ]
+}

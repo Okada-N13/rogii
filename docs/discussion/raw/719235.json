@@ -1,0 +1,11 @@
+{
+  "id": 719235,
+  "title": "Question about the geologists' analysis",
+  "authorName": "David Rouyre",
+  "postDate": "2026-07-04 17:56:01.022000",
+  "votes": 20,
+  "commentCount": 0,
+  "content": "<p>For certain wells, such as 1944513c, there is a strong correlation between the typewell and what is observed.\n<img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F5914929%2F372c5f17147b64c6edc4afa4b1083828%2Ftvt_gr_1944513c.png?generation=1783186907211414&amp;alt=media\" alt=\"\"></p>\n<p>But for others, such as 000d7d20, we can see that it doesn't match at all.\n<img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F5914929%2F158c2f58811f0af0830f5de7e6d6f0f8%2Ftvt_gr_00d7d20.png?generation=1783187256365207&amp;alt=media\" alt=\"\"></p>\n<p>So I was curious to hear an explanation about this <a href=\"https://www.kaggle.com/igorakuvaev\" target=\"_blank\">@igorakuvaev</a>.\nIs the geologists' prediction always reliable? And if so, how did they manage to predict the results for well 000d7d20, given that they apparently didn't use the Typewell data?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/719235",
+  "comments": []
+}

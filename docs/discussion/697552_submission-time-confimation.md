@@ -1,0 +1,71 @@
+# Submission time confimation
+
+- 投稿者: HarshitKulkarni07
+- 投稿日時: 2026-05-06 15:05:13.095000
+- 投票数: 4
+- コメント数: 6（取得数: 6）
+- トピックID: `697552`
+- 原文: [https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/697552](https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/697552)
+
+## 本文
+
+<p>Have submittted the notebook and the submission.csv file 5hr ago still i m not able to see any public score or any status 
+how much time usally does it takes to submit?</p>
+
+## コメント
+
+### コメント 1 — Aly Ayman
+
+- 投稿日時: 2026-06-08 20:17:28.657000
+- 投票数: -3
+- コメントID: `3468339`
+
+<p>The most likely cause: the submission didn't actually go through, even if the notebook ran. Worth confirming:</p>
+<ul>
+<li>Did you click "Submit to Competition" itself? Committing the notebook is not the same as submitting. After the commit finishes, go to the notebook's Output tab and click the Submit button next to submission.csv. Just running/committing doesn't enter it.</li>
+<li>Check "My Submissions" on the competition page. If your entry is there, look at its status — it'll show Pending, Scored, or Error. If you don't see it at all, the submission wasn't registered.</li>
+<li>If it shows an error, the file likely has a format issue — wrong filename, missing id/tvt columns, wrong number of rows, or NaNs in the predictions. Compare against sample_submission.csv.</li>
+<li>Re-running the notebook on the hidden test set takes time. When you submit, Kaggle re-executes your notebook against the real hidden test data. If your notebook is slow, that rerun has to finish before scoring — but it still shouldn't take 5 hours unless you're near the run-time limit.</li>
+</ul>
+<p>What I'd do: Check My Submissions first. If it's stuck on Pending for hours with no error, try submitting once more from the Output tab. If it errored, the log will tell you which check failed.</p>
+<p>If you can share what status shows under My Submissions, I can help you pin it down. Good luck!</p>
+
+### コメント 2 — Svanik Kolli
+
+- 投稿日時: 2026-05-08 18:19:47.837000
+- 投票数: 1
+- コメントID: `3455150`
+
+<p>It depends on how long your notebook takes to run. For example, I ran a notebook for 2 hours and 30 minutes; it was submitted 7 hours ago and is still running. However, when I ran a notebook that only took 30 minutes, I got my results within 2 hours. It really depends on the runtime. I would recommend keeping it under 3 hours to avoid a timeout.</p>
+
+### コメント 3 — Andrew Lukyanenko
+
+- 投稿日時: 2026-05-07 09:54:33.877000
+- 投票数: 0
+- コメントID: `3454476`
+
+<p>My initial submission timed out. After I optimized it, the submissions take 4-5 hours.</p>
+
+#### コメント 3.1 — HarshitKulkarni07
+
+- 投稿日時: 2026-05-07 22:34:25.540000
+- 投票数: 0
+- コメントID: `3454791`
+
+<p>It was same for me but now it has been solved the submisssion are now happening fast!!</p>
+
+### コメント 4 — Marco DG
+
+- 投稿日時: 2026-05-07 06:58:52.430000
+- 投票数: 0
+- コメントID: `3454447`
+
+<p>Same, one of my submisisons timed out after 11h or something</p>
+
+#### コメント 4.1 — HarshitKulkarni07
+
+- 投稿日時: 2026-05-07 22:35:22.787000
+- 投票数: 0
+- コメントID: `3454792`
+
+<p>Faced this but now it is solved ! As my second submission was done within few minutes </p>

@@ -1,0 +1,11 @@
+.venv/
+.uv-cache/
+__pycache__/
+*.py[cod]
+artifacts/
+.pytest_cache/
+.ipynb_checkpoints/
+data/
+public_notebook/
+.agents/
+.codex/

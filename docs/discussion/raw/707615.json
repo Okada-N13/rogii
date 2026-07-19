@@ -1,0 +1,20 @@
+{
+  "id": 707615,
+  "title": "How to submit notebook for csv file",
+  "authorName": "MasonLeSaint",
+  "postDate": "2026-06-11 03:23:01.444000",
+  "votes": 3,
+  "commentCount": 1,
+  "content": "<p>Hi everyone,\nI want to ask about how to submit notebook or submission.csv file. I can not select the notebook and choose submit as a image below <img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F32853119%2Fc2ee43e6a930424670606fb03db59af4%2Fsubmit01.png?generation=1781148176367524&amp;alt=media\" alt=\"\"></p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/707615",
+  "comments": [
+    {
+      "id": 3471711,
+      "authorName": "yuji y",
+      "postDate": "2026-06-12 07:40:06.120000",
+      "votes": 0,
+      "content": "<p>This is a <strong>code competition</strong>, so you can't upload a CSV directly ? the submission <em>is</em> a notebook. The flow:</p>\n<ol>\n<li>Your notebook must be attached to this competition (create it from the competition's Code tab, or add the competition under \"Input\").</li>\n<li>It must write the predictions to <code>/kaggle/working/submission.csv</code> (exact name).</li>\n<li><strong>Save Version</strong> (Save &amp; Run All) and wait until the version finishes successfully ? you submit a <em>completed version</em>, not the editor state.</li>\n<li>Then either: notebook page Output tab  \"Submit to Competition\", or Submissions page \"Submit Prediction\" pick the notebook version.</li>\n</ol>\n<p>If the notebook can't be selected / the button is greyed out, it's almost always one of:</p>\n<ul>\n<li>the version run failed or is still running (check the version log),</li>\n<li>no <code>submission.csv</code> in the Output of that version,</li>\n<li><strong>Internet is ON</strong> in notebook settings (must be OFF for this comp),</li>\n<li>the notebook isn't attached to this competition,</li>\n<li>you haven't accepted the competition rules.</li>\n</ul>\n<p>Also note the example <code>test/</code> folder is replaced with the real hidden test set when your notebook is re-run for scoring, so make sure your code discovers wells dynamically (e.g. from <code>sample_submission.csv</code>) instead of hard-coding the 3 example well ids.</p>",
+      "replies": []
+    }
+  ]
+}

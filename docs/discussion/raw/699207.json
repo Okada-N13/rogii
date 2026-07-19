@@ -1,0 +1,105 @@
+{
+  "id": 699207,
+  "title": "Can a single model achieve LB/CV below 10.0?",
+  "authorName": "NobelK",
+  "postDate": "2026-05-13 05:11:56.953000",
+  "votes": 17,
+  "commentCount": 11,
+  "content": "<p>Hi everyone,</p>\n<p>I would like to ask whether it seems possible to achieve a score below 10.0 on the LB or local CV using a single model.</p>\n<p>At the moment, my single CatBoost model has plateaued. I am using mostly tabular features with CatBoost, and my local CV and LB are no longer improving much after basic parameter tuning. I suspect that either my validation strategy or feature engineering may be the bottleneck, but I am not sure how to diagnose it.</p>\n<p>Since I am still a beginner, I would really appreciate any discussion or exchange of ideas around this topic.</p>\n<p>For example, I am interested in hearing about:</p>\n<ul>\n<li>whether people have seen single-model scores below 10.0</li>\n<li>whether CatBoost alone seems strong enough for this competition</li>\n<li>which direction is more promising: feature engineering, validation design, post-processing, or ensembling</li>\n<li>common mistakes that may cause a CatBoost baseline to get stuck</li>\n</ul>\n<p>I am not asking for anyone’s private solution, but I would be grateful for any general hints, observations, or advice that could help beginners understand where to focus next.</p>\n<p>Thanks in advance!</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/699207",
+  "comments": [
+    {
+      "id": 3482616,
+      "authorName": "SpeedSci",
+      "postDate": "2026-06-27 14:32:30.770000",
+      "votes": 3,
+      "content": "<p>LGB+5Fold，get 7.034</p>",
+      "replies": []
+    },
+    {
+      "id": 3462642,
+      "authorName": "Vishal Kishore",
+      "postDate": "2026-05-24 10:45:49.383000",
+      "votes": 4,
+      "content": "<p>Yeah it is possible, I scored 8.8 with a single dl model approach only. Only matters how you formulate it in your model </p>",
+      "replies": [
+        {
+          "id": 3462678,
+          "authorName": "NobelK",
+          "postDate": "2026-05-24 14:26:39.577000",
+          "votes": 0,
+          "content": "<p>That's a fantastic score!</p>\n<p>I have a basic question: what does it mean to \"formulate it in your model\"?</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3461347,
+      "authorName": "Andrew Lukyanenko",
+      "postDate": "2026-05-20 09:54:33.780000",
+      "votes": 2,
+      "content": "<p>This is definitely possible. I got 9.463 with a single model.</p>",
+      "replies": [
+        {
+          "id": 3461348,
+          "authorName": "NobelK",
+          "postDate": "2026-05-20 10:02:44.883000",
+          "votes": 0,
+          "content": "<p>9.463 with a single model!? That's amazing!\nI'm very interested in your approach.\nI've run out of ideas right now…</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3459030,
+      "authorName": "Tom",
+      "postDate": "2026-05-17 08:12:29.687000",
+      "votes": 1,
+      "content": "<p>Current GBDTs are definitely not a good solution for this challenge. Based on my current EDA, there is still significant room for improvement. Ultimately, it depends on how the problem is reformulated. I'll post some new directions after I understand the data deeper.</p>",
+      "replies": [
+        {
+          "id": 3459042,
+          "authorName": "hengck23",
+          "postDate": "2026-05-17 08:46:35.987000",
+          "votes": 1,
+          "content": "<p>my experment results: upper bound 3.5 (due to ambigous annotation). i think a good model is about 4.5. \nGBDTs is ok if the input is good. </p>\n<p>but problem is not feature engineering, it is problem formulation. It is easier to work with CNN and transformer ( top k path query)</p>",
+          "replies": [
+            {
+              "id": 3459045,
+              "authorName": "NobelK",
+              "postDate": "2026-05-17 08:51:32.527000",
+              "votes": 1,
+              "content": "<p>I'd like to use CNNs and transformers, but I lack the knowledge to build a model properly.</p>\n<p>I would be grateful if you could share any helpful resources or resources you know of.</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3457221,
+      "authorName": "Tucker Arrants",
+      "postDate": "2026-05-13 11:37:33.610000",
+      "votes": 2,
+      "content": "<p>Of course, the competition has only been live for a week. I have a simple LGB that scores 9.7 on the leaderboard - nothing fancy, just some feature engineering. I’m sure the final scores will be much lower, maybe around 5 feet, but it is hard to tell. Look at the leaderboard…there are some heavy hitters competing here and it has only just begun - it's going to be a good one.</p>",
+      "replies": [
+        {
+          "id": 3457236,
+          "authorName": "NobelK",
+          "postDate": "2026-05-13 12:12:38.163000",
+          "votes": 1,
+          "content": "<p>9.7… That's fantastic.</p>\n<p>I still seem to lack the fundamentals, so I'll do my best to catch up.</p>\n<p>Thank you for the helpful information; let's both do our best.</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3457145,
+      "authorName": "Yang Wei Hao",
+      "postDate": "2026-05-13 07:45:38.477000",
+      "votes": -1,
+      "content": "<p>i think it must do that</p>",
+      "replies": []
+    }
+  ]
+}

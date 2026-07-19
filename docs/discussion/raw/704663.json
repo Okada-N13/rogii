@@ -1,0 +1,62 @@
+{
+  "id": 704663,
+  "title": "Like anyone please tell why my score keeps on varying even though I submit the same notebook?",
+  "authorName": "Debatreya Biswas",
+  "postDate": "2026-06-05 17:00:25.712000",
+  "votes": 9,
+  "commentCount": 6,
+  "content": "<p>like this is is the notebook I am talking about <a href=\"https://www.kaggle.com/code/debatreyabiswas/wellboregeology-prediction-with-koolbox-best-8-188\" target=\"_blank\">https://www.kaggle.com/code/debatreyabiswas/wellboregeology-prediction-with-koolbox-best-8-188</a></p>\n<p>I submit it 3 times and all the 3 times different scores were given</p>\n<p>like first time 8.354</p>\n<p>second time 8.188(the best one)</p>\n<p>third time 8.438</p>\n<p>like is it because of the noise in the data we are using?</p>\n<p>like I know the difference is only around 0.2 but when the models in the leaderboard board are only separated by 0.01 in some cases it becomes a huge deal, so it is just luck? Or is there a legit solution to this problem other than hoping for the best</p>\n<p>(Sorry, I am new to Kaggle so the question might be stupid)</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/704663",
+  "comments": [
+    {
+      "id": 3467297,
+      "authorName": "Chris Deotte",
+      "postDate": "2026-06-05 21:10:30.897000",
+      "votes": 3,
+      "content": "<p>Many feature engineering are stochastic in this competition. Feature engineering is the process of us making new columns on the train and test data. So every time we submit our notebook, the train.csv will be different and the test.csv will be different because when we add our features they are different (stochastic) each time.</p>\n<p>(And train.csv affects the trained model and test.csv affects the inference of the model)</p>",
+      "replies": [
+        {
+          "id": 3467309,
+          "authorName": "Debatreya Biswas",
+          "postDate": "2026-06-05 21:32:50.960000",
+          "votes": 2,
+          "content": "<p>Ok,thank you Sir,</p>\n<p>So,the stochastic is the model randomness,(like for example while making a cake there is a instructions given add a pinch of salt in my code,so whenever I submit it,kaggle add different values to that pinch of salt command everytime leading to different tasting cake,here which is different scores).</p>\n<p>So,Sir,does averaging different randomness values helps,to get a much more stable version of this model?</p>",
+          "replies": [
+            {
+              "id": 3467317,
+              "authorName": "Chris Deotte",
+              "postDate": "2026-06-05 22:17:50.310000",
+              "votes": 6,
+              "content": "<p>No random is like random. In other tabular data competitions, there are no random features.</p>\n<p>In this competition we do things like particle filter features. To create a new column we literally generate a bunch of random numbers and then compute stuff from those random numbers. So the resultant new columns is a result of randomness. If we were to compute the new column twice it would be different each time.</p>\n<p>This is completely different from making a new column that is the subtraction of two previous columns. That is how most feature engineering is. Most feature engineering is a deterministic formula and if we were to create the new column twice it would have the same values each time.</p>",
+              "replies": []
+            },
+            {
+              "id": 3467335,
+              "authorName": "Debatreya Biswas",
+              "postDate": "2026-06-05 23:00:09.223000",
+              "votes": 2,
+              "content": "<p>Wow,ok understood Sir🤯</p>\n<p>So,everytime we are submitting it is like a full on random roll of dice to generate the new column.</p>\n<p>So, basically there can exist a infinite possible number between my given range of let's say in this case 8.1 to 8.5,right Sir?</p>",
+              "replies": []
+            },
+            {
+              "id": 3467337,
+              "authorName": "Chris Deotte",
+              "postDate": "2026-06-05 23:04:44.600000",
+              "votes": 4,
+              "content": "<p>Yes exactly. A few weeks ago, one could get top 5 on the public LB (not private LB) just submitting the best public notebook like 10 times haha. But not anymore because the people at the top of the leaderboard are doing more than just the best public notebooks at this point.</p>",
+              "replies": []
+            },
+            {
+              "id": 3467340,
+              "authorName": "Debatreya Biswas",
+              "postDate": "2026-06-05 23:18:51.757000",
+              "votes": 1,
+              "content": "<p>Lol 😂 just praying for luck to get the top spot</p>\n<p>Thank,you Sir so much for the explanation and helping me understand it all</p>\n<p>Btw, Sir as you said the people at the top are now doing things differently do you have any hints on topics that I should learn or apply in these models to reach the top of the leaderboard?</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

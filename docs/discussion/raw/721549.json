@@ -1,0 +1,37 @@
+{
+  "id": 721549,
+  "title": "Does pattern matching solutions (no ML) work here?",
+  "authorName": "Andrey Chankin",
+  "postDate": "2026-07-06 14:32:51.450000",
+  "votes": 6,
+  "commentCount": 3,
+  "content": "<p>Hello everyone!</p>\n<p>For most of the time I ve been working trying to implement something similar to what I have seen in the explanation video - try to match horizontal GR against typewell GR.</p>\n<p>Yet I could not achieve a sustainable result, sometimes results were fine, but mostly for wells with significant TVT moves <img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F2453410%2Fa60359f7820ba5c051d7b4398eb312ba%2Frogii_1.jpg?generation=1783347872147344&amp;alt=media\" alt=\"result_1\"></p>\n<p>But it doesnt even overperform baseline since for many \"flat\" wells predictions tend to go up/down too much.</p>\n<p>I could not yet figure out how to correctly match almost flat parts. I even built a little soft to match GR signals by hand, but sometimes if very unobvious why specific regions has been chosen.</p>\n<p>Could any of you achieve good results with such approach? - because I have tested numerous ideas here, but they all failed</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/721549",
+  "comments": [
+    {
+      "id": 3493129,
+      "authorName": "Shrey Gandhi",
+      "postDate": "2026-07-07 08:05:56.307000",
+      "votes": 3,
+      "content": "<p>It will work for a lot of wells, but there will be many wells with bad overlap GR's.</p>",
+      "replies": [
+        {
+          "id": 3493316,
+          "authorName": "Andrey Chankin",
+          "postDate": "2026-07-07 15:40:37.907000",
+          "votes": 0,
+          "content": "<blockquote>\n  <p>It will work for a lot of wells, but there will be many wells with bad overlap GR's.</p>\n</blockquote>\n<p>I observe it as well, many wells with high RMSE for constant predictions are predicted well, but at the same time many almost flat wells are being ruined with my approach, thus the overall quality remains bad </p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3493132,
+      "authorName": "Ochir Dorzhiev",
+      "postDate": "2026-07-07 08:09:08.033000",
+      "votes": 2,
+      "content": "<p>I got similar results: we can build a candidate path set where very good paths exist even for hard cases, using likpf, pf, beam, formation, etc. The best oracle over these candidates is around 4.5–6 ft, close to the top LB scores.</p>\n<p>The hard part is selection: horizontal GR vs typewell GR produces a very ambiguous cost map. An oracle-like scorer trained with positive paths and sampled negatives might help reduce this ambiguity, but only if the negatives are realistic hard negatives. Otherwise, the model may just learn to separate synthetic artifacts from real paths instead of learning what makes a geological path correct.</p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F295205%2F2fe63d91bdc11e548910960abaee2297%2FScreenshot%202026-07-07%20at%2015.15.55.png?generation=1783411791265873&amp;alt=media\" alt=\"\"></p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F295205%2F177cd1396187c82f33de074a3a126633%2FScreenshot%202026-07-07%20at%2015.15.44.png?generation=1783411798928842&amp;alt=media\" alt=\"\"></p>",
+      "replies": []
+    }
+  ]
+}

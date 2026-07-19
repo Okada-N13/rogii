@@ -1,0 +1,55 @@
+{
+  "id": 697400,
+  "title": "[EDIT] Dataset issue - Fixed!",
+  "authorName": "María Cruz",
+  "postDate": "2026-05-05 22:46:46.774000",
+  "votes": 16,
+  "commentCount": 5,
+  "content": "<p>UPDATE\nWe were able to fix the issues with the dataset and submissions are back on. Good luck everyone!</p>\n<hr>\n<p>Hi everyone, \nwe temporarily disabled submissions because there is a rerun dataset issue that we're resolving. We'll update the forum as soon as we have an update. Thank you for your patience!</p>\n<p>María</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/697400",
+  "comments": [
+    {
+      "id": 3463690,
+      "authorName": "Rustam Bazarbayev",
+      "postDate": "2026-05-27 17:24:44.590000",
+      "votes": -2,
+      "content": "<p><a href=\"https://www.kaggle.com/ryanholbrook\" target=\"_blank\">@ryanholbrook</a> Why all my last submissions got same high score 11429.285?</p>",
+      "replies": [
+        {
+          "id": 3465016,
+          "authorName": "SOUMYA",
+          "postDate": "2026-06-01 05:47:43.613000",
+          "votes": 0,
+          "content": "<p>did you find any reason for that ?</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3453787,
+      "authorName": "Ryan Holbrook",
+      "postDate": "2026-05-05 22:57:36.010000",
+      "votes": 0,
+      "content": "<p>The issue has been resolved. Apologies everyone for the disruption! Please let us know if anything else comes up.</p>",
+      "replies": [
+        {
+          "id": 3453789,
+          "authorName": "geeknik",
+          "postDate": "2026-05-05 23:04:10.450000",
+          "votes": 0,
+          "content": "<p>Do we need to re-download any files? Or was this an issue on your side?</p>",
+          "replies": [
+            {
+              "id": 3453791,
+              "authorName": "Ryan Holbrook",
+              "postDate": "2026-05-05 23:06:58.550000",
+              "votes": 0,
+              "content": "<p>This was just on the backend. No need to redownload anything.</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

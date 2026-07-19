@@ -1,0 +1,36 @@
+{
+  "id": 721343,
+  "title": "Does submissions work?",
+  "authorName": "Anastasiia Yuzikova",
+  "postDate": "2026-07-06 12:36:26.418000",
+  "votes": -1,
+  "commentCount": 3,
+  "content": "<p>So I tried to make a submission, compliant with all the requirements (Internet off, etc.), and even though the notebook ran successfully, I got the <code>Notebook threw Exception</code> error. (logs show nothing relevant, no errors)</p>\n<p>I wonder whether the problem is on the backend or not? </p>\n<p>P.S. On public data everything works, and I have not changed the way I generate the <code>submission.csv</code> file since my last successfull submission.</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/721343",
+  "comments": [
+    {
+      "id": 3496481,
+      "authorName": "Eduardo",
+      "postDate": "2026-07-14 01:20:29.570000",
+      "votes": 0,
+      "content": "<p>I seems traditional submission generation does not work; my notebook is even failing save/run </p>",
+      "replies": []
+    },
+    {
+      "id": 3495101,
+      "authorName": "De DQ",
+      "postDate": "2026-07-11 13:06:46.407000",
+      "votes": 0,
+      "content": "<p>You should show particular cases that you face</p>\n<p>E.x : </p>\n<ul>\n<li>Which competitions? </li>\n<li>Verify datastes yet?</li>\n<li>What steps to do and where you face errors?</li>\n</ul>",
+      "replies": []
+    },
+    {
+      "id": 3492571,
+      "authorName": "",
+      "postDate": "2026-07-07 04:17:08.253000",
+      "votes": -1,
+      "content": "",
+      "replies": []
+    }
+  ]
+}

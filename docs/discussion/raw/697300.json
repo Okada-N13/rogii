@@ -1,0 +1,37 @@
+{
+  "id": 697300,
+  "title": "Some question",
+  "authorName": "YePing Lin",
+  "postDate": "2026-05-05 18:18:55.055000",
+  "votes": 7,
+  "commentCount": 3,
+  "content": "<p>Hello everyone, may I ask how to perform data augmentation in this kind of competition? Or rather, is data augmentation reasonable (because I'm not sure if it will work)? This is my first time participating in this kind of competition, so I don't know much about it. Thank you to all the experts for your guidance.</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/697300",
+  "comments": [
+    {
+      "id": 3453996,
+      "authorName": "hengck23",
+      "postDate": "2026-05-06 12:01:51.690000",
+      "votes": 2,
+      "content": "<p>interpolate nearby wells? you have to imagine you are subsampling from a big 3d geological structure. augmentation here means creating more samples (possibly virtual ones) from this big structure</p>",
+      "replies": []
+    },
+    {
+      "id": 3453673,
+      "authorName": "Abdessamed Zetroni",
+      "postDate": "2026-05-05 19:25:21.987000",
+      "votes": 1,
+      "content": "<p>Data augmentation has limited use here because of the nature of the problem.</p>\n<p>What could work: adding small noise to GR logs, or randomly shortening the known zone during training to simulate different eval lengths.</p>\n<p>What probably won't help: flipping/rotating trajectories (wellbores have a physical direction) or standard image augmentation (this is sequential tabular data, not images).</p>\n<p>The bigger insight for this competition is that TVT barely changes in horizontal wells since the drill is moving laterally through the same formation. Feature engineering around the trajectory and typewell reference will likely matter more than augmentation.</p>\n<p>Good luck!</p>",
+      "replies": [
+        {
+          "id": 3453998,
+          "authorName": "hengck23",
+          "postDate": "2026-05-06 12:06:47.123000",
+          "votes": 4,
+          "content": "<p>warp the GR data for both reference and input  … like linear elastic transform.</p>\n<p>make aligned pairs reference and input to decide what kinds of noise, deformation to add</p>",
+          "replies": []
+        }
+      ]
+    }
+  ]
+}

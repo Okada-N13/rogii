@@ -1,0 +1,29 @@
+{
+  "id": 724669,
+  "title": "Should we move these bad wells? Or have better way to use them.",
+  "authorName": "Zejun_",
+  "postDate": "2026-07-12 15:21:13.048000",
+  "votes": 3,
+  "commentCount": 2,
+  "content": "<p>Testing CV, we found some type wells extremely bad on RSME, like 20+. And other wells’ RSME are good and similar. I wonder if top team delete bad training data for a better fitting model? Worry about overfitting, we haven't use it yet. </p>\n<p>Will the distribution of the test data be similar to that of the training data?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/724669",
+  "comments": [
+    {
+      "id": 3495812,
+      "authorName": "Andrey Chankin",
+      "postDate": "2026-07-12 20:35:51.577000",
+      "votes": 0,
+      "content": "<blockquote>\n  <p>Testing CV, we found some type wells extremely bad on RSME, like 20+. </p>\n</blockquote>\n<p>what do you mean by bad type wells? - bad predictions on horizontal?</p>",
+      "replies": [
+        {
+          "id": 3495974,
+          "authorName": "Zejun_",
+          "postDate": "2026-07-13 03:43:35.937000",
+          "votes": 0,
+          "content": "<p>Bad RSME in CV.</p>",
+          "replies": []
+        }
+      ]
+    }
+  ]
+}

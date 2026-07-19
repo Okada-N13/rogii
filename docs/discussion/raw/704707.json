@@ -1,0 +1,28 @@
+{
+  "id": 704707,
+  "title": "Can I trust public lb？",
+  "authorName": "Kuni05",
+  "postDate": "2026-06-05 20:14:18.561000",
+  "votes": 1,
+  "commentCount": 2,
+  "content": "<p>I consider this the best approach (it significantly outperforms others in terms of public test RMSE, and I find the trick very clever).\nHowever, on the public leaderboard, it trails my best-performing model by 0.2 to 0.3.\nSo, should I trust the public leaderboard?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/704707",
+  "comments": [
+    {
+      "id": 3467477,
+      "authorName": "Ricardo.M.Zhang",
+      "postDate": "2026-06-06 10:50:19.737000",
+      "votes": 1,
+      "content": "<p>Nah, check this then you can understand why:<a href=\"https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/704663#3467297\" target=\"_blank\">https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/704663#3467297</a></p>",
+      "replies": []
+    },
+    {
+      "id": 3467273,
+      "authorName": "Kuni05",
+      "postDate": "2026-06-05 20:15:37.053000",
+      "votes": -4,
+      "content": "<p>Also, does anyone have any good ideas? I'm stuck right now and feel like I can't climb any higher.</p>",
+      "replies": []
+    }
+  ]
+}

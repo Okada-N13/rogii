@@ -1,0 +1,11 @@
+{
+  "id": 700340,
+  "title": "OOF vs LB: should we track worst-well improvements instead of only global RMSE?",
+  "authorName": "Zhenyu Zhang",
+  "postDate": "2026-05-17 09:20:41.450000",
+  "votes": 6,
+  "commentCount": 0,
+  "content": "<p>I’m trying to understand how to evaluate real progress in this competition.</p>\n<p>In our experiments, lower OOF RMSE does not always seem to imply a better LB score. That\n  makes me wonder: how should we know whether a model change is actually better?</p>\n<p>One idea is to look not only at the overall OOF, but also at the hardest wells. In our\n  EDA, some consistently difficult wells are:</p>\n<ul>\n<li><p>86454a6f</p></li>\n<li><p>fb03ae90</p></li>\n<li><p>1b1eba53</p></li>\n<li><p>389ae58f</p></li>\n<li><p>896d15b9</p>\n<p>These wells tend to have very large signed-bias errors across the whole well. So maybe a\nmodel with slightly better OOF is not really better if it does not improve these failure\ncases.</p>\n<p>For model comparison, would you focus on overall OOF, fold consistency, worst-well\nimprovement, bias reduction, or another validation signal?</p>\n<p>I’d be interested to hear how others judge whether an OOF gain is likely to transfer to\nLB.</p></li>\n</ul>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/700340",
+  "comments": []
+}

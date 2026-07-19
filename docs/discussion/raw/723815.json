@@ -1,0 +1,181 @@
+{
+  "id": 723815,
+  "title": "What is your worst performing well?",
+  "authorName": "Shrey Gandhi",
+  "postDate": "2026-07-08 11:02:22.486000",
+  "votes": 12,
+  "commentCount": 20,
+  "content": "<p>My worst performing well is 86454a6f with an rmse of 43.86. Due to sequential modelling, it drifts early and stays at it.</p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F7200429%2F5732f0772a77eeb3cf8dc1cef00dd496%2Fworstwell.png?generation=1783508396765082&amp;alt=media\" alt=\"\"></p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/723815",
+  "comments": [
+    {
+      "id": 3495309,
+      "authorName": "k256.dev",
+      "postDate": "2026-07-12 01:09:30.070000",
+      "votes": 2,
+      "content": "<p>fb03ae90 38.29</p>\n<p>389ae58f 31.76</p>\n<p>91db7070 29.33</p>\n<p>86454a6f 20.76</p>",
+      "replies": [
+        {
+          "id": 3495431,
+          "authorName": "Shrey Gandhi",
+          "postDate": "2026-07-12 09:48:00.263000",
+          "votes": 0,
+          "content": "<p>Cool, you have different wells XD. Arent you using data engineering? </p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3494403,
+      "authorName": "Andrey Chankin",
+      "postDate": "2026-07-09 22:32:44.313000",
+      "votes": 2,
+      "content": "<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F2453410%2F7520801bc1aae21386bf971559d97d13%2Fkaggle_2.png?generation=1783636281006786&amp;alt=media\" alt=\"\"></p>\n<p>For such wells (with big tvt movements) simple approach works +- ok, but since I made it to start from the previous segment end - one mistake ruins the well and it heavily affects almost flat wells</p>",
+      "replies": [
+        {
+          "id": 3494686,
+          "authorName": "Shrey Gandhi",
+          "postDate": "2026-07-10 13:17:46.180000",
+          "votes": 0,
+          "content": "<p>Interesting.</p>",
+          "replies": []
+        },
+        {
+          "id": 3495289,
+          "authorName": "",
+          "postDate": "2026-07-11 22:01:45.623000",
+          "votes": 0,
+          "content": "",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3494128,
+      "authorName": "Rishikesh Jani",
+      "postDate": "2026-07-09 08:10:32.373000",
+      "votes": 1,
+      "content": "<p>Also 86454a6f sitting at 40.8 RMSE, followed by 4c2208f5 at 34.3</p>",
+      "replies": [
+        {
+          "id": 3494132,
+          "authorName": "Shrey Gandhi",
+          "postDate": "2026-07-09 08:18:40.783000",
+          "votes": 0,
+          "content": "<p>There must be something about this well then 😅</p>",
+          "replies": [
+            {
+              "id": 3494144,
+              "authorName": "Rishikesh Jani",
+              "postDate": "2026-07-09 08:46:27.517000",
+              "votes": 0,
+              "content": "<p>There are a few wells that my model doesn't do well on. As of right now I am able to categorize which wells will have large errors, but not the direction of the error. Once I have a little more time I'm going to look into it more. </p>",
+              "replies": []
+            },
+            {
+              "id": 3494150,
+              "authorName": "Rishikesh Jani",
+              "postDate": "2026-07-09 09:01:03.107000",
+              "votes": 0,
+              "content": "<p>I realize this is worded a bit weirdly and requires some nuance. Apologies, more on this later. </p>",
+              "replies": []
+            },
+            {
+              "id": 3494153,
+              "authorName": "Shrey Gandhi",
+              "postDate": "2026-07-09 09:06:17.197000",
+              "votes": 0,
+              "content": "<p>Ohh cool. Yea, 'direction of error' seems ambiguous.</p>",
+              "replies": []
+            },
+            {
+              "id": 3494177,
+              "authorName": "Shrey Gandhi",
+              "postDate": "2026-07-09 10:21:28.047000",
+              "votes": 0,
+              "content": "<p>Yep 4c2208f5 is bad for me too.</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3494195,
+      "authorName": "Connor Tynan",
+      "postDate": "2026-07-09 11:24:17.933000",
+      "votes": 0,
+      "content": "<p>~50 RMSE on both 389ae58f and fb03ae90 using deterministic solution. GBT/UNet on top of my current method doesn't improve performance much.  I think, having separate approaches could be a way forward: approach for the majority of wells + approach for hard wells. Then the issue becomes diagnosing a well as \"hard\" on the fly. Scrutinising the geometry has been rewarding, but there are overlapping signals which make distinguishing well difficulty in the moment somewhat challenging.</p>",
+      "replies": [
+        {
+          "id": 3494198,
+          "authorName": "Shrey Gandhi",
+          "postDate": "2026-07-09 11:36:41.380000",
+          "votes": 2,
+          "content": "<p>Yea, I feel like your approach is sequential too. And using GBT/Unet on top would predict residuals. \nThis could help, specially using the unet approach. If its not working, I feel like focusing on drift instead of residual learning will help. And I feel like geometry is doing that for you somehow.<br>\nWhat is your status for the well 86454a6f?</p>",
+          "replies": [
+            {
+              "id": 3494207,
+              "authorName": "Connor Tynan",
+              "postDate": "2026-07-09 12:05:37.193000",
+              "votes": -1,
+              "content": "<p>Thank you, sounds useful – I’ll give it some thought. </p>\n<p>86454a6f Is sitting at 19 RMSE for me. I looked at the failure modes for the bottom 10 % of wells and 86454a6f falls into the “underestimating drift” category, so a similar issue to what you’re having.</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3493888,
+      "authorName": "Sandy",
+      "postDate": "2026-07-08 16:46:22.113000",
+      "votes": 0,
+      "content": "<p>i'm not running experiments on all the wells, but a subset of 50 well. This specific well 86454a6f comes to 22.64 rmse for my experiment, but overall my scores are way too off.</p>",
+      "replies": [
+        {
+          "id": 3493894,
+          "authorName": "Shrey Gandhi",
+          "postDate": "2026-07-08 17:05:15.903000",
+          "votes": 0,
+          "content": "<p>I see, thanks for sharing sandy!</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3493884,
+      "authorName": "Tony Li",
+      "postDate": "2026-07-08 16:36:53.403000",
+      "votes": 0,
+      "content": "<p>I’m new here, so apologies if this is a beginner question.</p>\n<p>Is well <code>86454a6f</code> part of the training data?</p>\n<p>Also, did you evaluate your model on all 700+ training wells? Since the model was trained on them, I’m wondering whether the RMSE of 43.86 is meaningful.</p>\n<p>How long would it take to run the model across all training wells?</p>\n<p>Thanks</p>",
+      "replies": [
+        {
+          "id": 3493885,
+          "authorName": "Shrey Gandhi",
+          "postDate": "2026-07-08 16:42:53.167000",
+          "votes": 1,
+          "content": "<p>Hey Tony,\nYes its part of the training data.\nYep evaluating on all wells.\nMy approach is not training based right now, but top lb use the nn's, I feel\nWhats your worst well would you like to share?\nAny other insight you think for this well? </p>",
+          "replies": [
+            {
+              "id": 3493997,
+              "authorName": "Tony Li",
+              "postDate": "2026-07-08 22:29:36.007000",
+              "votes": 0,
+              "content": "<p>Sorry, I haven’t started yet. I’ll get back to you once I have some ideas for my worse well or anything else that might be useful. Thanks again for your reply.</p>",
+              "replies": []
+            },
+            {
+              "id": 3499039,
+              "authorName": "To be happy",
+              "postDate": "2026-07-16 12:19:09.457000",
+              "votes": 0,
+              "content": "<p>So, your approach isn't based on training right now? Does that mean your methods are all physics-based, like PF? I'm absolutely shocked.</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

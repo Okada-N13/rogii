@@ -1,0 +1,534 @@
+{
+  "id": 700424,
+  "title": "Share an UI visualizer ",
+  "authorName": "Tom",
+  "postDate": "2026-05-17 12:47:20.845000",
+  "votes": 91,
+  "commentCount": 63,
+  "content": "<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2F8fe8f43532b152aa5a7637b7d6f1a2fe%2FUI1.png?generation=1779022020724846&amp;alt=media\" alt=\"\"></p>\n<p>Feel free to use it: <a href=\"https://github.com/tom99763/rogii-viewer\" target=\"_blank\">https://github.com/tom99763/rogii-viewer</a>  </p>\n<p>And some EDA &amp; directions in attachments. I suggest people to read <code>glossary.html</code> first to clarify some confused definition. </p>\n<p>I really like this explaination about TVT:</p>\n<pre><code>Analogy: TVT is the “floor number” in a geological building\n\nImagine the geology as a completed high-rise building, where each floor represents a different rock layer (ANCC, Austin Chalk, Eagle Ford, Buda, etc.).\n\nTypewell = the elevator shaft: it goes vertically from the top floor to the basement, recording “the GR at this layer is X” as it passes through each floor.\nHorizontal well = a person walking inside the building:  moving along the hallway of a certain floor, sometimes going up or down between floors.\nTVT = which floor is this person currently on?\n</code></pre>\n<h3>Update GR Mismatch Visualizer</h3>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2F5b91ffbfc5d669a76d10fe1cb409dcb5%2FGR.png?generation=1779030611267623&amp;alt=media\" alt=\"\"></p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/700424",
+  "comments": [
+    {
+      "id": 3466303,
+      "authorName": "hengck23",
+      "postDate": "2026-06-03 23:52:18.897000",
+      "votes": 5,
+      "content": "<p>the public notebook (recent lb 8.63) uses meta-heuristics to decide k-beam or pf. this means some information is embedded at \"whole well level\", e.g. len of csv, min and max of well z, etc…</p>\n<p>problem of PF is that it is local and sequential (error accumulation):<br>\np(s_t|s_t-1).</p>\n<p>how about:\np(s_t|distribution up to s_t-1).  </p>\n<p>or even \np(s_t|distribution exluding to s_t).  </p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F113660%2Feab42d972538dcdcf5912b11fc3086df%2FSelection_3869.png?generation=1780530617337253&amp;alt=media\" alt=\"\"></p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F113660%2F438338a874344cbae87002c86d67d751%2FSelection_3870.png?generation=1780530630436236&amp;alt=media\" alt=\"\"></p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F113660%2Fc849d82db43ad30674f359a52e1e4e56%2FSelection_3871.png?generation=1780530643655204&amp;alt=media\" alt=\"\"></p>\n<p>reference:\nIntroducing DiffusionBlocks: Block-wise Neural Network Training via Diffusion Interpretation<br>\n<a href=\"http://pub.sakana.ai/diffusionblocks\" target=\"_blank\">http://pub.sakana.ai/diffusionblocks</a>  </p>",
+      "replies": []
+    },
+    {
+      "id": 3466070,
+      "authorName": "Tom",
+      "postDate": "2026-06-03 12:58:36.763000",
+      "votes": 5,
+      "content": "<p>Explaination about current trick and physical meaning in attachment</p>\n<p>And is it possible to do point sampling instead and making model predicting point connections. Just initial thoughts.</p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2F3dad47de922281e411d11a249991181c%2Fexample.png?generation=1780491961954126&amp;alt=media\" alt=\"\"></p>",
+      "replies": []
+    },
+    {
+      "id": 3471783,
+      "authorName": "Tom",
+      "postDate": "2026-06-12 12:59:10.873000",
+      "votes": 2,
+      "content": "<p>Even though this was 5 years ago, I try seasonal trends again.</p>\n<p><a href=\"https://www.kaggle.com/code/tom99763/tensorflow-probability-inference?kernelSessionId=79007085\" target=\"_blank\">https://www.kaggle.com/code/tom99763/tensorflow-probability-inference?kernelSessionId=79007085</a></p>",
+      "replies": [
+        {
+          "id": 3471827,
+          "authorName": "Tom",
+          "postDate": "2026-06-12 15:12:53.600000",
+          "votes": 0,
+          "content": "<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2F2addfecdec246f6e27dc9016915f53a2%2F5255.png?generation=1781277165146138&amp;alt=media\" alt=\"\"></p>",
+          "replies": []
+        },
+        {
+          "id": 3472009,
+          "authorName": "hengck23",
+          "postDate": "2026-06-13 03:26:44.953000",
+          "votes": 4,
+          "content": "<p>i have a feeling that the interpretation is different for different wells (hence it is mixture mode). It is not a \"optimization/prediction\" problem but rather predicting the geologist preference for this particular well interpretation. My experiments show that per well model generally performs better but it is too slow to run as submission.</p>",
+          "replies": []
+        },
+        {
+          "id": 3472290,
+          "authorName": "hengck23",
+          "postDate": "2026-06-13 20:24:15.563000",
+          "votes": 3,
+          "content": "<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F113660%2Fca0857b85060e729040d365bffc559a1%2FSelection_4046.png?generation=1781382155509617&amp;alt=media\" alt=\"\"></p>\n<p>if you are predicting trajectories, here is an alternative formulation. very much like onion layering of the Vesuvius Challenge - Surface Detection.</p>\n<p>each value (or segment, e.g peak or valley) of the typewell GR is a trajectory. </p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3463617,
+      "authorName": "Tom",
+      "postDate": "2026-05-27 13:06:06.467000",
+      "votes": 5,
+      "content": "<p>Working on Neural SDE now. I discover that forward-stepping curriculum can make it start to learn.\nThis is really badass.\n<img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2Fd5b35c29393af30fe67920b379ef2185%2Ffield.png?generation=1779888583205959&amp;alt=media\" alt=\"\"></p>",
+      "replies": []
+    },
+    {
+      "id": 3460419,
+      "authorName": "hengck23",
+      "postDate": "2026-05-18 20:11:02.220000",
+      "votes": 5,
+      "content": "<p><a href=\"https://youtu.be/VgzFt7xknGo?si=rwz9Kv2oi3ZwniBE\" target=\"_blank\">https://youtu.be/VgzFt7xknGo?si=rwz9Kv2oi3ZwniBE</a></p>\n<p>time 27:50 shows (results? or the infrence  process?) ROGII automatic alignment and  segmentation</p>",
+      "replies": []
+    },
+    {
+      "id": 3462399,
+      "authorName": "Tom",
+      "postDate": "2026-05-23 05:48:45.080000",
+      "votes": 3,
+      "content": "<p>Share another approach: curvature integration with teacher forcing warm start</p>",
+      "replies": []
+    },
+    {
+      "id": 3462360,
+      "authorName": "Tom",
+      "postDate": "2026-05-23 01:45:41.363000",
+      "votes": 3,
+      "content": "<p>Sharing a diffeomorphic warping approach from my vesiuvius challenge solution. (Warp from a flat line instead</p>",
+      "replies": [
+        {
+          "id": 3462362,
+          "authorName": "Tom",
+          "postDate": "2026-05-23 02:03:20.400000",
+          "votes": 1,
+          "content": "<p>So, building on Giba’s last-value <a href=\"https://www.kaggle.com/code/titericz/last-value-baseline\" target=\"_blank\">baseline</a>, a promising next step is to predict the direction at each MD position using sign(x), and then iteratively refine the correction magnitude over N steps.</p>",
+          "replies": [
+            {
+              "id": 3462363,
+              "authorName": "Tom",
+              "postDate": "2026-05-23 02:08:10.620000",
+              "votes": 2,
+              "content": "<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2F166e648d61d3dfc05c97f85c5ff64b26%2F555.png?generation=1779502089436723&amp;alt=media\" alt=\"\"></p>",
+              "replies": []
+            },
+            {
+              "id": 3462373,
+              "authorName": "hengck23",
+              "postDate": "2026-05-23 03:18:42.403000",
+              "votes": 2,
+              "content": "<p>i have a slightly different but similar idea:</p>\n<pre><code>treat it like a RL game:\n\ninput solution\nwhile some stop condition not meet:\n- analyse and select a segment\n- push the segment up or down\n- accept if  action produce better results, else reject\n- repeat\n\nsuch methods benefit from large data\n</code></pre>\n<p>for me, since CNN+SDF can give end-to-end solution and can fit train data, my next plan is:</p>\n<ul>\n<li>massive train data by sythetic generator</li>\n<li>hierachy/iterative approcale to improve resoution </li>\n</ul>\n<hr>\n<p>i treat normal and wraped  as a kind of TTA for esembling (and also augmentation for training) and different have different warping template</p>",
+              "replies": []
+            },
+            {
+              "id": 3462455,
+              "authorName": "Tom",
+              "postDate": "2026-05-23 11:40:39.573000",
+              "votes": 2,
+              "content": "<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2Fbd55adc259858926aa5af71ed0c216b9%2F1.png?generation=1779536126303326&amp;alt=media\" alt=\"\"></p>\n<p>Now I develop a piecewise correction model by defining multiple pieces using two split points, t1 and t2, along md.</p>\n<p>A piece is defined as:</p>\n<p>$$\npiece =\nsign(correction_{t1}^{oof} - model_{t1}^{oof})\n\\times\nsign(correction_{t2}^{oof} - model_{t2}^{oof})=-1\n$$</p>\n<p>The idea is to partition the space according to whether the correction directions are consistent between the two split points.</p>\n<p>If the correction direction or magnitude inside a piece is incorrect, the model learns an adjustment term of the form:</p>\n<p>$$\nsign(\\alpha)\\cdot |\\alpha|\n$$</p>\n<p>Here, sign(alpha) controls the correction direction, while |alpha| controls the correction magnitude.</p>\n<p>This allows the model to learn localized residual corrections in a piecewise manner.</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3462480,
+      "authorName": "Tom",
+      "postDate": "2026-05-23 14:01:53.093000",
+      "votes": 4,
+      "content": "<p>Probabilistic modeling is shining (No GBDT, finish in 20min)</p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2F60e41418f8624915f2bca7b830f6bc98%2F1.png?generation=1779544886799314&amp;alt=media\" alt=\"\"></p>",
+      "replies": [
+        {
+          "id": 3462542,
+          "authorName": "Tucker Arrants",
+          "postDate": "2026-05-23 19:00:10.470000",
+          "votes": 8,
+          "content": "<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4379159%2F22175fc1da830b548c670f8312200156%2FScreenshot%202026-05-23%20145911.png?generation=1779562775107735&amp;alt=media\" alt=\"\"></p>\n<p>~1.2 ft behind you with simple UNet model. No physics constraints yet.</p>\n<p>Pre-training on synthetic wells gave a decent boost…</p>",
+          "replies": [
+            {
+              "id": 3467583,
+              "authorName": "Sangram Patil",
+              "postDate": "2026-06-06 17:22:58.513000",
+              "votes": 2,
+              "content": "<p>How are you using the 2D U-Net? My input is <code>[B, C, H, W]</code> and the output is <code>[B, H, W]</code>, but the model isn't performing well. I can't get the FT score below 14 no matter what I try. Do you have any suggestions?</p>",
+              "replies": []
+            },
+            {
+              "id": 3467931,
+              "authorName": "Tucker Arrants",
+              "postDate": "2026-06-08 02:15:08.823000",
+              "votes": 1,
+              "content": "<p>Your output has the right shape. Ask yourself what each of the H rows along a single column is competing to be and whether you're scoring that competition, or just regressing its shadow.</p>\n<p>Look at what you're not feeding it that you already have. Review what <a href=\"https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/699853#3467823\" target=\"_blank\">Hengck is doing</a> for a concrete example.</p>",
+              "replies": []
+            },
+            {
+              "id": 3468828,
+              "authorName": "hengck23",
+              "postDate": "2026-06-09 21:31:42.040000",
+              "votes": 2,
+              "content": "<p>\"you're scoring that competition, or just regressing its shadow.\"  </p>\n<p>within one column, SDF actually ranks all (typewell, horizontal) matches and gives results in \"distance form\". that is why it is so powerful.  </p>\n<p>looks like regression, but we are actually doing ranking </p>",
+              "replies": []
+            },
+            {
+              "id": 3468881,
+              "authorName": "Sangram Patil",
+              "postDate": "2026-06-10 05:00:43.733000",
+              "votes": 2,
+              "content": "<p>Thanks, guys, <a href=\"https://www.kaggle.com/tuckerarrants\" target=\"_blank\">@tuckerarrants</a> and <a href=\"https://www.kaggle.com/hengck23\" target=\"_blank\">@hengck23</a>. I'm still confused about most parts, so I've been using Claude and Gemini to help me understand them. At least I managed to build an SDF baseline that matches the CV-LB.</p>\n<p><a href=\"https://www.kaggle.com/code/sangrampatil5150/lb-15-41-cnn-sdf-train\" target=\"_blank\">https://www.kaggle.com/code/sangrampatil5150/lb-15-41-cnn-sdf-train</a></p>\n<p>If you have any suggestions for improving the current pipeline, it would be a huge help. Thanks!</p>",
+              "replies": []
+            },
+            {
+              "id": 3468882,
+              "authorName": "hengck23",
+              "postDate": "2026-06-10 05:14:11.403000",
+              "votes": 4,
+              "content": "<p>Nice work getting an SDF baseline running.</p>\n<p>One caution: “matches CV–LB” is useful but not a litmus test, but it is not enough to prove the implementation is correct.\ne.g. A wrong local CV and a wrong LB submission can still have a similar gap.</p>\n<p>I would suggest checking the pipeline in stages:</p>\n<p>1) start with baseline submission = last tvt value: local CV =12, LB=15 (we now LB is about +2 worse than local)<br>\n2) any learning model must perform better than local cv 12 if it is correct becuase if there is no better solution it sould predict null which leads to 12<br>\n3) to check correct modeling:<br>\na) overfit train (this is upper bound if there is no generalisation error). SDF should easily gets to 8<br>\nb) generalise validation to train. without augmentation, SDF should easily get 11+. you probably can reduce it to 9/10 with augmentation.<br>\nc) submit to LB and try to keep gap. CV/LB consistent or less than 2  </p>",
+              "replies": []
+            },
+            {
+              "id": 3468885,
+              "authorName": "Tucker Arrants",
+              "postDate": "2026-06-10 05:40:46.857000",
+              "votes": 3,
+              "content": "<p>Good start - keep trying and lean on the LLMs. It took me a little to get mine running, but it will give you a very good understanding of the problem / data once you do. I think there are a lot of approaches for this competition, so enjoy and be creative with your modeling.</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3461852,
+      "authorName": "Tom",
+      "postDate": "2026-05-21 16:35:22.610000",
+      "votes": 3,
+      "content": "<p>about fourier formation perspective on this problem</p>",
+      "replies": []
+    },
+    {
+      "id": 3461432,
+      "authorName": "Tom",
+      "postDate": "2026-05-20 15:13:20.400000",
+      "votes": 3,
+      "content": "<p>On DTW inverse problem in the wavelet domain</p>",
+      "replies": [
+        {
+          "id": 3461519,
+          "authorName": "hengck23",
+          "postDate": "2026-05-20 18:23:38.070000",
+          "votes": 0,
+          "content": "<p>in the typewell GR domain would be better?</p>",
+          "replies": []
+        },
+        {
+          "id": 3462500,
+          "authorName": "Gaurav Rawat",
+          "postDate": "2026-05-23 15:10:54.597000",
+          "votes": 0,
+          "content": "<p>Did dtw work for you</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3460928,
+      "authorName": "Tom",
+      "postDate": "2026-05-19 11:04:43.927000",
+      "votes": 3,
+      "content": "<p>Update: </p>\n<p>Baysian Physical-informed SegFormer got very good result.  (0.94 cv score)</p>\n<table>\n<thead>\n<tr>\n<th>Fold</th>\n<th>baseline (077o)</th>\n<th>soft_seg input (077q)</th>\n<th>Δ q-o</th>\n<th>bpinn (077bpinn) ⭐⭐</th>\n<th>Δ bpinn-q</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>1</td>\n<td>9.45</td>\n<td>9.18</td>\n<td>−0.27</td>\n<td>9.18</td>\n<td>−0.00</td>\n</tr>\n<tr>\n<td>2</td>\n<td>10.73</td>\n<td>10.43</td>\n<td>−0.30</td>\n<td>9.79</td>\n<td>−0.64 ★</td>\n</tr>\n<tr>\n<td>3</td>\n<td>9.44</td>\n<td>8.68</td>\n<td>−0.76 ★</td>\n<td>8.45</td>\n<td>−0.23 ★</td>\n</tr>\n<tr>\n<td>4</td>\n<td>11.39</td>\n<td>10.48</td>\n<td>−0.91 ★</td>\n<td>10.13</td>\n<td>−0.35 ★</td>\n</tr>\n<tr>\n<td>5</td>\n<td>10.45</td>\n<td>9.58</td>\n<td>−0.87 ★</td>\n<td>9.35</td>\n<td>−0.23 ★</td>\n</tr>\n<tr>\n<td>Overall</td>\n<td>10.32</td>\n<td>9.70</td>\n<td>−0.63</td>\n<td>9.40 ⭐⭐</td>\n<td>−0.30</td>\n</tr>\n<tr>\n<td>LB</td>\n<td>10.576 ✓</td>\n<td>TBD</td>\n<td>–</td>\n<td>TBD</td>\n<td>–</td>\n</tr>\n</tbody>\n</table>\n<p>It can formulate measurement equations to constrain the neural network through probabilistic modeling. I believe this could push the limits of GBDTs.</p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2F1dd9a77e93f676bdb46343b65d9d8a53%2F213.png?generation=1779188800831447&amp;alt=media\" alt=\"\"></p>",
+      "replies": [
+        {
+          "id": 3460930,
+          "authorName": "hengck23",
+          "postDate": "2026-05-19 11:17:04.340000",
+          "votes": 3,
+          "content": "<p>If you consider just gr fitting aline, transformer is clearly better. Current notebook has better results because it is a fusion of multiple methods.</p>\n<p>You should analyse 1. Comparison with last value baseline( and public plane fitting baseline) 2. Normalised rmse ( ie divided by std if signal) 3. Error coming from well that is not sharing common vertical well? There are only about 69 unique vertical wells.</p>\n<p>If baseline is better than the worst cases, constraint to baseline should help </p>",
+          "replies": [
+            {
+              "id": 3460962,
+              "authorName": "hengck23",
+              "postDate": "2026-05-19 13:11:43.413000",
+              "votes": 1,
+              "content": "<p>you can try to add the following to the transformer as features, it should improve  results by 1~2</p>\n<ul>\n<li>shared common typewell id</li>\n<li>x,y,z, amz, inc</li>\n<li>plane z  sampled from fitted geology plane  ancc, buda , etc ….</li>\n<li>different sommon filter</li>\n<li>drop segment in training</li>\n</ul>\n<p>in alphafold there is MSA  template matching to guide protein folding. in theory all neighbour wells  can be used as template and input to transformer </p>",
+              "replies": []
+            },
+            {
+              "id": 3477062,
+              "authorName": "Simon Beck",
+              "postDate": "2026-06-21 08:23:30.123000",
+              "votes": 0,
+              "content": "<p><a href=\"https://www.kaggle.com/hengck23\" target=\"_blank\">@hengck23</a> now this is gold. i shoulde try it. thx</p>",
+              "replies": []
+            }
+          ]
+        },
+        {
+          "id": 3461895,
+          "authorName": "NobelK",
+          "postDate": "2026-05-21 18:08:32.407000",
+          "votes": 0,
+          "content": "<p>That's amazing!!\nHow is this learning being done?\nI'm very curious about the details.</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3459270,
+      "authorName": "hengck23",
+      "postDate": "2026-05-17 15:26:24.330000",
+      "votes": 3,
+      "content": "<p>U can add following to cnn feature:</p>\n<ol>\n<li>Self correlation, good for identifying moving reverse </li>\n<li>Neighbouring well correlation </li>\n</ol>",
+      "replies": []
+    },
+    {
+      "id": 3459198,
+      "authorName": "Tom",
+      "postDate": "2026-05-17 13:37:40.257000",
+      "votes": 3,
+      "content": "<p>This plot seems showing a hidden insight</p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2Fd0df1bc4db7dfa9a0ac8a8689037f967%2Finsights.png?generation=1779025047785552&amp;alt=media\" alt=\"\"></p>",
+      "replies": []
+    },
+    {
+      "id": 3459778,
+      "authorName": "Tom",
+      "postDate": "2026-05-18 09:11:14.423000",
+      "votes": 4,
+      "content": "<p>I made a NN-based approach with some probabilistic modeling similar to <a href=\"https://www.kaggle.com/jeroencottaar\" target=\"_blank\">@jeroencottaar</a> Yale/UNC-CH solution. I haven't submitted yet but it seems a good direction.</p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2F501a4be8bddc4492da4fd2bfac3fbd52%2Fensemble_vs_truth_5wells_v2.png?generation=1779095472915796&amp;alt=media\" alt=\"\"></p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2F44863581fda421aee8b3c431f68898ae%2Fheatmap_boxes_5wells.png?generation=1779096241756462&amp;alt=media\" alt=\"\"></p>",
+      "replies": [
+        {
+          "id": 3459916,
+          "authorName": "PatrickAIForFun",
+          "postDate": "2026-05-18 12:54:45.643000",
+          "votes": 3,
+          "content": "<p>When you say similar to Jeroen's solution, do you mean you actually modelled a prior and are optimizing the TVT math to minimize some measruement of mismatch between the TVTs? If yes, this is highly interesting, but I don't see how a CNN would fit into this.\nWhat am I missing or are you willing to share more?</p>",
+          "replies": [
+            {
+              "id": 3459940,
+              "authorName": "Tom",
+              "postDate": "2026-05-18 13:16:46.113000",
+              "votes": 4,
+              "content": "<p>Yes, I’ve actually built few priors and have been working on minimizing several measurements. I’ll release it once I have more completed experiments and the full map is built.</p>",
+              "replies": []
+            },
+            {
+              "id": 3459946,
+              "authorName": "hengck23",
+              "postDate": "2026-05-18 13:23:58.057000",
+              "votes": 3,
+              "content": "<p>\", but I don't see how a CNN would fit into this\" . put your prior in the loss:  </p>\n<p>loss = regression loss + classification loss  + \"too different from the prior loss\"  </p>\n<p>if you use probability:<br>\ntoo different from the prior loss = P( solution not drawn from prior disturibution)  </p>\n<p>if you assume Gaussian, then it is related to \"distance from prior solution\"</p>\n<hr>\n<p>similarly, if you use physics or geology equations (as prior), then it is\nloss = regression loss + classification loss  + \"much much the solution follows physics equations\"  </p>\n<hr>\n<p>if there is prior or physics, maybe predict residual is easier: solution = residual + prior </p>",
+              "replies": []
+            },
+            {
+              "id": 3459956,
+              "authorName": "Tom",
+              "postDate": "2026-05-18 13:36:12.803000",
+              "votes": 1,
+              "content": "<p>I use this package: <a href=\"https://docs.pyro.ai/en/stable/\" target=\"_blank\">https://docs.pyro.ai/en/stable/</a></p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3459276,
+      "authorName": "hengck23",
+      "postDate": "2026-05-17 15:33:51.527000",
+      "votes": 4,
+      "content": "<p>Normal dtw assume monotonic seq and cannot match reverse index, so be careful if you use it.</p>",
+      "replies": []
+    },
+    {
+      "id": 3462031,
+      "authorName": "Tom",
+      "postDate": "2026-05-22 00:55:42.623000",
+      "votes": 2,
+      "content": "<p>single bpinn reach 9.+ lb</p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2F5365423f114f60c6b5d6ed711665b09e%2F123432.png?generation=1779411315220089&amp;alt=media\" alt=\"\"></p>",
+      "replies": [
+        {
+          "id": 3462059,
+          "authorName": "Gaurav Rawat",
+          "postDate": "2026-05-22 03:25:17.843000",
+          "votes": 1,
+          "content": "<p>Super what CV you getting ?</p>",
+          "replies": [
+            {
+              "id": 3462061,
+              "authorName": "Tom",
+              "postDate": "2026-05-22 03:36:27.337000",
+              "votes": 0,
+              "content": "<p>9.62 cv score</p>",
+              "replies": []
+            },
+            {
+              "id": 3462322,
+              "authorName": "Gaurav Rawat",
+              "postDate": "2026-05-22 21:20:49.623000",
+              "votes": 0,
+              "content": "<p>ahh awesome cv GBDTs are bit worse ,,, </p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3460870,
+      "authorName": "Tom",
+      "postDate": "2026-05-19 07:53:52.450000",
+      "votes": 2,
+      "content": "<p>Soft input segment worked. Just reach 0.97 overall CV with SegFormer. </p>\n<table>\n<thead>\n<tr>\n<th>Fold</th>\n<th>baseline</th>\n<th>soft_seg input</th>\n<th>Δ</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>1</td>\n<td>9.45</td>\n<td>9.18</td>\n<td>−0.27</td>\n</tr>\n<tr>\n<td>2</td>\n<td>10.73</td>\n<td>10.43</td>\n<td>−0.30</td>\n</tr>\n<tr>\n<td>3</td>\n<td>9.44</td>\n<td>8.68</td>\n<td>−0.76 ★</td>\n</tr>\n<tr>\n<td>4</td>\n<td>11.39</td>\n<td>10.48</td>\n<td>−0.91 ★</td>\n</tr>\n<tr>\n<td>5</td>\n<td>10.45</td>\n<td>9.58</td>\n<td>−0.87 ★</td>\n</tr>\n<tr>\n<td>Overall</td>\n<td>10.32</td>\n<td>9.70 ⭐</td>\n<td>−0.63</td>\n</tr>\n<tr>\n<td>LB</td>\n<td>10.576</td>\n<td>?</td>\n<td></td>\n</tr>\n</tbody>\n</table>",
+      "replies": []
+    },
+    {
+      "id": 3460833,
+      "authorName": "hengck23",
+      "postDate": "2026-05-19 06:32:27.897000",
+      "votes": 2,
+      "content": "<p>Azimuthal LWD Data Interpretation for UBCTDGeosteering Using a Physics-Informed Neural Network\n<a href=\"https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6000576\" target=\"_blank\">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6000576</a></p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F113660%2F0d83424de73277a9b0029db77e206b16%2FSelection_3682.png?generation=1779172309683194&amp;alt=media\" alt=\"\"></p>\n<p>\"stay / steer_up / steer_down\" this could be signed dip (-1,0,+1)</p>",
+      "replies": [
+        {
+          "id": 3460849,
+          "authorName": "Tom",
+          "postDate": "2026-05-19 07:01:27.140000",
+          "votes": 1,
+          "content": "<p>I think there's a opportunity to add some physical constraint in each segments for special behavior. Like controlling the curvature. </p>",
+          "replies": [
+            {
+              "id": 3460861,
+              "authorName": "Tom",
+              "postDate": "2026-05-19 07:30:47.063000",
+              "votes": 2,
+              "content": "<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2Ff7f2ffedb845a1bda8d8796e78a188d4%2Fensemble_vs_truth_5wells_v2.png?generation=1779175832490103&amp;alt=media\" alt=\"\"></p>",
+              "replies": []
+            },
+            {
+              "id": 3461227,
+              "authorName": "hengck23",
+              "postDate": "2026-05-20 00:44:48.217000",
+              "votes": 1,
+              "content": "<p>if you can set some equations on</p>\n<pre><code>forward GR =   F.interpolate (predict_tvt, typewell_tvt, typewell_GR)\n\nbesides l2 loss, how to compare forward GR  and observation horizontal GR\n\nor \n\nforward geological formation = func(TVT, ...)\n</code></pre>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3459986,
+      "authorName": "hengck23",
+      "postDate": "2026-05-18 14:06:14.800000",
+      "votes": 2,
+      "content": "<p>i have a suggestion for you. use seq transformer to learn segments (span of md of similar dip) and output as:</p>\n<pre><code>segmentation output:\n1111222222333333333333334444444444444444455666666666666666\n\nauxilarly ouput\ndip\nxxxyyyzzzz\n\nDTW\netc ....\n\ntvt\n</code></pre>\n<p>actually segmenting should be the first step</p>\n<p>you can measure the goodness of each segment by GR fitting or DTW, so it is a \"physics model\"</p>\n<p>ask chatgpt to make segmentation ground truth by considering gradients (-1,0,+1) of tvt and link them up (or a very slow method called monotonic regression on gradient)</p>\n<hr>\n<p>note, the segmntation results is not unqiue. so we can have top-k segmentation prediction</p>",
+      "replies": [
+        {
+          "id": 3460821,
+          "authorName": "Tom",
+          "postDate": "2026-05-19 05:47:19.473000",
+          "votes": 4,
+          "content": "<p>This is what a casual segformer can achieve for me now</p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4310004%2F8cb928831c0531e60d76135b542d654b%2Fheatmap_boxes_5wells.png?generation=1779169616302808&amp;alt=media\" alt=\"\"></p>",
+          "replies": [
+            {
+              "id": 3461107,
+              "authorName": "Mohit",
+              "postDate": "2026-05-19 19:17:47.993000",
+              "votes": 0,
+              "content": "<p>even that much is good</p>",
+              "replies": []
+            },
+            {
+              "id": 3461248,
+              "authorName": "Gaurav Rawat",
+              "postDate": "2026-05-20 02:00:11.063000",
+              "votes": 0,
+              "content": "<p>Thats great </p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3459878,
+      "authorName": "hengck23",
+      "postDate": "2026-05-18 12:01:20.630000",
+      "votes": 2,
+      "content": "<p>maybe this is useful for \nyou: <a href=\"https://www.youtube.com/watch?v=fEf6i2A0jdo\" target=\"_blank\">https://www.youtube.com/watch?v=fEf6i2A0jdo</a><br>\n<a href=\"https://www.youtube.com/watch?v=vQDbKR3NAlM\" target=\"_blank\">https://www.youtube.com/watch?v=vQDbKR3NAlM</a>  </p>\n<p>check the lecture from 00 to 05 etc</p>",
+      "replies": []
+    },
+    {
+      "id": 3459554,
+      "authorName": "Gaurav Rawat",
+      "postDate": "2026-05-18 00:48:33.427000",
+      "votes": 2,
+      "content": "<p>love the eda via claude here very nice to understand the comp .. </p>",
+      "replies": [
+        {
+          "id": 3459581,
+          "authorName": "Tom",
+          "postDate": "2026-05-18 01:51:56.097000",
+          "votes": 3,
+          "content": "<p>This comp is really complicated. There are many details haven't been coveraged</p>",
+          "replies": [
+            {
+              "id": 3459655,
+              "authorName": "hengck23",
+              "postDate": "2026-05-18 05:09:43.720000",
+              "votes": 3,
+              "content": "<p>one of the few competitions left that humans must do the problem definition first before applying agent optimization</p>",
+              "replies": []
+            },
+            {
+              "id": 3459666,
+              "authorName": "Tom",
+              "postDate": "2026-05-18 05:30:01.593000",
+              "votes": 1,
+              "content": "<p>Turning \"plan mode\" in Claude and carefully define the problem by myself worked well for me.</p>",
+              "replies": []
+            },
+            {
+              "id": 3459684,
+              "authorName": "Tom",
+              "postDate": "2026-05-18 06:12:54.617000",
+              "votes": 3,
+              "content": "<p>Workflow (every new experiment):</p>\n<ol>\n<li>Restate the geological problem\n(physical reality + constraints + signals)</li>\n<li>Abstract it into a mathematical problem\n(alignment? inpainting? inverse problem? assignment? consensus?)</li>\n<li>Map each domain concept to a model component</li>\n<li>Explore multiple reasonable formulations in parallel</li>\n<li>Only implement after the formulation is finalized  </li>\n</ol>",
+              "replies": []
+            },
+            {
+              "id": 3459998,
+              "authorName": "Gaurav Rawat",
+              "postDate": "2026-05-18 14:21:38.300000",
+              "votes": 0,
+              "content": "<p>I try to do nowadays grill me for it to also grill before advising ..</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3460033,
+      "authorName": "Durga Kumari",
+      "postDate": "2026-05-18 15:06:36.027000",
+      "votes": -1,
+      "content": "<p>This is incredibly helpful, especially the TVT analogy.</p>",
+      "replies": []
+    },
+    {
+      "id": 3459997,
+      "authorName": "Mohit",
+      "postDate": "2026-05-18 14:20:14.570000",
+      "votes": -1,
+      "content": "<p>Great work out there also how is nn aproach used here?</p>",
+      "replies": []
+    },
+    {
+      "id": 3459736,
+      "authorName": "Navneet",
+      "postDate": "2026-05-18 07:57:27.787000",
+      "votes": -1,
+      "content": "<p>Cool UI visualizer <a href=\"https://www.kaggle.com/tom99763\" target=\"_blank\">@tom99763</a> </p>",
+      "replies": []
+    },
+    {
+      "id": 3459409,
+      "authorName": "",
+      "postDate": "2026-05-17 19:12:14.420000",
+      "votes": 0,
+      "content": "",
+      "replies": []
+    }
+  ]
+}

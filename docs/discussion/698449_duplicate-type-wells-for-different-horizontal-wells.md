@@ -1,0 +1,82 @@
+# Duplicate type wells for different horizontal wells
+
+- 投稿者: RMorrison
+- 投稿日時: 2026-05-09 23:30:08.615000
+- 投票数: 34
+- コメント数: 6（取得数: 6）
+- トピックID: `698449`
+- 原文: [https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/698449](https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/698449)
+
+## 本文
+
+<p>When doing a quick EDA, I noticed there are a few type well files that are exactly the same but assigned to different horizontal wells. In some cases this makes sense (wells that are oriented adjacent or on top of each other), but in other cases the wells are quite distant from each other. Why would wells some distance apart be using exactly the same type well? Is this intentional?</p>
+<p>Here are the well pairs with matching type wells, and a picture of how they are oriented compared to other wells with different type wells.</p>
+<p>duplicate_groups = [
+    ['02e7fe5a', '10b89021', '3417285d', '6ae68655', '7993a768', 'bc4381e2', 'ecdab904', 'f021b650', 'f49fdea3', 'f88ddb26'],
+    ['071d7b45', '4463446c'],
+    ['25939962', '8050c789'],
+    ['2f8e53c3', '91db7070'],
+    ['75cd5f11', 'be83e781'],
+    ['7b38844c', 'ed6e6e54'],
+    ['89f1085d', 'aed44918'],
+    ['8b95d6d1', 'a2e8e7f6'],
+    ['a4f989c2', 'd011f41b'],
+    ['add9c322', 'cbe62450'],
+    ['b977be4a', 'c908edd0'],
+    ['cd7f1687', 'fcfcc902'],
+    ['f321a31c', 'fa667be2'],
+]</p>
+
+## コメント
+
+### コメント 1 — Igor Kuvaev
+
+- 投稿日時: 2026-05-10 03:57:30.960000
+- 投票数: 11
+- コメントID: `3455674`
+
+<p>Good catch!</p>
+<p>Typically typewell selection is a manual process, the geologist picks the one that is close to the lateral and available at the time.
+Wells in the project were drilled over 10 years and when you were drilling certain lateral the closest typewell (the one the is close now) could not be available.</p>
+<p>Additionally the geologist may take TVT GR data from the nearby interpreted lateral to interpret the next lateral. Sometimes this helps a lot and this approach is called "pseudo-typewell". Some of the typewells in the project are actually "pseudo-typewells" - interpretations from nearby laterals drilled prior to the current one.</p>
+
+### コメント 2 — Matthew Degtyar
+
+- 投稿日時: 2026-05-10 15:45:31.637000
+- 投票数: 1
+- コメントID: `3455892`
+
+<p>Very clutch</p>
+
+### コメント 3 — PC Jimmmy
+
+- 投稿日時: 2026-05-10 00:35:24.093000
+- 投票数: 1
+- コメントID: `3455652`
+
+<p>Nice catch!</p>
+
+### コメント 4 — Alfred
+
+- 投稿日時: 2026-07-03 17:06:10.813000
+- 投票数: 0
+- コメントID: `3487356`
+
+<p>Very good catch thanks ! 
+I found 50 unique typewells, please correct me if you find less or more.  I add this big picture that illustrate how grouped are the HW by typewells in the X, Y map.</p>
+
+#### コメント 4.1 — Alfred
+
+- 投稿日時: 2026-07-03 17:07:26.577000
+- 投票数: 0
+- コメントID: `3487357`
+
+<p><img src="https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F6680031%2Fb45a94868a0330126ab79e12f2a5ee85%2Fduplicated_TW.png?generation=1783098441064892&alt=media" alt=""></p>
+
+#### コメント 4.2 — PC Jimmmy
+
+- 投稿日時: 2026-07-04 15:00:15.353000
+- 投票数: 0
+- コメントID: `3488092`
+
+<p>I had 57 myself.</p>

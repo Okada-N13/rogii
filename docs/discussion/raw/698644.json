@@ -1,0 +1,28 @@
+{
+  "id": 698644,
+  "title": "Over fitting on well",
+  "authorName": "ren toda",
+  "postDate": "2026-05-11 02:35:11.309000",
+  "votes": 4,
+  "commentCount": 2,
+  "content": "<p>I'm not sure but , does adding mean tvt or Max tvt and things with cause over fitting by identifying the specific well instead of leaving the relationship.\nI think it's medecated my the modern model structure.( e.g. boosting model feature frac) But I wonder how much it effects.</p>\n<pre><code>--- Training Stats ---\nTotal Samples:  5,092,255\nTotal Wells:    773\nAvg Samples/Well: 6,587.65\n</code></pre>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/698644",
+  "comments": [
+    {
+      "id": 3471714,
+      "authorName": "yuji y",
+      "postDate": "2026-06-12 07:42:10.693000",
+      "votes": 2,
+      "content": "<p>The fix for per-well overfitting is to make your validation match the task: you're judged on <em>wells you've never seen</em>, so your CV must hold out <strong>entire wells</strong>, not random rows.</p>\n<ul>\n<li>Use <code>GroupKFold(groups=well_id)</code> ? with random row splits, neighboring points of the same well leak across folds and your CV will look ~2-3 RMSE better than reality.</li>\n<li>Inside a well the residual (TVT ? heel anchor) is smooth and small; the hard part is the <em>between-well</em> component. If your model memorizes well identity (or features that proxy it), grouped CV will expose it immediately.</li>\n<li>Quick sanity check: compare your random-split CV vs grouped CV. The gap is the amount of self-deception.</li>\n</ul>\n<p>Minimal grouped-CV starter if useful: <a href=\"https://www.kaggle.com/code/yujiyyy/rogii-honest-groupkfold-baseline\" target=\"_blank\">https://www.kaggle.com/code/yujiyyy/rogii-honest-groupkfold-baseline</a></p>",
+      "replies": []
+    },
+    {
+      "id": 3468344,
+      "authorName": "Aly Ayman",
+      "postDate": "2026-06-08 20:22:06.310000",
+      "votes": -4,
+      "content": "<p>Hello, that's very good questions</p>\n<p>Yes, per-well aggregate features (mean TVT, max TVT, etc.) are a leakage/overfitting risk …. but the mechanism matters.</p>\n<p>There are two distinct problems in your question:</p>\n<ol>\n<li>Target leakage (the more serious one)</li>\n</ol>\n<p>If you compute mean_tvt or max_tvt from the full well including the evaluation zone, you're leaking the answer, those statistics are partly made of the values you're trying to predict. At test time you only have TVT for the early (input) portion of the well, so any aggregate must be computed from that visible portion only. If your training features use the whole well but your test features can only use part of it, you also get train/test distribution mismatch on top of the leakage. This is usually a bigger issue than classic overfitting.</p>\n<ol>\n<li>Well-identification / memorization (the one you're describing)\nEven with no leakage, a per-well constant like \"this well's mean TVT ≈ 11,500\" lets a powerful model effectively recognize the well and memorize its level, rather than learning the underlying geological relationship. On training data this looks great; on unseen wells it generalizes poorly because each new well has its own level the model has never seen.</li>\n</ol>\n<p>Does the model structure protect you? Partly &gt;&gt;&gt; but don't rely on it.</p>\n<p>You're right that boosting hyperparameters like feature_fraction / colsample_bytree, min_child_samples, and regularization reduce how hard the model leans on any single feature. But they dampen the effect; they don't remove it. If a per-well feature is genuinely predictive on the training folds, the model will still use it  column subsampling just means it's not used in every tree.</p>\n<p>The reliable way to measure the effect: validation design.</p>\n<p>This is the key point. Validate by well, not by row. Use GroupKFold (or similar) grouped on the well ID, so entire wells are held out. Then:</p>\n<p>So instead of guessing how much it affects things, you can measure it: run grouped CV with and without the aggregate features and compare. </p>\n<p>Hope that helps!</p>",
+      "replies": []
+    }
+  ]
+}

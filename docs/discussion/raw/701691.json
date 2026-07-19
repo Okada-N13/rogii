@@ -1,0 +1,146 @@
+{
+  "id": 701691,
+  "title": "cv and lb correlations .....",
+  "authorName": "Gaurav Rawat",
+  "postDate": "2026-05-19 01:24:38.821000",
+  "votes": 16,
+  "commentCount": 16,
+  "content": "<p>Was seeing some notebooks getting better in LB based on the cv , So far wanted to check how others have been getting the correlation going for tabular and non tabular models . For me have been using the standard GroupKfold on <code>wells</code> . </p>\n<p>Train Log </p>\n<table>\n<thead>\n<tr>\n<th>Version</th>\n<th>CV RMSE (ft)</th>\n<th>LB RMSE (ft)</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>train_v2.py</td>\n<td>31.3871</td>\n<td>35.843</td>\n</tr>\n<tr>\n<td>train_v2.1.py</td>\n<td>14.7065</td>\n<td>13.949</td>\n</tr>\n<tr>\n<td>v2.2</td>\n<td>14.4634</td>\n<td>13.777</td>\n</tr>\n<tr>\n<td>v2.5</td>\n<td>11.9993</td>\n<td>12.383</td>\n</tr>\n<tr>\n<td>v2.6</td>\n<td>11.2693</td>\n<td>12.383</td>\n</tr>\n<tr>\n<td>v2.7</td>\n<td>10.7485</td>\n<td>10.606</td>\n</tr>\n<tr>\n<td>v2.7.1</td>\n<td>10.2486</td>\n<td>-</td>\n</tr>\n<tr>\n<td>v2.8</td>\n<td>10.6543</td>\n<td>-</td>\n</tr>\n<tr>\n<td>v2.7.2 online</td>\n<td>-</td>\n<td>10.520</td>\n</tr>\n<tr>\n<td>v2.9</td>\n<td>10.3256</td>\n<td>9.816</td>\n</tr>\n<tr>\n<td>v2.10</td>\n<td>10.3730</td>\n<td>10.384</td>\n</tr>\n<tr>\n<td>v2.9.7</td>\n<td>10.37</td>\n<td>9.585</td>\n</tr>\n<tr>\n<td>v2.9.11</td>\n<td>10.6</td>\n<td>8.739</td>\n</tr>\n</tbody>\n</table>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/701691",
+  "comments": [
+    {
+      "id": 3468148,
+      "authorName": "Ruby",
+      "postDate": "2026-06-08 14:30:58.543000",
+      "votes": 6,
+      "content": "<p>recent two experiments:\nCV 6.74 LB 6.48\nCV 6.22 LB 7.18\nI guess it is dominated by some bad cases</p>",
+      "replies": []
+    },
+    {
+      "id": 3468143,
+      "authorName": "Tucker Arrants",
+      "postDate": "2026-06-08 14:23:48.600000",
+      "votes": 4,
+      "content": "<p>LB feels noisy to me. I often observe CV improvements of 0.7 feet or more, leading to regressions in LB. I think some of my submissions were \"lucky\" e.g. CV around 8 scoring 6.6 on LB.</p>\n<p>Latest results:</p>\n<p>CV 6.7, LB 6.3 -&gt; the \"lucky gap\" between CV and LB I previously observed (and can be observed on all the public notebooks) is starting to shrink. Think we need to be careful with LB here. Small number of public test set wells and heavy tail problem…</p>",
+      "replies": [
+        {
+          "id": 3468317,
+          "authorName": "Jack",
+          "postDate": "2026-06-08 19:34:22.513000",
+          "votes": 0,
+          "content": "<p>I'd be questioning where those CV improvements are coming from in relation to past runs - might be insightful. I'm still trying to figure out what the heck you're doing for 2 mins inference.. well, that and orbit wars lol</p>",
+          "replies": [
+            {
+              "id": 3468326,
+              "authorName": "Gaurav Rawat",
+              "postDate": "2026-06-08 19:49:29.430000",
+              "votes": 0,
+              "content": "<p>I dunno CV strategy needs to be alteare in one I got cv 7.4 but LB is like 9 . maybe need to have cv mixed with hard wells vs easy ones per fold or some custom way </p>",
+              "replies": []
+            },
+            {
+              "id": 3468336,
+              "authorName": "Jack",
+              "postDate": "2026-06-08 20:10:27.660000",
+              "votes": 0,
+              "content": "<p>But how would you define hard vs easy wells? I can think of some more direct ways of balancing folds</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3464167,
+      "authorName": "Tucker Arrants",
+      "postDate": "2026-05-29 02:50:39.137000",
+      "votes": 6,
+      "content": "<p>Single model NN update:</p>\n<p>CV 8.5, LB 7.5</p>\n<p>Inference in 2 minutes lol</p>",
+      "replies": [
+        {
+          "id": 3464172,
+          "authorName": "Gaurav Rawat",
+          "postDate": "2026-05-29 03:31:37.767000",
+          "votes": 1,
+          "content": "<p>awesome ya I see NN infer like 2-3 mins .. :) maybe u framed the right Arch .. my cv not going down </p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3460777,
+      "authorName": "Tucker Arrants",
+      "postDate": "2026-05-19 02:03:43.993000",
+      "votes": 6,
+      "content": "<p>With the plain jane GBDT models, CV around 11.00 split on well ID and leaderboard around 9.6</p>\n<p>Large gap, but very stable -&gt; all CV improvements have led to LB improvements (so far).</p>\n<p>A lot of the public notebooks have leakage which leads to a smaller CV-LB gap, but is not as trustworthy.</p>",
+      "replies": [
+        {
+          "id": 3460780,
+          "authorName": "Gaurav Rawat",
+          "postDate": "2026-05-19 02:07:19.763000",
+          "votes": 1,
+          "content": "<p>feel need to beat the 10 mark in cv to see marked improvements for my experiments . NN so far for me havent been doign that great maybe need to dive deep to design them better . </p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3464047,
+      "authorName": "Gaurav Rawat",
+      "postDate": "2026-05-28 17:01:38.753000",
+      "votes": 1,
+      "content": "<p><strong>Adding NN experiments now , just baselines now</strong></p>\n<ul>\n<li>CV 14.4 LB 17</li>\n<li>cv 8 lb 9</li>\n</ul>",
+      "replies": []
+    },
+    {
+      "id": 3461673,
+      "authorName": "shanzhong8",
+      "postDate": "2026-05-21 05:32:43.863000",
+      "votes": 1,
+      "content": "<p>CV 10.7  , LB 9.9</p>",
+      "replies": [
+        {
+          "id": 3462054,
+          "authorName": "Gaurav Rawat",
+          "postDate": "2026-05-22 03:03:57.753000",
+          "votes": 0,
+          "content": "<p>nice GBDT or NN .. was wondering how much folks are gettign with NN CV</p>",
+          "replies": [
+            {
+              "id": 3462428,
+              "authorName": "shanzhong8",
+              "postDate": "2026-05-23 08:53:31.673000",
+              "votes": 2,
+              "content": "<p>Transformer</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3461301,
+      "authorName": "Hassan Gasim",
+      "postDate": "2026-05-20 06:22:27.067000",
+      "votes": -3,
+      "content": "<p>Outstanding progress so far. Regarding your note on Neural Networks underperforming: standard MLPs usually struggle with the spatial, sequential nature of wellbore data compared to GBDTs. Since well logs are essentially depth-series data, have you considered a hybrid architecture? Implementing a 1D-CNN or a light Transformer backbone (like TabNet or FT-Transformer) grouped by Well ID can capture the vertical stratigraphy layers much better than vanilla NNs. Looking forward to seeing how your NN experiments evolve once the architecture matches the geological domain!</p>",
+      "replies": []
+    },
+    {
+      "id": 3460997,
+      "authorName": "Durga Kumari",
+      "postDate": "2026-05-19 15:09:56.927000",
+      "votes": -4,
+      "content": "<p>Interesting that v2.10 had slightly worse CV but matched LB almost perfectly. Usually a good sign the model is generalizing more consistently rather than optimizing fold-specific patterns.</p>",
+      "replies": []
+    },
+    {
+      "id": 3468434,
+      "authorName": "YYH",
+      "postDate": "2026-06-09 01:26:58.327000",
+      "votes": 0,
+      "content": "<p>Are the top-ranked solutions currently all based on physics models combined with machine learning? It seems that some physics models have performed quite well in this competition.It is easy to find numerous hard samples in the dataset that cannot be predicted accurately by conventional physical models, which drives up the RMSE score. I am currently working to address this issue.</p>",
+      "replies": []
+    }
+  ]
+}

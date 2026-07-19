@@ -1,0 +1,28 @@
+{
+  "id": 697857,
+  "title": "Is 'Geology' feature included in actual test set?",
+  "authorName": "NNMax",
+  "postDate": "2026-05-07 16:46:47.488000",
+  "votes": 1,
+  "commentCount": 2,
+  "content": "<p>I noticed that provided sample test sets doesn't have the feature <code>Geology</code>.</p>\n<p>I don't see any relevant information regarding this feature as well. Can somebody clarify?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/697857",
+  "comments": [
+    {
+      "id": 3455130,
+      "authorName": "hengck23",
+      "postDate": "2026-05-08 16:45:14.523000",
+      "votes": 1,
+      "content": "<p>not given. It could be that the ground truth is \"derived from them.\" </p>",
+      "replies": []
+    },
+    {
+      "id": 3454908,
+      "authorName": "Maksimilian Pavlov",
+      "postDate": "2026-05-08 06:57:39.873000",
+      "votes": 1,
+      "content": "<p>This feature is included in train dataset only</p>",
+      "replies": []
+    }
+  ]
+}

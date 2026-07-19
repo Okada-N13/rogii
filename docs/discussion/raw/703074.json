@@ -1,0 +1,54 @@
+{
+  "id": 703074,
+  "title": "Type-well and horizontal well Overlap.",
+  "authorName": "Shrey Gandhi",
+  "postDate": "2026-05-28 13:19:12.158000",
+  "votes": 4,
+  "commentCount": 5,
+  "content": "<p>Looking at other discussions and the YT videos, geo-steering seems to be a GR overlap problem from the typewell to the horizontal well. </p>\n<p>But on looking at the overlaps of the wells, some wells have terrible overlaps. What do the domain experts use here to decide the TVT values?</p>\n<p>Specially the segment between 15500 and 16000.\nExample:\nwell pair_id = '000d7d20'\n<img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F7200429%2F08c8197360236feb07c13c32cabb075b%2Fterrible_well.png?generation=1779974258651818&amp;alt=media\" alt=\"\"></p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/703074",
+  "comments": [
+    {
+      "id": 3464000,
+      "authorName": "Chris Deotte",
+      "postDate": "2026-05-28 14:53:51.270000",
+      "votes": 4,
+      "content": "<p>Well <code>000d7d20</code> has great correlation between GR horizontal and vertical well:\n<img src=\"https://raw.githubusercontent.com/cdeotte/Kaggle_Images/refs/heads/main/May-2026/well.png\" alt=\"\"></p>",
+      "replies": [
+        {
+          "id": 3464007,
+          "authorName": "Shrey Gandhi",
+          "postDate": "2026-05-28 15:14:25.547000",
+          "votes": 1,
+          "content": "<p>I see your plot is between TVT and GR. \nAlso, is vertical well same as typewell or ar these the values before PS.\nGreat analysis btw, could be used somewhere.</p>",
+          "replies": [
+            {
+              "id": 3464011,
+              "authorName": "Chris Deotte",
+              "postDate": "2026-05-28 15:20:22.300000",
+              "votes": 1,
+              "content": "<p>What i call \"vertical well\" is <code>typewell.csv</code>. And what i call \"horizontal well\" is the TVT before and after PS.</p>\n<p>I make this plot with <code>df.groupby('TVT').GR.mean()</code> applied to the two dataframes, <code>horizontal_well.csv</code> and <code>typewell.csv</code></p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3479905,
+      "authorName": "Shrey Gandhi",
+      "postDate": "2026-06-24 09:00:47.543000",
+      "votes": 0,
+      "content": "<p>Any geologist, that would like to comment here?</p>",
+      "replies": []
+    },
+    {
+      "id": 3471801,
+      "authorName": "really?",
+      "postDate": "2026-06-12 13:36:51.237000",
+      "votes": -1,
+      "content": "<p>excellent!</p>",
+      "replies": []
+    }
+  ]
+}

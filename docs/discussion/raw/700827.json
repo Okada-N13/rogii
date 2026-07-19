@@ -1,0 +1,37 @@
+{
+  "id": 700827,
+  "title": "Any Advice on Cross-Validation Strategy?",
+  "authorName": "NobelK",
+  "postDate": "2026-05-18 06:48:51.684000",
+  "votes": 4,
+  "commentCount": 3,
+  "content": "<p>I'm having a lot of difficulty coming up with a reliable cross-validation strategy for this competition.\nIf anyone has any helpful references, learning materials, or general advice on CV design, I would really appreciate it.\nMy intuition is that validation design is likely to be one of the most important keys to performing well in this competition.</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/700827",
+  "comments": [
+    {
+      "id": 3460182,
+      "authorName": "PC Jimmmy",
+      "postDate": "2026-05-18 17:08:08.527000",
+      "votes": 0,
+      "content": "<p>The split I would recommend depends on your use of typewells.  A discussion <a href=\"https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/698449\" target=\"_blank\">post</a> reported that a number of the typewells were duplicates.  </p>\n<p>That analysis was partially correct (assuming I did not screw up).  </p>\n<p>I have found that there are only 57 unique typewells in the full field.  If you called them Supertypes - than you would not want to have the same Supertype in both train and validation - again dependent on how your using typewells to build features.</p>",
+      "replies": [
+        {
+          "id": 3460374,
+          "authorName": "hengck23",
+          "postDate": "2026-05-18 19:42:54.390000",
+          "votes": 1,
+          "content": "<p>Since you can see location and number of the hidden test wells from host explanation slides, create similar validation split based on that, mimicking the test distribution </p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3459716,
+      "authorName": "PatrickAIForFun",
+      "postDate": "2026-05-18 07:07:26",
+      "votes": 0,
+      "content": "<p>I would just go with standard Grouped K-Fold CV where the well id is the group. As per my understanding the hidden test set has wells very close to existing wells and also includes some typewells which are already present in the train set, thus there is no real value in trying to group the wells by location or duplicate typewells.\nHowever, if your model is small enough / you can afford it: Leave-One-Well-Out would certainly be the best CV strategy.</p>",
+      "replies": []
+    }
+  ]
+}

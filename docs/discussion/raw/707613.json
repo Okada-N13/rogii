@@ -1,0 +1,79 @@
+{
+  "id": 707613,
+  "title": "PF baseline got LB 8.863 - any ideas to make it learnable with NN?",
+  "authorName": "NobelK",
+  "postDate": "2026-06-11 03:15:20.326000",
+  "votes": 12,
+  "commentCount": 8,
+  "content": "<p>Hi everyone,</p>\n<p>Based on the idea shared in this discussion:\n<a href=\"https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/700424#3466070\" target=\"_blank\">https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/700424#3466070</a></p>\n<p>I implemented a baseline using a Particle Filter (PF), and it achieved a public LB score of 8.863.</p>\n<p>However, my current approach is still mostly rule-based / inference-only. It does not really learn from the training data. The PF works surprisingly well because it can sequentially track a plausible TVT trajectory using GR likelihood and physical constraints, but I am not sure how to move from this handcrafted PF approach to a learnable model.</p>\n<p>My rough idea is to replace the PF with a Neural Network (NN), or at least make some part of the PF pipeline learnable. For example:</p>\n<ul>\n<li>train an NN to directly predict the TVT trajectory</li>\n<li>train an NN to predict residual corrections on top of the PF output</li>\n<li>train an NN to rank/select PF candidate trajectories</li>\n<li>learn the transition / observation model used inside the PF</li>\n<li>use something like a differentiable particle filter</li>\n</ul>\n<p>But I am not sure which formulation is the most practical for this competition. I tried asking LLMs for implementation ideas, but the answers were honestly too generic and not very actionable.</p>\n<p>Does anyone have a smart idea, hint, or direction for turning this PF-style baseline into a trainable NN-based approach?</p>\n<p>Also, if there is something important I am overlooking in this problem setup, I would really appreciate any comments.</p>\n<p>Thanks!</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/707613",
+  "comments": [
+    {
+      "id": 3471295,
+      "authorName": "Tom",
+      "postDate": "2026-06-11 06:36:19.363000",
+      "votes": 6,
+      "content": "<p>There are a lot of options you can do:</p>\n<ul>\n<li>sub sampling N particles, expand a window then train a network to do N-way classification. This way switching the problem from regression to block-wise inference. </li>\n<li>recording particle vectors then predicting the offset to calibrate them, impacting the PF process. </li>\n<li>For each particle step, train a generative models. </li>\n</ul>",
+      "replies": []
+    },
+    {
+      "id": 3471263,
+      "authorName": "hengck23",
+      "postDate": "2026-06-11 04:10:39.210000",
+      "votes": 4,
+      "content": "<p>first you need to \"measure\" the performance of your current PF method:<br>\n1) probability of generating  the \"truth trajectory tvt\" (or close to it)<br>\ne.g. you always get at least  30  \"truth trajectory tvt with rmse&lt;10\" for 100% of the validation data, given at least 500 particles.    </p>\n<p>you always get at least  3  \"truth trajectory tvt with rmse&lt;4\" for 90% of the validation data, given at least 500 particles.  </p>\n<p>2) rank error of your scorer.<br>\nhow good your score correlates to tvt rmse? (gr rmse is not a good correlator of tvt rmse)</p>\n<hr>\n<p>then you can decide what to improve. here are the strategies:\n1) improve generator probability\n2) improve scorer ranking/correlation \n3) if you cannot improve your scorer, then improve your generator so that FP are not generated</p>",
+      "replies": [
+        {
+          "id": 3471265,
+          "authorName": "hengck23",
+          "postDate": "2026-06-11 04:20:44.013000",
+          "votes": 1,
+          "content": "<p>\" I tried asking LLMs for implementation ideas, but the answers were honestly too generic and not very actionable.\"</p>\n<hr>\n<p>hello chatgpt, here is my current PF performance:</p>\n<ul>\n<li>probability of generating the \"truth trajectory tvt\"<br><ul>\n<li>30 \"truth trajectory tvt with rmse&lt;10\" for 100% of the validation data, given at least 500 particles.  </li>\n<li>3 \"truth trajectory tvt with rmse&lt;4\" for 50% of the validation data, given at least 500 particles.  </li>\n<li>also i find that only 50% follows the physics constraint under the equation : ….</li>\n<li>i show you show plots of results </li></ul></li>\n</ul>\n<p>(1) i want to increase \"rmse&lt;4\" for 80%, is it feasible?\n(2) how to use  physics constraint for general improvement?</p>\n<p>waht is the estimate of gain in LB if (1) is achieved. how to test the data if (1) is achivable? ….</p>",
+          "replies": [
+            {
+              "id": 3471267,
+              "authorName": "NobelK",
+              "postDate": "2026-06-11 04:33:56.073000",
+              "votes": 1,
+              "content": "<p>Thank you so much for the very specific and helpful advice.</p>\n<p>I will re-examine it. Thank you so much.</p>",
+              "replies": []
+            }
+          ]
+        },
+        {
+          "id": 3471967,
+          "authorName": "Shrey Gandhi",
+          "postDate": "2026-06-12 21:53:42.930000",
+          "votes": 0,
+          "content": "<p>Hey hengck, have u tried any strategy to deal with bad GR overlap wells?</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3479226,
+      "authorName": "Georgy Mamarin",
+      "postDate": "2026-06-23 14:56:10.343000",
+      "votes": -2,
+      "content": "<p>On the NN angle — we went down it (CNN, GRU, GBM, even a typewell cross-attention seq2seq) and none beat a well-tuned multi-scale PF on an honest well-grouped CV; the learned models landed ~13-14 vs the PF's ~10. So the win, at least for us, was upstream of the model — measure the generator and scorer first, exactly like hengck23 said.</p>\n<p>On the bad-GR-overlap wells Shrey asked about (most of the error for us too): the GR misfit at the true TVT is flat or even worse than a decoy one bundle away on the worst wells, so no legal test-time trigger separates \"converged\" from \"stuck in a self-similar decoy.\" That's a ceiling on those wells, not a tuning bug — GR pulls ~16 down to ~10 but can't pin the fine slope where it overlaps.</p>\n<p>I wrote the limits up with a fork-and-go harness for measuring a PF's ceiling (it's on my profile) — happy to run it on your OOF if you share it.</p>",
+      "replies": []
+    },
+    {
+      "id": 3471307,
+      "authorName": "",
+      "postDate": "2026-06-11 07:33:17.437000",
+      "votes": -1,
+      "content": "",
+      "replies": [
+        {
+          "id": 3471308,
+          "authorName": "",
+          "postDate": "2026-06-11 07:34:30.347000",
+          "votes": -1,
+          "content": "",
+          "replies": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+experiment_name: baseline_anchor
+seed: 42
+
+data:
+  data_dir: null
+  split: train
+  limit_wells: null
+
+cv:
+  n_splits: 5
+  seed: 42
+
+model:
+  name: last_tvt_anchor
+
+output:
+  artifact_dir: null

@@ -1,0 +1,62 @@
+# Typewell and horizontal. How to match?
+
+- 投稿者: Moonimonster
+- 投稿日時: 2026-07-03 01:11:03.534000
+- 投票数: -1
+- コメント数: 4（取得数: 4）
+- トピックID: `718088`
+- 原文: [https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/718088](https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/718088)
+
+## 本文
+
+<p>Hi.
+Hope y'all enjoying this competition!</p>
+<p>I was wondering if there's any better idea to match typewell's tvt data to horizontal well other than using particle filter.
+Also, as I do eda, I kinda started doubting point of matching typewell's data..</p>
+<p>Would be great to hear your opinions about it.
+Thank you!</p>
+
+## コメント
+
+### コメント 1 — Tucker Arrants
+
+- 投稿日時: 2026-07-03 16:51:13.943000
+- 投票数: 4
+- コメントID: `3487346`
+
+<p>A simple experiment you can do to test your theory: train your model with all your features, including the ones that are derived from typewell matching. Run it across all your folds for a baseline CV score. Then do the same thing without those typewell matching based features. If the model regresses without the typewell features, you have your answer, quantified empirically.</p>
+
+#### コメント 1.1 — Moonimonster
+
+- 投稿日時: 2026-07-06 10:08:50.523000
+- 投票数: 0
+- コメントID: `3490498`
+
+<p>Thank you! 😃</p>
+
+### コメント 2 — Pratyaksh
+
+- 投稿日時: 2026-07-06 17:57:44.297000
+- 投票数: 0
+- コメントID: `3491595`
+
+<p>I treated it like a sequence alignment problem rather than direct depth matching.</p>
+<p>For each horizontal well, I first find an anchor point using the last known TVT point from the input trajectory. Then I locate the closest TVT position in the typewell. Around those anchor points, I crop local segments from both wells.</p>
+<p>Next, I build a 2D cost/heatmap:</p>
+<ul>
+<li>columns = horizontal well progression</li>
+<li>rows = typewell TVT positions</li>
+<li>each cell = GR mismatch between horizontal and typewell at those positions</li>
+</ul>
+<p>So the model basically sees: “if the horizontal well is at column x, how likely is each typewell row y”.</p>
+<p>The true path is generated using closest TVT alignment between the cropped segments. I then draw the known historical part of that path as an image channel and let the model predict continuation of the alignment path.</p>
+<p>So instead of explicitly forcing TVT matching with a particle filter, I let the network learn the optimal alignment from GR similarity + partial trajectory history.</p>
+<p>But I eventually dropped this approach because there’s a fundamental bottleneck: a paper I read pointed out that GR-to-TVT matching is often inherently ambiguous. Similar GR patterns can map to multiple different TVT locations due to bimodal/multimodal geological behavior, so the alignment is not uniquely identifiable in many cases.</p>
+
+#### コメント 2.1 — Moonimonster
+
+- 投稿日時: 2026-07-06 23:31:39.327000
+- 投票数: 0
+- コメントID: `3492263`
+
+<p>Thank you for sharing your idea and experience honestly! Hope you find your joy as you continue on this competition!</p>

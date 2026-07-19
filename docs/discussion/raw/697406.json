@@ -1,0 +1,29 @@
+{
+  "id": 697406,
+  "title": "Geological Formations on well Geology (region: Texas)",
+  "authorName": "Marília Prata",
+  "postDate": "2026-05-05 23:00:26.955000",
+  "votes": 60,
+  "commentCount": 2,
+  "content": "<h2>Geological Formations</h2>\n<p>ANCC, ASTNU, ASTNL, EGFDU, EGFDL, BUDA - Predicted depth of various geological formations (Training only). And Categorical labels indicating the geological unit in Geology column (train typewells)</p>\n<h3>BUDA Limestone</h3>\n<p>\"The Buda Limestone is a dense white to yellow sparry limestone with numerous calcite veins that weathers to yellowish or pinkish due to its iron content.\"</p>\n<p>Coordinates    30.0849°N 97.8507°W - Region: North America</p>\n<p><a href=\"https://en.wikipedia.org/wiki/Buda_Limestone\" target=\"_blank\">https://en.wikipedia.org/wiki/Buda_Limestone</a></p>\n<h3>ANCC - Anacacho Limestone</h3>\n<p>\"The Anacacho Limestone is a unit of limestone of Cretaceous (Campanian) age in Texas. Most of the Anacacho Limestone is interpreted as having accumulated in relatively shallow (&lt;50 m depth) marine water.\"</p>\n<p><a href=\"https://en.wikipedia.org/wiki/Anacacho_Limestone\" target=\"_blank\">https://en.wikipedia.org/wiki/Anacacho_Limestone</a></p>\n<h3>ASTNU and ASTNL</h3>\n<p>Austin Chalk (U = <strong>Upper Austin Chalk</strong>, L = <strong>Lower Austin Chalk</strong>).</p>\n<p>\"The Austin Chalk is an upper Cretaceous geologic formation in the Gulf Coast region of the United States.\"</p>\n<p>\"The rocks of the Austin Chalk consist of recrystallized, fossiliferous, interbedded chalks and marls. Exposures of Austin Chalk are mainly seen in quarries, roadcuts, and stream beds where water eroded the soil. \"</p>\n<p><a href=\"https://en.wikipedia.org/wiki/Austin_Chalk\" target=\"_blank\">https://en.wikipedia.org/wiki/Austin_Chalk</a></p>\n<h3>EFGDU and EFGDL</h3>\n<p>Eagle Ford (U = <strong>Upper Eagle Ford</strong>, L = <strong>Lower Eagle Ford</strong>).</p>\n<p>\"The <strong>Eagle Ford Group</strong> (also called the Eagle Ford Shale) is a sedimentary rock formation deposited during the Cenomanian and Turonian ages of the Late Cretaceous over much of the modern-day state of Texas. The Eagle Ford is predominantly composed of organic matter-rich fossiliferous marine shales and marls with interbedded thin limestones.\"</p>\n<p><a href=\"https://en.wikipedia.org/wiki/Eagle_Ford_Group\" target=\"_blank\">https://en.wikipedia.org/wiki/Eagle_Ford_Group</a></p>\n<h3>Olmos</h3>\n<p>\"The Olmos Formation is a Late Cretaceous formation in the easternmost portion of the Rio Grande Embayment of the Gulf Coast Basin in Texas. It is the uppermost unit in the Campanian Taylor Group of Texas, unconformably overlain by the Escondido Formation and underlain by San Miguel Formation . Both of the Escondido and San Miguel Formations are sequences of mudstone and sandstone.\"</p>\n<p><a href=\"https://gccc.beg.utexas.edu/co2-data/olmos-00\" target=\"_blank\">https://gccc.beg.utexas.edu/co2-data/olmos-00</a></p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/697406",
+  "comments": [
+    {
+      "id": 3458061,
+      "authorName": "AlexFromIdaho",
+      "postDate": "2026-05-15 00:42:24.607000",
+      "votes": 2,
+      "content": "<p>Marilia, thank you so much for this! I've been scratching my head about what these acronyms mean since last night. I'm going to print this out and keep it by my desk as reference.</p>",
+      "replies": [
+        {
+          "id": 3458076,
+          "authorName": "Marília Prata",
+          "postDate": "2026-05-15 02:18:26.703000",
+          "votes": 2,
+          "content": "<p>I'm very glad that the information will help you Ahfretheim.  Thank you.</p>",
+          "replies": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": 699289,
+  "title": "Paradigm Shift: Why pure Tabular Models might be hitting a wall (Spatial & Sequential Context)",
+  "authorName": "Amged Alfaqih",
+  "postDate": "2026-05-13 12:22:48.528000",
+  "votes": 28,
+  "commentCount": 4,
+  "content": "<p><strong>Hi everyone,</strong></p>\n<p>After spending some time diving deep into the data and experimenting with various preprocessing pipelines, I noticed a common trap we might all be falling into: treating this purely as a standard tabular regression problem.</p>\n<p>If you are just passing [X, Y, Z, MD, GR] into LightGBM or XGBoost, you will eventually hit a hard ceiling on your CV/LB score. Why? Because the models are missing the physical and spatial realities of the wellbore trajectory.</p>\n<h2><strong>1. The Sequential Reality (Physics of the Drill)</strong></h2>\n<p>We aren't just looking at random rows; we are tracing a path. Features like MD (Measured Depth) and Z dictate a trajectory.</p>\n<p>Instead of simple lags and rolling windows, has anyone experimented with Particle Filters (PF) or Beam Search? By treating the expected TVT as a moving particle that updates its state based on the Gamma Ray (GR) observations and spatial constraints, we can create incredibly strong baseline predictions to feed into our Gradient Boosting models.</p>\n<h2><strong>2. The Spatial Reality (Geology is Continuous)</strong></h2>\n<p>A well doesn't exist in a vacuum; it shares the same geological formation as its neighbors.</p>\n<p>Relying solely on X and Y coordinates in a tree model is inefficient. A better approach is using Spatial Imputation (like cKDTree) to find the nearest known wells and calculate the median TVT or formation depth in that specific localized area.</p>\n<p>Feeding this \"spatial neighborhood consensus\" as a feature massively stabilizes the predictions for unseen evaluation rows.</p>\n<p>By shifting the focus from \"tuning model hyperparameters\" to \"building physics-aware and spatial-aware features\", the performance jump is massive.</p>\n<p>Are you guys currently using any sequential tracking (like Particle Filters/Kalman Filters) or mostly relying on heavy rolling/lag statistical features?</p>\n<p>Would love to hear your thoughts!</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/699289",
+  "comments": [
+    {
+      "id": 3457539,
+      "authorName": "hengck23",
+      "postDate": "2026-05-13 22:32:03.703000",
+      "votes": 12,
+      "content": "<p>Check rogii patent on its product startsteer. Its viterbi/ beam search includes using dip equation<br>\nUS20190106974A1 — “Systems and methods for horizontal well geosteering”<br>\nUS20230019126A1 — “Methods for Assisted and Automated Horizontal Well Geosteering”    </p>\n<ul>\n<li>select big segment size. </li>\n<li>select dip range. </li>\n<li>select big segment. </li>\n<li>select basic algorithm. </li>\n<li>run through segment with identified dip. </li>\n<li>calculate accuracy by K-value. </li>\n<li>select best algorithm / best K-value. </li>\n<li>repeat over segment sizes and dip ranges. </li>\n</ul>\n<pre><code>for segment_size in choices:\n    for dip_model in choices:\n        for algorithm in choices:\n            project lateral log into TVT\n            compare with typewell log\n            score by similarity K\nchoose best-scoring interpretation\n</code></pre>\n<p>These are the same as shown in the YouTube video the competition host introduced. The state transversal is not point by point but rather in hierarchical order: match big segments first, then reiterating by breaking big segments to smaller ones to increase matching accuracy </p>",
+      "replies": []
+    },
+    {
+      "id": 3457966,
+      "authorName": "faizan",
+      "postDate": "2026-05-14 18:01:55.147000",
+      "votes": 2,
+      "content": "<p>Really well-articulated post, and I think you've put your finger on something a lot of people are quietly running into but haven't named this clearly.\nThe point about sequential context is especially underrated. Most people's first instinct with lag features is a fixed rolling window (last 3–5 rows of GR or MD delta), but that's essentially a flat prior — it treats all neighbors equally regardless of geological consistency. A Kalman Filter or even a lightweight Particle Filter changes that entirely by letting the model track state and weight recent observations by how well they fit the expected trajectory. The signal quality improvement on noisy GR readings alone makes it worth the implementation effort.\nOn the spatial imputation side, I've had good results with a similar cKDTree approach, but one thing worth experimenting with is distance-weighted interpolation (IDW) instead of a flat median — nearby wells in the same formation should contribute proportionally more than outliers at the edge of your search radius. Also, if the competition data has any formation labels or lithology markers, conditioning the spatial neighborhood on those (rather than raw Euclidean XY distance) tends to produce much cleaner consensus features.\nOne thing I'd add to your framework: azimuth and inclination derived from the trajectory (X, Y, Z, MD) can be reconstructed and used to estimate the wellbore's entry angle into each formation. That angular context, combined with your spatial neighborhood TVT, gives the gradient boosting model a much richer \"where am I and where am I headed\" signal rather than just \"what are the raw coordinates.\"\nFully agree that hyperparameter chasing on a feature-poor dataset has heavily diminishing returns. The ceiling you're describing is real — the delta comes from feature engineering, not from squeezing one more tree out of XGBoost.</p>",
+      "replies": [
+        {
+          "id": 3458622,
+          "authorName": "想去看海",
+          "postDate": "2026-05-16 09:35:19.390000",
+          "votes": -2,
+          "content": "<p>你好，我是初入机器学习的小白选手，对于您的“但值得尝试的一件事是距离加权插值（IDW）而不是平坦的中值和mdash;”这一观点十分赞同，但我还有一个小小的疑问，我该怎么寻找附近的井？是根据每个样本的xyz值吗？这样的话是不是要将train中所有的样本数据综合起来分析？</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3458841,
+      "authorName": "Durga Kumari",
+      "postDate": "2026-05-16 18:59:08.737000",
+      "votes": -2,
+      "content": "<p>Really good point. I think many people are treating this as a pure tabular problem while the data is clearly sequential + spatial. The idea of combining trajectory-aware features with spatial neighborhood information makes a lot of sense, especially for stabilizing predictions across nearby wells.</p>",
+      "replies": []
+    }
+  ]
+}

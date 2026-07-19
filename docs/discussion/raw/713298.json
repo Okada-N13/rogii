@@ -1,0 +1,20 @@
+{
+  "id": 713298,
+  "title": "About submitting the prediction files.",
+  "authorName": "Ankit Bhagavat Raut",
+  "postDate": "2026-06-24 09:22:56.599000",
+  "votes": 1,
+  "commentCount": 1,
+  "content": "<p>Hi all, I have a question regarding the submission process. Do we need to submit all four test files after populating them with our predicted values, or is only a specific file required? Any clarification would be appreciated. Thank you.</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/713298",
+  "comments": [
+    {
+      "id": 3480133,
+      "authorName": "PatrickAIForFun",
+      "postDate": "2026-06-24 14:16:31.013000",
+      "votes": 0,
+      "content": "<p>You do not need to submit any \"submission file\". You need to submit a notebook which reads the test files and creates the submission.csv, this notebool is then again run on a new set of test files.</p>",
+      "replies": []
+    }
+  ]
+}

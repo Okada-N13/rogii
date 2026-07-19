@@ -1,0 +1,54 @@
+{
+  "id": 699326,
+  "title": "stage.1 : global search using linear prior tvt = linear(md,z)",
+  "authorName": "hengck23",
+  "postDate": "2026-05-13 15:49:38.319000",
+  "votes": 27,
+  "commentCount": 5,
+  "content": "<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F113660%2F1aabc18ee91163e6ba228c5e1db9b147%2FSelection_3505.png?generation=1778687376098048&amp;alt=media\" alt=\"\"></p>\n<p>Next post: stage.2 iterative local search for refinement </p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/699326",
+  "comments": [
+    {
+      "id": 3457623,
+      "authorName": "hengck23",
+      "postDate": "2026-05-14 03:21:23.183000",
+      "votes": 6,
+      "content": "<p>this is why prior (constraints) is important.</p>\n<p>lower GR fitting doesn't mean lower T\n** it is an inverse problem ! **</p>\n<p>You should learn the 2-parameter prior space using TVT RMSE, not GR RMSE.</p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F113660%2F862c8e7dcb7c2c0594d4c769da63c3ca%2FSelection_3518.png?generation=1778728817525025&amp;alt=media\" alt=\"\">VT. </p>",
+      "replies": []
+    },
+    {
+      "id": 3457377,
+      "authorName": "hengck23",
+      "postDate": "2026-05-13 17:03:16.327000",
+      "votes": 1,
+      "content": "<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F113660%2Fc56ecec1fbf2e65293ed60b919a8d170%2FSelection_3507.png?generation=1778691758365065&amp;alt=media\" alt=\"\"></p>\n<p>initalise with fitted line of md,z after PS and also using tvt_input. need to think of  a way to make it \"smooth\"</p>",
+      "replies": [
+        {
+          "id": 3457380,
+          "authorName": "hengck23",
+          "postDate": "2026-05-13 17:12:46.277000",
+          "votes": 1,
+          "content": "<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F113660%2F56d68326c7bf5fb5347999c5889b0513%2FSelection_3508.png?generation=1778692190154785&amp;alt=media\" alt=\"\"></p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F113660%2F65ed9281146bfcc077582dd4d4e54495%2FSelection_3509.png?generation=1778692204746245&amp;alt=media\" alt=\"\"></p>\n<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F113660%2F528e2db812b1dec908fe6de6e42c9e74%2FSelection_3513.png?generation=1778693089162977&amp;alt=media\" alt=\"\"></p>\n<p>top to bottom: typewell TVT-GR after PS, typewell TVT-GS, horizontal MD-smoothedGS showing forward and reverse, horizontal MD-smoothedGS showing TVT as color, horizontal TVT-smoothedGS  </p>",
+          "replies": [
+            {
+              "id": 3457385,
+              "authorName": "hengck23",
+              "postDate": "2026-05-13 17:21:44.083000",
+              "votes": 3,
+              "content": "<p>gemini suggested this but i haven't tried:\n<img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F113660%2Fdd4117e1392d8e76e50fec03ec6111df%2FSelection_3512.png?generation=1778692902303316&amp;alt=media\" alt=\"\">\n<img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F113660%2F3909dbc9cfac77444c5d3e6acfabc790%2FSelection_3511.png?generation=1778692880943488&amp;alt=media\" alt=\"\"></p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3465896,
+      "authorName": "Franklin Gois",
+      "postDate": "2026-06-03 01:37:42.410000",
+      "votes": 0,
+      "content": "<p><a href=\"https://www.kaggle.com/hengck23\" target=\"_blank\">@hengck23</a> Thank you! </p>",
+      "replies": []
+    }
+  ]
+}

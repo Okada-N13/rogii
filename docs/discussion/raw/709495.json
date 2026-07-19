@@ -1,0 +1,130 @@
+{
+  "id": 709495,
+  "title": "New: Working Note Awards! Submit by July 6",
+  "authorName": "María Cruz",
+  "postDate": "2026-06-18 23:29:46.734000",
+  "votes": 17,
+  "commentCount": 14,
+  "content": "<p>Hi everyone, \nI'm pleased to announce that the competition host has decided to incorporate two additional prizes. The Working Note Award will be given to 2 (two) teams who share their notes by July 6, 2026. Details to note:</p>\n<ul>\n<li>These prizes are optional, and they are in addition to the leaderboard prizes</li>\n<li>Each prize is $2,500</li>\n<li>Eligibility: teams must be in the Medal Zone in the public leaderboard to be eligible for a Working Note Award.</li>\n<li>Please refer to the <a href=\"www.kaggle.com/competitions/rogii-wellbore-geology-prediction/overview/evaluation\" target=\"_blank\">Evaluation section</a> in the Overview tab to find the evaluation criteria for this award. </li>\n<li>The deadline to submit a working note is July 6, 2026, at 11:59pm UTC.</li>\n</ul>\n<p>Good luck!</p>\n<p>María</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/709495",
+  "comments": [
+    {
+      "id": 3474964,
+      "authorName": "steubk",
+      "postDate": "2026-06-19 05:44:04.047000",
+      "votes": 3,
+      "content": "<p><a href=\"https://www.kaggle.com/macruzbar\" target=\"_blank\">@macruzbar</a>  I would appreciate some clarification regarding a potential typos in the timeline.</p>\n<p>The deadline for submitting Working Notes is July 6, while the competition itself does not end until August 5.</p>\n<p>How are participants expected to produce meaningful Working Notes nearly a month before the final submission deadline? At that stage, many teams will still be actively experimenting, validating ideas, and refining their solutions.</p>\n<p>Thank you for the clarification.</p>",
+      "replies": [
+        {
+          "id": 3478426,
+          "authorName": "María Cruz",
+          "postDate": "2026-06-22 17:30:56.723000",
+          "votes": 2,
+          "content": "<p>Hi <a href=\"https://www.kaggle.com/steubk\" target=\"_blank\">@steubk</a> -- the early deadline is intentional. The idea is to encourage participants to share their method early with others. Good luck!</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3474929,
+      "authorName": "Rishikesh Jani",
+      "postDate": "2026-06-19 03:55:43.970000",
+      "votes": 4,
+      "content": "<p>Will the Working Notes be made public? </p>",
+      "replies": [
+        {
+          "id": 3480302,
+          "authorName": "SpeedSci",
+          "postDate": "2026-06-24 17:07:38.560000",
+          "votes": -5,
+          "content": "<p>I think you could just write up the method, but without a strong score on the leaderboard, it's hard to get people's attention. Also, I'd like to ask — did you use any additional datasets for augmentation? And what do you think is the main driver behind your improvements?</p>",
+          "replies": []
+        },
+        {
+          "id": 3484022,
+          "authorName": "María Cruz",
+          "postDate": "2026-06-29 22:14:54.227000",
+          "votes": 1,
+          "content": "<p><a href=\"https://www.kaggle.com/rishikeshjani\" target=\"_blank\">@rishikeshjani</a> -- yes, they will!</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3478874,
+      "authorName": "Bernardus",
+      "postDate": "2026-06-23 06:08:13.573000",
+      "votes": -3,
+      "content": "<p><a href=\"https://www.kaggle.com/macruzbar\" target=\"_blank\">@macruzbar</a>  Hi, I recently made a public notebook submission and it is in the medal section. Can you confirm if that is sufficient or if I need to do anything else? Happy Tuesday to you. </p>\n<p>I added my notes in the public submission's comments : <a href=\"https://www.kaggle.com/code/bernubritz/rogii-lb7295-public-rebuild/comments\" target=\"_blank\">https://www.kaggle.com/code/bernubritz/rogii-lb7295-public-rebuild/comments</a></p>",
+      "replies": [
+        {
+          "id": 3484916,
+          "authorName": "María Cruz",
+          "postDate": "2026-06-30 21:26:57.283000",
+          "votes": 0,
+          "content": "<p>Hi <a href=\"https://www.kaggle.com/bernubritz\" target=\"_blank\">@bernubritz</a> -- Thank you for bringing this to my attention. I created the instructions on how to submit your writeup for this award <a href=\"https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/716699\" target=\"_blank\">here</a>. You would have to transfer the note you created on the comment in that notebook to a new writeup, and link the writeup to that forum post. Please let me know if you have any questions!</p>\n<p>Good luck, </p>\n<p>María </p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3487101,
+      "authorName": "Georgy Mamarin",
+      "postDate": "2026-07-03 11:28:54.677000",
+      "votes": 0,
+      "content": "<p><a href=\"https://www.kaggle.com/macruzbar\" target=\"_blank\">@macruzbar</a> Could you clarify when medal-zone eligibility is assessed for the Working Note Award — at the July 6 note deadline, or at final judging after August 5?</p>",
+      "replies": [
+        {
+          "id": 3494874,
+          "authorName": "María Cruz",
+          "postDate": "2026-07-10 21:16:36.543000",
+          "votes": 0,
+          "content": "<p>Hi <a href=\"https://www.kaggle.com/georgymamarin\" target=\"_blank\">@georgymamarin</a> -- medal-zone eligibility is assessed at the deadline to submit your writeup for the Working Note Award. Hope that helps!</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3485862,
+      "authorName": "daulettoibazar",
+      "postDate": "2026-07-01 21:33:07.283000",
+      "votes": 0,
+      "content": "<p>Hi <a href=\"https://www.kaggle.com/macruzbar\" target=\"_blank\">@macruzbar</a> <a href=\"https://www.kaggle.com/ryanholbrook\" target=\"_blank\">@ryanholbrook</a>, looking at the evaluation criteria (breadth of exploration, data insights, physical meaningfulness, contribution of individual ideas, uncertainty estimation), it seems entirely focused on analysis, reasoning, and documentation rather than code reproducibility.</p>\n<p>Can you please confirm: well-written analysis covering these five points sufficient on its own? Or is there also an expectation (even if not explicitly stated in the criteria) to open-source the codebase, training scripts, and data access for full reproducibility?</p>",
+      "replies": [
+        {
+          "id": 3491254,
+          "authorName": "Igor Kuvaev",
+          "postDate": "2026-07-06 16:21:17.743000",
+          "votes": 0,
+          "content": "<p>Hi <a href=\"https://www.kaggle.com/daulettoibazar\" target=\"_blank\">@daulettoibazar</a>,</p>\n<p>The Working Note Award will be evaluated solely based on the published evaluation criteria in the competition Overview. There is no expectation that participants open-source their code, training scripts, or data access beyond what is required by the competition rules.</p>\n<p>Good luck!</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3482969,
+      "authorName": "Yone",
+      "postDate": "2026-06-28 08:43:58.743000",
+      "votes": 0,
+      "content": "<p>Hello, I would like to ask: if I am in the medal zone, but I open-sourced a method that could potentially improve model performance, and the score is not that high, would I still have a chance to win an award?</p>",
+      "replies": [
+        {
+          "id": 3484919,
+          "authorName": "María Cruz",
+          "postDate": "2026-06-30 21:31:43.763000",
+          "votes": 0,
+          "content": "<p>Hi <a href=\"https://www.kaggle.com/theunforgiven7\" target=\"_blank\">@theunforgiven7</a> -- the working note is evaluated based on the criteria shared in the <a href=\"www.kaggle.com/competitions/rogii-wellbore-geology-prediction/overview/evaluation\" target=\"_blank\">Evaluation section</a> in the Overview tab. It's independent of the score you get on the leaderboard. The only thing that affects the working note award is whether you are in the medal zone, because the medal zone determines eligibility. I hope this brings some clarity. Good luck!</p>\n<p>María</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3485924,
+      "authorName": "",
+      "postDate": "2026-07-01 23:36:34.797000",
+      "votes": 0,
+      "content": "",
+      "replies": []
+    }
+  ]
+}

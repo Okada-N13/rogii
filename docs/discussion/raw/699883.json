@@ -1,0 +1,28 @@
+{
+  "id": 699883,
+  "title": "What transformations improve TVT RMSE without breaking TVT scale?",
+  "authorName": "POR160893",
+  "postDate": "2026-05-15 16:10:57.955000",
+  "votes": 8,
+  "commentCount": 2,
+  "content": "<p>After ~35–40 phases of analogue/retrieval/residual experiments, I think the main unresolved question is no longer “how do we fit GR better?”, but:</p>\n<p>What transformations of a strong TVT anchor actually improve hidden TVT RMSE without destroying absolute TVT scale?</p>\n<p>A lot of my earlier experiments implicitly assumed:</p>\n<ul>\n<li>better GR match -&gt; better TVT</li>\n<li>better local sequence analogue -&gt; better submission</li>\n</ul>\n<p>But discussion here (especially around inverse problems / priors) suggests this is not necessarily true.</p>\n<p>What I’m seeing empirically:</p>\n<ul>\n<li>Strong anchor submissions (Phase23D-style smooth constrained solutions) remain surprisingly robust.</li>\n<li>Aggressive free-form transformations can catastrophically fail even when pseudo-validation looks good.</li>\n<li>Small flatten/compression variants sometimes move LB slightly, but signal is weak.</li>\n<li>Preserving global TVT statistics (mean/std/range/drift) seems extremely important.</li>\n<li>Local GR resemblance alone does not appear sufficient.</li>\n</ul>\n<p>So I’m trying to understand the correct search space.</p>\n<p>For those experimenting successfully:</p>\n<ol>\n<li>Are you mostly applying:</li>\n</ol>\n<ul>\n<li>affine transforms?</li>\n<li>local warping?</li>\n<li>slope regularization?</li>\n<li>residual learning?</li>\n<li>monotonicity priors?</li>\n<li>MD-domain smoothing?</li>\n<li>sequence transplantation?</li>\n</ul>\n<ol>\n<li>How tightly are you constraining:</li>\n</ol>\n<ul>\n<li>per-well mean?</li>\n<li>std/range?</li>\n<li>drift?</li>\n<li>curvature/roughness?</li>\n</ul>\n<ol>\n<li>Has anyone found evidence that:</li>\n</ol>\n<ul>\n<li>hidden RMSE rewards smoother geological priors more than local GR fit?</li>\n<li>preserving absolute TVT scale matters more than matching local structure?</li>\n</ul>\n<ol>\n<li>Most importantly:\nIf you start from a “good anchor”, what transformations have actually improved LB consistently rather than randomly?</li>\n</ol>\n<p>At this point I suspect the competition is largely about learning the correct prior space for TVT, not maximizing GR similarity.</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/699883",
+  "comments": [
+    {
+      "id": 3458439,
+      "authorName": "hengck23",
+      "postDate": "2026-05-15 21:13:47.257000",
+      "votes": 3,
+      "content": "<p>code and lesson (lecture notes) <a href=\"https://github.com/geosteering-no/inversion_school_geosteering/tree/main\" target=\"_blank\">https://github.com/geosteering-no/inversion_school_geosteering/tree/main</a></p>\n<p>the above answers your questions.</p>\n<p>1) you need to find a solution without GR first (i suggest linear prior, some public code use knn on ancc plane, the lecture suggests piecewise linear or \"anything that is geologically correct\", the competition host mentions about nearby wells having the same dip)</p>\n<p>2) then fit GR such that the resulting TVT is close to the prior (see lecture slides). Here starsteer patent suggests choosing NCC stretching and windows from some pre-defined \"dips\" and \" large segment sizes\", which is a form of constraint too. </p>\n<p>in short, it is about lowest GR rmse  under what constraints?</p>\n<p>the CNN method in the lecture note did not explicitly mnimize GR loss nor do correlation NCC, becuase the loss they minimize is TVT mse </p>\n<p>The public solution did it slightly differently. instead of using these local results of GR NCC directly (or NCC-based PF/k-beams), these are fed into a model that uses them as features to predict TVT. </p>",
+      "replies": []
+    },
+    {
+      "id": 3458407,
+      "authorName": "hengck23",
+      "postDate": "2026-05-15 19:33:32.320000",
+      "votes": 2,
+      "content": "<p>You can still use GR for fitting, but the goal should be to fit the geological structure represented by the GR log, not merely the raw GR values.  </p>\n<p>For example, the peaks and valleys in a GR log may carry the most important geological information. They might make up only around 10% of the signal, but matching that 10% correctly can matter more than matching the other 90%.</p>",
+      "replies": []
+    }
+  ]
+}

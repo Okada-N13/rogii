@@ -1,0 +1,29 @@
+{
+  "id": 704001,
+  "title": "EGFDU, ANCC, ASTNL, ASTNU, EGFDL, BUDA and Geology ?",
+  "authorName": "Big Boss",
+  "postDate": "2026-06-02 20:37:33.220000",
+  "votes": 3,
+  "commentCount": 2,
+  "content": "<p>Can you confirm that EGFDU, ANCC, ASTNL, ASTNU, EGFDL, BUDA and Geology in typewell are available in the hidden test set ?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/704001",
+  "comments": [
+    {
+      "id": 3465804,
+      "authorName": "Chris Deotte",
+      "postDate": "2026-06-02 20:43:31.863000",
+      "votes": 3,
+      "content": "<p>No, they are not. They are only available in the train data. As said on the data page <a href=\"https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/data\" target=\"_blank\">here</a></p>\n<blockquote>\n  <p>ANCC, ASTNU, ASTNL, EGFDU, EGFDL, BUDA - Predicted depth of various geological formations (Training only).</p>\n</blockquote>",
+      "replies": [
+        {
+          "id": 3465881,
+          "authorName": "Big Boss",
+          "postDate": "2026-06-03 00:21:18.763000",
+          "votes": 0,
+          "content": "<p>Thank you!</p>",
+          "replies": []
+        }
+      ]
+    }
+  ]
+}

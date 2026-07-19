@@ -1,0 +1,28 @@
+{
+  "id": 699835,
+  "title": "I have one year experience in Data Science",
+  "authorName": "Lounis ALLANE",
+  "postDate": "2026-05-15 12:16:19.974000",
+  "votes": 2,
+  "commentCount": 2,
+  "content": "<p>Hello. I have a question, I have one year expérience of Data Science, And i did 3-4 projects in Data Science, This competition are good for progress and learning in Data Science or not?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/699835",
+  "comments": [
+    {
+      "id": 3468350,
+      "authorName": "Aly Ayman",
+      "postDate": "2026-06-08 20:29:30.407000",
+      "votes": -2,
+      "content": "<p>yes, this is an excellent competition for your stage  and one of the more valuable ones to learn from, precisely because it's not a generic tabular problem.</p>\n<p>Beacuse: It is a real, domain-grounded problem &amp; it provokes proper ML thinking</p>",
+      "replies": []
+    },
+    {
+      "id": 3458304,
+      "authorName": "JJ",
+      "postDate": "2026-05-15 15:34:02.070000",
+      "votes": 0,
+      "content": "<p>Yes, if you are doing the work and not depending on AI, then you will always make progress. If you are only using AI then your mile may vary. Just my humble opinion.</p>",
+      "replies": []
+    }
+  ]
+}

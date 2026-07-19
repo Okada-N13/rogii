@@ -1,0 +1,104 @@
+{
+  "id": 703038,
+  "title": "The battle for LB9.0↓",
+  "authorName": "NobelK",
+  "postDate": "2026-05-28 05:15:58.278000",
+  "votes": 5,
+  "commentCount": 11,
+  "content": "<p>I'm amazed by the incredible results being submitted one after another.\nHow did these admirable competitors manage to break through this barrier?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/703038",
+  "comments": [
+    {
+      "id": 3465555,
+      "authorName": "Tim Krige",
+      "postDate": "2026-06-02 10:14:35.197000",
+      "votes": 3,
+      "content": "<p>My first question is always: do I understand the question? Do I understand the data? </p>\n<p>From there: how would I (as a human) learn to make this prediction? then, how can I combine this with code? Is it logic that I need, maths, patterns, etc… </p>\n<p>Do you understand the data and have you played with it enough? I know there is a lot in this data that took me AGES to wrap my head around. Talk to a LLM about some EDA, explore your ideas, nothing is wrong if you learn even one thing from it.</p>",
+      "replies": [
+        {
+          "id": 3465938,
+          "authorName": "NobelK",
+          "postDate": "2026-06-03 04:41:23.353000",
+          "votes": 0,
+          "content": "<p>Thank you for your encouraging words!!</p>\n<p>I'm still inexperienced, so I'll review my EDA (Electronic Data Analysis) process.</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3465985,
+      "authorName": "Tom",
+      "postDate": "2026-06-03 07:41:09.557000",
+      "votes": 2,
+      "content": "<p>Probably final score would be 3.5 rmse</p>",
+      "replies": [
+        {
+          "id": 3466007,
+          "authorName": "NobelK",
+          "postDate": "2026-06-03 08:40:06.953000",
+          "votes": 0,
+          "content": "<p>3.5… that's a very frightening score.</p>\n<p>By the way, is there any basis for that predicted score?</p>",
+          "replies": [
+            {
+              "id": 3466010,
+              "authorName": "Tom",
+              "postDate": "2026-06-03 08:54:22.877000",
+              "votes": 1,
+              "content": "<p>that's oracle score. You can do mock test, it would give you similar score.</p>",
+              "replies": []
+            },
+            {
+              "id": 3466012,
+              "authorName": "Tim Krige",
+              "postDate": "2026-06-03 08:58:51.197000",
+              "votes": 0,
+              "content": "<p>That's quite a lot better than we currently have… It is not linear effort to reduce a RMSE score linearly…</p>",
+              "replies": []
+            },
+            {
+              "id": 3466016,
+              "authorName": "Tom",
+              "postDate": "2026-06-03 09:11:34.093000",
+              "votes": 3,
+              "content": "<p>Who knows. Maybe EDA god <a href=\"https://www.kaggle.com/cdeotte\" target=\"_blank\">@cdeotte</a> will release a secret to reach 3.5 next week and tell you that's logarithm effort.</p>",
+              "replies": []
+            }
+          ]
+        },
+        {
+          "id": 3466026,
+          "authorName": "theredbluepill",
+          "postDate": "2026-06-03 09:34:24.090000",
+          "votes": 1,
+          "content": "<p>My oracle gives me <code>&lt;1.0</code> score 😅</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3464128,
+      "authorName": "Mattias Fagerlund",
+      "postDate": "2026-05-28 20:48:56.527000",
+      "votes": 2,
+      "content": "<p>It's LB8.0↓ now :/</p>",
+      "replies": []
+    },
+    {
+      "id": 3463928,
+      "authorName": "Andrew Lukyanenko",
+      "postDate": "2026-05-28 10:47:24.373000",
+      "votes": 2,
+      "content": "<p>We created some features, trained models, blended some approaches.\nAnd like 80-90% of my ideas don't work. It is important to not give up and pursue different ideas.</p>",
+      "replies": [
+        {
+          "id": 3465933,
+          "authorName": "TheOneTheOnly",
+          "postDate": "2026-06-03 04:30:57.433000",
+          "votes": 0,
+          "content": "<p>do you think there is a data leakage ? or people just push the boundary really well ? </p>",
+          "replies": []
+        }
+      ]
+    }
+  ]
+}

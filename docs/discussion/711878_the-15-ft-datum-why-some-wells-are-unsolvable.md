@@ -1,0 +1,141 @@
+# The ±15 ft datum: why some wells are unsolvable
+
+- 投稿者: souldrive
+- 投稿日時: 2026-06-22 06:01:33.449000
+- 投票数: 18
+- コメント数: 14（取得数: 14）
+- トピックID: `711878`
+- 原文: [https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/711878](https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/711878)
+
+## 本文
+
+<p>A quick look at this competition's error structure suggests a clean split: on roughly half the wells a GR-correlation / structural model is already near-solved (per-well RMSE under ~5 ft), while a heavy tail of wells carries most of the total error. It's worth understanding why that tail is so stubborn — it's geology, not (only) modeling.</p>
+<p>The Eagle Ford is a rhythmically bedded carbonate–marl system, and those rhythms are Milankovitch (orbital) cycles: bundles of limestone–marl couplets that repeat on roughly a 15–25 ft scale here. The catch for geosteering is that, over a long lateral, the horizontal GR signature can line up with the type well at TWO stratigraphic positions about one bundle apart. Both matches look about equally good, so the well's datum becomes bimodal — roughly ±15 ft, a near-coin-flip between two equally-plausible TVT solutions. A minority of wells add a second cause: small (sub-seismic) normal faults that step the section by 15–30 ft.</p>
+<p>Here is the part I find genuinely interesting (and a little humbling): when a well is truly ~50/50 between two datums, the RMSE-optimal prediction is the MIDPOINT, not either mode. Committing to one mode gives ~0 ft error half the time and ~30 ft the other half, so its expected RMSE is about 21 ft; predicting the midpoint gives a flat ~15 ft. So on the genuinely ambiguous wells, a smooth / averaged prediction is mathematically the best you can do, and chasing the "right" mode tends to make your score worse, not better. That is the wall a lot of robust pipelines seem to hit.</p>
+<p>I visualized the cyclicity and the bimodal residual structure in this notebook (CPU-only, runs top-to-bottom): <a href="https://www.kaggle.com/code/souldrive/decoding-eagle-ford-why-some-wells-are-hard">https://www.kaggle.com/code/souldrive/decoding-eagle-ford-why-some-wells-are-hard</a></p>
+<p>None of this means the competition is unwinnable — the real gains live on the median / solvable wells and in clean structural smoothing. But it does explain the heavy tail, and why "just predict the mean of the two options" is often optimal rather than lazy. Curious whether others see the same bimodal split in their CV residuals.</p>
+
+## コメント
+
+### コメント 1 — Georgy Mamarin
+
+- 投稿日時: 2026-06-30 08:52:50.627000
+- 投票数: 0
+- コメントID: `3484334`
+
+<p>You read the rule exactly right, and Patrick's catch was the good kind — better flagged now than later. I'm with you: public discussion only, and I'll drop my offer to link our OOF. Nothing needs to change hands for the result to hold.</p>
+<p>And it does hold. Your bimodal datum and my degenerate likelihood are the same surface, and your residual-concentration cut — the ~15% of wells with a half-bundle-plus datum bias carrying ~65% of the error, the ~12% self-similar core inside it — lands on the same split I get from the heel calibration: most of the tail legally pinnable, the real residue the orbitally self-similar wells. That part's already public, and it stands on its own.</p>
+<p>Thanks for the sharpest exchange I've had on here, and for keeping it clean. Credit's mutual, and to pilkwang for the posterior-mean hedge.</p>
+
+### コメント 2 — souldrive
+
+- 投稿日時: 2026-06-29 10:43:36.940000
+- 投票数: 0
+- コメントID: `3483671`
+
+<p>Georgy — saying this directly to you and not just on the thread above: I'm going to keep us to the public discussion and skip the private OOF / hold-out swap now that the sharing rule has been flagged. No awkwardness on my side — you offered it in good faith and so did I; the line is just mine to respect. And honestly the part that mattered is already public and already done: we mapped the same wall from both ends. Your degenerate-likelihood and heel-calibration results and our joint-solve / residual-concentration view land on the same ~12% self-similar core — most of the tail legally pinnable, the genuine residue the orbitally self-similar wells — with credit mutual (and to pilkwang for the posterior-mean hedge). That result stands on its own without a private file behind it. Thanks for the sharpest back-and-forth I've had on here; the limits-side framing in Stop Reforking was the complement I was missing.</p>
+
+### コメント 3 — Georgy Mamarin
+
+- 投稿日時: 2026-06-29 06:27:47.400000
+- 投票数: 0
+- コメントID: `3483530`
+
+<p>Your joint-estimation point is the sharp version, and I think it's right. "Detect the tie, then hedge" isn't really a separate datum fix with its own operating regime. When the shape is tight the joint solver already has the datum; when it's loose there's nothing legal to recover it with. So the only honest job left for the hedge is on the irreducible core you've now bounded — the part where the mode is a coin-flip ~12% of the time even under oracle calibration. There the posterior mean isn't recovering the true datum; it can't. But it still spends down expected squared error on those wells (my §5b: worst-decile 5.1 vs 5.8 committing), because the midpoint is the Bayes point estimate on a near-50/50 split. The legal-detector earns its keep as a diagnostic, flagging which wells sit in that core, not as a corrective step. That's pilkwang's non-collapse point too: the posterior mean falls out of the joint solve, it isn't bolted on. The selector still does the work; what changes is the story for the hedge. So this sharpens my §8 rather than touching it, and I'll fold it in with credit to you and to pilkwang.</p>
+<p>On the OOF — yes, let's do it. The honest representative on our side is the per-well selector (a multi-scale GR particle filter), not the cheap-feature legal model. That one barely beats the flat baseline (15.1 vs 15.9), which is the §6 negative result, not a predictor. I'll format the selector's per-well OOF as a simple well_id / MD / pred / true CSV and link it; send yours and I'll run the correlation both ways. Same signal means we've jointly confirmed the wall; headroom is the more interesting answer.</p>
+
+#### コメント 3.1 — souldrive
+
+- 投稿日時: 2026-06-29 07:42:18.320000
+- 投票数: 0
+- コメントID: `3483580`
+
+<p>One calibration note on reading any cross-method comparison correctly: a joint GBM + structural projection (~8.9 pooled OOF) and a datum-only particle-filter selector (~15.1) are different classes of object, so an overall blend number would mostly reflect that quality gap, not headroom. The clean "same wall" test isn't a global blend — it's residual concentration: stratify by the wrong-datum tail, the ~15% of wells whose per-well datum bias is at least half a bundle (~8 ft) and which carry ~65% of the squared error, with the irreducible ~12% coin-flip core sitting inside it, and ask whether both methods are pinned to the same ±15 ft variance there while doing ordinary, largely decorrelated work off it. That stratified view lines up with your v7 split: most of the tail is legally pinnable once the gain/offset is fit on the legal heel, and the genuine residue is the self-similar core, not the whole tail.</p>
+
+##### コメント 3.1.1 — PatrickAIForFun
+
+- 投稿日時: 2026-06-29 09:48:53.563000
+- 投票数: 0
+- コメントID: `3483647`
+
+<p>Just a quick note from an outside observer of the discussion: Private sharing without forming a team is against kaggles competition rules.</p>
+
+##### コメント 3.1.2 — souldrive
+
+- 投稿日時: 2026-06-29 10:30:02.507000
+- 投票数: 0
+- コメントID: `3483665`
+
+<p>Good catch, and thank you — you're right, that's the private-sharing rule and I don't want to be anywhere near the wrong side of it. I've taken the shared dataset down. We'll keep this strictly to the public discussion (the mechanism and the decomposition we've been comparing), and won't exchange any private predictions unless it's a formal team merge. Appreciate you flagging it.</p>
+
+### コメント 4 — souldrive
+
+- 投稿日時: 2026-06-27 09:24:30.503000
+- 投票数: 0
+- コメントID: `3482454`
+
+<p>One update from the broader thread, since it changes the framing: Tucker’s ~5 ft single-model, per-well-only result is the most important number on the table — it sits below the per-well line oracle I’d assumed, so if it’s legal and holds out-of-fold by well, the recoverable fraction is bigger than I bracketed and the genuinely-irreducible set is just the small self-similar core, not the tail. I’d happily be wrong in that direction. So let me restate my own point more narrowly: the bimodal/midpoint story is not a ceiling on the competition — it’s about a minority of wells where the orbital cyclicity makes the decoy a true stratigraphic twin, and there the geology both predicts the ±one-bundle spacing and explains why no matched filter can break the tie. Everywhere else looks like fair game.</p>
+
+### コメント 5 — Georgy Mamarin
+
+- 投稿日時: 2026-06-27 08:41:37.673000
+- 投票数: 0
+- コメントID: `3482430`
+
+<p>Update from the measured side, since we'd left this as "same surface from two ends." I ran the hedge, then checked whether the datum is legally recoverable at all. On the tail, your midpoint generalizes: predicting the posterior mean over the two GR-misfit minima (pilkwang's hedge) leaves ~5.1 ft of datum error on the worst-decile wells vs ~5.8 committing (though committing still wins overall, 5.18 vs 5.69 all-wells), so the hedge is a tail buy-back, not a global swap. And that 8% localization I'd cited earlier was my own weak-calibration artifact, not a real ceiling: fit the GR gain/offset on the known heel instead and the datum localizes ~80%, within 2 points of the illegal oracle (82%). So most of the tail is legally pinnable, which leaves your genuinely-50/50 wells as the real residue — the ~12% where the decoy fits as well as the truth even under a perfect calibration, and there your midpoint is exactly the Bayes hedge. Your irreducible core survives, sharper and better-bounded: the self-similar wells, not the whole tail. It's in v7 now, with credit to you for the bimodal/midpoint framing and to pilkwang for the posterior-mean hedge.</p>
+
+#### コメント 5.1 — Unknown
+
+- 投稿日時: 2026-06-27 09:00:54.060000
+- 投票数: -3
+- コメントID: `3482441`
+
+_本文なし_
+
+### コメント 6 — Georgy Mamarin
+
+- 投稿日時: 2026-06-27 09:23:42.950000
+- 投票数: 0
+- コメントID: `3482452`
+
+<p>Good thing to stress-test, and the gap to the oracle is where I'd push too. So I ran the well-grouped CV you asked for. The heel calibration is per-well: each well's gain and offset are fit only on its own known heel, applied to its own eval tail, and scored on rows the fit never saw. Nothing is shared across wells, so a grouping has nothing to expose. Five folds of held-out wells aggregate to the same ~80% as pooled (individual folds run 72-86% on 50 wells each, small-sample noise), and they have to, since every well's verdict comes only from its own data. So the 2-point gap to the 82% oracle is the honest heel-to-tail transfer cost; there's no leakage sitting there for a grouping to close.</p>
+<p>Where your instinct is dead right is the deeper version. That 80% is datum localization given the true shape: the scan is centred on the truth to isolate the datum, so it measures how well the calibration finds the datum once the shape is known. What it leaves untested is the legal shape, the per-well slope my field hold-out says doesn't come out of cheap features. So the end-to-end question is legal shape, then heel calibration, then hedge, scored on held-out wells. Send the within-field hold-out over and I'll run the full chain on it, shape included. I think your hold-out is the cleanest way to settle it.</p>
+
+### コメント 7 — Georgy Mamarin
+
+- 投稿日時: 2026-06-23 14:54:23.217000
+- 投票数: 0
+- コメントID: `3479225`
+
+<p>This matches what I see from the likelihood side, and your Milankovitch framing is the mechanism I was missing. On the tail wells I measured the GR misfit at the <em>true</em> TVT against the decoy zone, and for most of them the truth is flat or even worse than a match one bundle away — your bimodal datum, just seen as a degenerate likelihood surface instead of geology.</p>
+<p>The midpoint-is-optimal point is the one I'd underline: it's why a smoothed prediction beats committing to a mode, and why the per-well "true" slope isn't recoverable even when GR clearly carries signal — on a 50/50 well there's no legal way to pick the right mode, so the math rewards hedging. Same heavy tail in my CV: ~40% of the squared error on ~10% of the wells.</p>
+<p>I came at the same wall from the limits side (the oracle ladder, and that degeneracy measured directly) in <a href="https://www.kaggle.com/code/georgymamarin/rogii-wellbore-where-the-wall-is">Stop Reforking — Where the Wall Is</a>. Your orbital-cyclicity read is the cleanest "why" for the tail I've seen — nice write-up.</p>
+
+#### コメント 7.1 — souldrive
+
+- 投稿日時: 2026-06-23 16:37:52.030000
+- 投票数: 0
+- コメントID: `3479311`
+
+<p>Thanks — and yes, I think we measured the same object from opposite ends. Your “GR misfit at the true TVT is flat or even worse than a match one bundle away” is the cleanest direct confirmation I’ve seen: the likelihood literally doesn’t prefer the truth. That’s the geology made quantitative — the limestone–marl couplets are near-self-similar by construction, so an honest matched filter should be degenerate. The decoy zone isn’t noise to be cleaned up; it’s a real stratigraphic twin one bundle away.
+So I’d say your “degenerate likelihood surface” and my “bimodal datum” are the same surface — geology just tells you why it’s degenerate (orbital self-similarity) and roughly where the second mode sits (≈ one bundle ≈ ±15 ft, with the fault-throw subset stacking on top). Useful because it predicts the spacing instead of just observing the scatter.
+The corollary I keep coming back to is the one your oracle ladder runs into: even a perfect mode-classifier has a ceiling, because on a genuinely 50/50 well there’s no information left to classify with — the irreducible loss is just the variance of the bimodal datum, and the midpoint is the Bayes-optimal hedge against it. That’s why ~10% of wells carrying ~40% of the squared error isn’t a modeling failure you can grind away; it’s the shape of the loss surface. Reading “Stop Reforking” now — the limits-side framing is exactly the complement I wanted.</p>
+
+##### コメント 7.1.1 — Georgy Mamarin
+
+- 投稿日時: 2026-06-23 17:27:03.233000
+- 投票数: 0
+- コメントID: `3479350`
+
+<p>The thing I want to carry into the update is that your mechanism predicts the spacing, not just the scatter — and that makes the ambiguity detectable. If the twin sits about one bundle away, you can probe for it: score the GR misfit at the candidate TVT and at ±one bundle, and a degenerate well shows up as a near-tie instead of a single clear minimum. That turns "this one's a coin-flip" from a post-hoc excuse into a legal feature, and the action it points to is exactly your midpoint — detect the tie, then hedge rather than commit. I'm folding your orbital-cyclicity read in as the "why" behind the degenerate likelihood, with credit. Same surface from two sides, and the geology is what says where the second mode lives.</p>
+
+##### コメント 7.1.2 — souldrive
+
+- 投稿日時: 2026-06-28 10:58:18.960000
+- 投票数: -1
+- コメントID: `3483043`
+
+<p>Thanks Georgy, and thank you again for the mention. Your “Stop Reforking — Where the Wall Is” framing keeps matching what we kept finding as we went deeper, and two independent paths landing on the same wall is more convincing than either alone.
+One thing that has gotten sharper on our end is the distinction between detecting the bimodal datum and resolving it. We just finished an oracle decomposition directly on the NCC cost landscape: roughly 49% of wells have a clearly bimodal cost profile (secondary minimum in the 10–25 ft Milankovitch gap range), and among those, the secondary minimum is closer to the true datum 51.2% of the time vs. 48.8% for the primary. The NCC cost margin — how confident the primary minimum looks relative to the secondary — has correlation r = +0.054 (p = 0.30) with which peak is actually correct. It is essentially a lookup of “what does this particular cycle look like vs. the adjacent one,” and those two cycles are indistinguishable to any GR window by construction. The coin flip in our earlier routing experiments was not noise — it is the geometry of the problem.
+The complement comes from the estimation side: a shape sensitivity experiment shows that GR can recover the datum with >50% success if and only if the shape error is below ~3 ft, but on the actual stack the shape error and datum error are jointly estimated. Tight-shape wells already have the datum correct (beam/PF resolved it jointly), and for loose-shape wells GR cannot recover a correct datum on a non-oracle shape. There is no regime where a post-hoc datum fix applies — the joint solver already does the best possible job, and anything added on top either disrupts a correct estimate or fails to fix a wrong one.
+So I read your wall and ours as the same wall from opposite directions — yours from “stop reforking,” ours from “the residual is a 50/50 datum, not a modeling gap.” If you have OOF predictions in a simple per-well format, a quick correlation check would tell us in a few minutes whether our approaches have any blend headroom or whether we are already the same signal. Happy to share ours if you are up for it — even knowing the answer to that question would be useful at this stage.</p>

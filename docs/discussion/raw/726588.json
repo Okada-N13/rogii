@@ -1,0 +1,11 @@
+{
+  "id": 726588,
+  "title": "Toe-end TVT: GR correlation vs trajectory features?",
+  "authorName": "Am I overfitted?",
+  "postDate": "2026-07-15 19:44:56.456000",
+  "votes": -1,
+  "commentCount": 0,
+  "content": "<p>For predicting the masked toe-end TVT, is <strong>gamma-ray correlation</strong> with the <strong>typewell</strong>  working better than <strong>trajectory-based features</strong>, or a mix of both?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/726588",
+  "comments": []
+}

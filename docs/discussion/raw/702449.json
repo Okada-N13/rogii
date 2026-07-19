@@ -1,0 +1,37 @@
+{
+  "id": 702449,
+  "title": "Does anyone randomly get really bad LB score (686)?",
+  "authorName": "Andrew Lukyanenko",
+  "postDate": "2026-05-23 15:19:28.528000",
+  "votes": 3,
+  "commentCount": 3,
+  "content": "<p>Most of the time, my submissions produce reasonable scores. But sometimes, I get a score of ~686. I think that in these cases kaggle kernel fails for some reason and submits the baseline values.\nDoes anyone else have this problem? How to deal with it?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/702449",
+  "comments": [
+    {
+      "id": 3463305,
+      "authorName": "Rustam Bazarbayev",
+      "postDate": "2026-05-26 14:55:43.293000",
+      "votes": 0,
+      "content": "<p>I got huge - 14429.86 :)</p>",
+      "replies": []
+    },
+    {
+      "id": 3462582,
+      "authorName": "hengck23",
+      "postDate": "2026-05-24 01:53:47.497000",
+      "votes": 0,
+      "content": "<p>did you predict unusually high values like NaN or very large numerics?</p>",
+      "replies": [
+        {
+          "id": 3462644,
+          "authorName": "Andrew Lukyanenko",
+          "postDate": "2026-05-24 11:17:01.870000",
+          "votes": 0,
+          "content": "<p>No, I checked it.\nI think it was due to OOM issues.</p>",
+          "replies": []
+        }
+      ]
+    }
+  ]
+}

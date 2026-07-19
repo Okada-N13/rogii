@@ -1,0 +1,20 @@
+{
+  "id": 722041,
+  "title": "  **\"What's working beyond the public baseline for hidden test wells?\"**",
+  "authorName": "Anjana mohan",
+  "postDate": "2026-07-06 17:28:26.686000",
+  "votes": -2,
+  "commentCount": 1,
+  "content": "<p>Hi everyone,\nMy current best is <strong>8.012</strong> using:</p>\n<ul>\n<li>Contact override for visible test wells (RMSE ~0.01)</li>\n<li>128-seed likelihood-weighted PF ensemble (4 scales: 3, 5, 8, 12)</li>\n<li>14-config beam search ensemble</li>\n<li>Adaptive per-well PF scale selection via holdout backtest (3 cut fracs)</li>\n<li>Fleongg pretrained LGB models blend (45% SP45 + 55% fleongg)</li>\n<li>Savitzky-Golay smoothing\nBronze cutoff is ~7.2. The gap is ~0.8 points which I believe is coming entirely from hidden test wells.\n<strong>Specific questions:</strong></li>\n</ul>\n<ol>\n<li>For hidden test wells, what's the single most impactful improvement beyond 128-seed lik-PF?</li>\n<li>Is the Gold Overlay calibration helping on hidden wells or only on visible ones? I'm getting ~25 RMSE when I apply it to hidden wells.</li>\n<li>Are people using the Bayesian forward-backward smoother? The CV returns NaN in my setup.</li>\n<li>What <code>tau</code> and <code>w_pf</code> values are working best for post-processing on hidden wells?</li>\n<li>Is there signal in resistivity or other columns beyond GR for hidden wells?</li>\n</ol>\n<h2>Any hints appreciated! 🙏</h2>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/722041",
+  "comments": [
+    {
+      "id": 3493578,
+      "authorName": "H. Ashida",
+      "postDate": "2026-07-08 03:42:54.177000",
+      "votes": 0,
+      "content": "<p>Hi! A few quick pointers:</p>\n<ol>\n<li><p>Blend weight: You wrote 45% SP45 + 55% fleongg — the public-anchored setting is the reverse (0.55×SP45). We tried fleongg-heavier and it scored consistently worse on LB. Worth double-checking.</p></li>\n<li><p>Gold overlay at ~25 RMSE = bug. It should make a small guarded move toward candidates (alpha-capped, clipped), never replace predictions. And align by MD interpolation, not row index — hidden rerun copies aren’t row-aligned.</p></li>\n<li><p>FB smoother NaN: likelihood underflow — clamp with max(lik, 1e-300) before logs, skip very short prefixes.</p></li>\n<li><p>w_pf ≈ 0 once the 128-seed lik-PF ensemble is already in the blend.</p></li>\n<li><p>Hidden wells only have MD, X, Y, Z, GR, TVT_input — no resistivity, markers are stripped.</p></li>\n</ol>\n<p>Good luck! 🙏</p>",
+      "replies": []
+    }
+  ]
+}

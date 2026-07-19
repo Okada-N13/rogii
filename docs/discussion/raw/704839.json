@@ -1,0 +1,54 @@
+{
+  "id": 704839,
+  "title": "When will Typewell data generated?",
+  "authorName": "doteeee",
+  "postDate": "2026-06-06 14:27:33.907000",
+  "votes": 5,
+  "commentCount": 5,
+  "content": "<p>I understood, logs from Horizontal well got generated from while drilling. As the drill starts vertically and move horizontally, we can get information regarding geological formation across.\nLogs generated -&gt; coordinate(x,y,z)  and GR , TVT </p>\n<p>But  i am not able to understand when will Typewell information will get generated. Require some clarification regarding this, to understand if GR, TVT from typewell can be better used relate to TVT of horizontal well.</p>\n<p>Thanks</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/704839",
+  "comments": [
+    {
+      "id": 3467570,
+      "authorName": "PC Jimmmy",
+      "postDate": "2026-06-06 16:22:39.780000",
+      "votes": 4,
+      "content": "<p>Vertical type wells exist before the drilling starts - so full data set should be present at test when the scoring run starts.  </p>\n<p>There are a limited number of different vertical holes in the train data - I have found that 57 wells can represent all the typewells for the 773 horizontals.  Would not be surprising to me that the test wells will use these existing verticals, but have made no attempts to confirm that.  As I found the 57 number it was also apparent that the vertical hole locations will not be a consistent distance or direction from the horizontal well, so TVT quality will vary with that distance variation.</p>",
+      "replies": [
+        {
+          "id": 3467585,
+          "authorName": "doteeee",
+          "postDate": "2026-06-06 17:30:21.193000",
+          "votes": 0,
+          "content": "<p>thanks, <a href=\"https://www.kaggle.com/pcjimmmy\" target=\"_blank\">@pcjimmmy</a>. so the typewell are the vertical drilling happened somewhere near to horizontal well even before work starts to estimate the geology. is my understanding correct?</p>",
+          "replies": [
+            {
+              "id": 3467658,
+              "authorName": "PC Jimmmy",
+              "postDate": "2026-06-07 02:05:31.240000",
+              "votes": 3,
+              "content": "<p>Yes - some of them also would be capable of oil or gas if the layer thick enough or perhaps some lease issues preventing the folks from going horizontal, but generally low ROI to drill them.  So my finding only 57 unique seems reasonable, and probably on the high side.  I think the host has mentioned in a post someone that some might be synthetic  (not the word he used).</p>",
+              "replies": []
+            },
+            {
+              "id": 3467661,
+              "authorName": "PC Jimmmy",
+              "postDate": "2026-06-07 02:11:11.293000",
+              "votes": 3,
+              "content": "<p><a href=\"https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/698449#3455674\" target=\"_blank\">\"pseudo-typewells\"</a> is the term used rather than synthetic.</p>",
+              "replies": []
+            },
+            {
+              "id": 3467688,
+              "authorName": "doteeee",
+              "postDate": "2026-06-07 04:02:20.350000",
+              "votes": 0,
+              "content": "<p>thank <a href=\"https://www.kaggle.com/pcjimmmy\" target=\"_blank\">@pcjimmmy</a> , will go through refered post</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

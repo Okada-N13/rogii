@@ -1,0 +1,20 @@
+{
+  "id": 717212,
+  "title": "why train set and test set are exactly same except rock formation data is missing in test set rest everything is exact same 100% why?",
+  "authorName": "Rahib Vk",
+  "postDate": "2026-07-01 16:48:37.548000",
+  "votes": -6,
+  "commentCount": 1,
+  "content": "<p>why train set and test set are exactly same except rock formation data is missing in test set rest everything is exact same 100% why?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/717212",
+  "comments": [
+    {
+      "id": 3485625,
+      "authorName": "daulettoibazar",
+      "postDate": "2026-07-01 16:52:54.103000",
+      "votes": 2,
+      "content": "<p>Refer to text below taken from<code>Data</code> section:</p>\n<pre><code>Note that the test/ folder visible here contains only a few instances from the training set as example data to help you author your submissions. When your submission is rerun on the hidden test set, these will be replaced with the actual test data.\n</code></pre>",
+      "replies": []
+    }
+  ]
+}

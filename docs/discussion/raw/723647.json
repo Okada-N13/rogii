@@ -1,0 +1,29 @@
+{
+  "id": 723647,
+  "title": "What's the lowest CV you have achieved?",
+  "authorName": "Jeevan Jolly",
+  "postDate": "2026-07-07 16:47:44.711000",
+  "votes": 2,
+  "commentCount": 2,
+  "content": "<p>My current lowest CV is ~6.5, but it does <strong>NOT</strong> translate at all to LB. infact, some of my worst performing CV at ~7.6 scored 6 at LB. </p>\n<p>This mismatch is anxiety inducing because I don't know which one to go with.</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/723647",
+  "comments": [
+    {
+      "id": 3493370,
+      "authorName": "Tucker Arrants",
+      "postDate": "2026-07-07 16:57:02.327000",
+      "votes": 6,
+      "content": "<p>5.4 single model, 5.0 equal weight ensemble. Trust your CV.</p>",
+      "replies": [
+        {
+          "id": 3493375,
+          "authorName": "Jeevan Jolly",
+          "postDate": "2026-07-07 17:08:05.887000",
+          "votes": 1,
+          "content": "<p>Already pretty close to the theoretical limit. </p>\n<p>I have a few more tricks up my sleeve.</p>",
+          "replies": []
+        }
+      ]
+    }
+  ]
+}

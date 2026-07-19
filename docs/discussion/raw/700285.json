@@ -1,0 +1,11 @@
+{
+  "id": 700285,
+  "title": "Curious how others are handling outlier wells in the spatial ANCC index",
+  "authorName": "Jordan",
+  "postDate": "2026-05-17 04:41:09.386000",
+  "votes": 3,
+  "commentCount": 0,
+  "content": "<p>I'm using a centroid-level Kriging model (one point per well) to predict ANCC at test/training wells then feeding that into an ANCC-Z baseline. When I look at the spatial residuals, about 5-6% of wells have ANCC values that are significant outliers relative to their 10 nearest neighbors. Has anyone found that keeping or removing outliers has had meaningful differences?</p>\n<p>I'm second guessing myself a bit here because if the wells reflect authentic geological observations and aren't data errors, it would likely make the spatial model worse in areas where it matters the most</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/700285",
+  "comments": []
+}

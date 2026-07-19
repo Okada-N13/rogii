@@ -1,0 +1,11 @@
+{
+  "id": 697433,
+  "title": "I did a quick EDA for the well TVT competition",
+  "authorName": "sghwr",
+  "postDate": "2026-05-06 04:01:41.380000",
+  "votes": 6,
+  "commentCount": 0,
+  "content": "<p>Hi everyone! I’ve just shared my EDA notebook for this competition:\n<a href=\"https://www.kaggle.com/code/songhow/well-prediction-eda-exploratory\" target=\"_blank\">https://www.kaggle.com/code/songhow/well-prediction-eda-exploratory</a>\nIt includes target distribution, per-well profiles, feature correlations, and evaluation zone structure analysis. Feel free to check it out, and any feedback or suggestions are very welcome!😊</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/697433",
+  "comments": []
+}

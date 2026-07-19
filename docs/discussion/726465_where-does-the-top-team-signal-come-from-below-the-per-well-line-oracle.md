@@ -1,0 +1,223 @@
+# Where does the top-team signal come from below the per-well line-oracle?
+
+- 投稿者: stevenleehans
+- 投稿日時: 2026-07-15 11:06:09.466000
+- 投票数: 9
+- コメント数: 19（取得数: 19）
+- トピックID: `726465`
+- 原文: [https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/726465](https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/726465)
+
+## 本文
+
+<p>I've built a from-scratch stack for ROGII (predict TVT along horizontal-well eval zones from trajectory + gamma-ray + vertical typewell): typewell master-frame clustering, marker-surface T=Z+TVT transfer from offset wells via anisotropic IDW, a momentum particle filter in marker-space with a two-pass smoother, and a GBM ensemble over ~60 features. Grouped-by-well pooled CV ≈ 8.8 (773 wells).</p>
+<p>Diagnostics on where my error lives:</p>
+<ul>
+<li>Per-well oracle ceilings: best constant 9.04, best line 6.70, quadratic 5.34, smooth 2.90. My model (8.8) sits between constant and line.
+Error splits sharply by nearest same-frame neighbor distance: wells with a neighbor <150 ft are already at RMSE 6.70 (the line-oracle); wells with no neighbor within 600 ft are at 10.15 (worse than their own per-well constant) and dominate the error.</li>
+<li>Far-neighbor dip has no transferable signal: a frame-average drift-vs-distance prior scores 17.5 (dip does not transfer within a master frame).</li>
+<li>GR fine-structure matching is dead: high-passed lateral-vs-typewell shape-cost minimizes ~20 ft from the true TVT (SNR<1 in the narrow ±20 ft eval band); the true position isn't even a low-cost point.</li>
+</ul>
+<p>Top teams report CV 5.7–6.0 — below my 8.8 and below the per-well line-oracle, i.e. they're capturing curvature. Given GR fine-structure matching provably fails here:</p>
+<ol>
+<li>Is the signal full-curve transfer of offset wells' interpreted TVT profiles (not just a smooth structure surface) for wells with close neighbors — borrowing the stratigraphic wiggle?</li>
+<li>Is there a GR/DTW formulation that works where naive high-passed shape-matching fails (multi-scale, self-log reference, warp constraints)?</li>
+<li>One competitor hinted the 773 wells split into two groups by a rule, with the LB correlating with only one — what is that split, and does it imply a different method per group?</li>
+<li>For far-neighbor wells with no offset control, is there any exploitable dip signal, or do top teams simply accept ~10 there and win on the covered wells?</li>
+</ol>
+
+## コメント
+
+### コメント 1 — De DQ
+
+- 投稿日時: 2026-07-15 11:54:53.293000
+- 投票数: 7
+- コメントID: `3498344`
+
+<p>Hi stevenleehans,</p>
+<p>Great analysis on the error splits! Since you are new to Kaggle, here is the simple intuition behind the top teams' "magic" scores (CV ~5.7) without the complex math:</p>
+<ol>
+<li>The "Signal" is Copy-Pasting Neighbors
+You asked if the signal is full-curve transfer. Yes, exactly.</li>
+</ol>
+<p>Simple View: Imagine you are drilling a new well, and there is an old well just 50 feet away. Instead of trying to calculate the rock layers from scratch using Gamma Ray (which is noisy), top teams simply copy the shape of the old well's path and paste it onto yours.
+Why it beats the Line-Oracle: The "Line-Oracle" only draws a straight trend. By copying the neighbor's exact "wiggles" (stratigraphic changes), you capture the curvature that a straight line misses. If you have a close neighbor, you basically already know the answer. </p>
+<ol>
+<li>Why Gamma Ray (GR) Matching Failed for You
+You found that matching GR shapes didn't work. This is common for beginners.</li>
+</ol>
+<p>The Issue: The GR logs in this dataset are often too "noisy" (static) to match small details. It’s like trying to match two blurry photos pixel-by-pixel; it fails.
+The Fix: Top teams don't rely on perfect GR matches. They rely on distance. If a neighbor is close (<150 ft), they assume the rocks are identical and just shift the neighbor's TVT profile to align with your starting point. They use GR only for a rough check, not precise matching. </p>
+<ol>
+<li>The "Split" Rule (Azimuth)
+The hint about splitting the wells refers to Drilling Direction.</li>
+</ol>
+<p>The Rule: Some wells are drilled North-West, others South-East. This means they pass through the rock layers in reverse order.
+The Mistake: If you train one model on all wells together, it gets confused (like reading a book forward and backward at the same time). 
+The Fix: Split your data into two groups based on direction and train separate models (or tell your model explicitly which direction it is). This alone often drops the score significantly.</p>
+<ol>
+<li>What is a "Particle Filter"? (For Novices)
+You mentioned using a particle filter. Here is the non-math explanation:</li>
+</ol>
+<p>Imagine: You are blindfolded in a hallway and want to know where you are.
+The Particles: You imagine 1,000 "ghost versions" of yourself scattered randomly in the building.
+The Step: You take a step forward. You move all 1,000 ghosts forward too.
+The Check: You feel the wall. Any ghost that didn't feel a wall where you did is "killed" (weight set to zero). Any ghost that felt the same wall gets a "vote."
+The Result: After a few steps, all 1,000 ghosts cluster around your true location.
+In this Competition: The "ghosts" are possible TVT paths. The filter keeps the paths that match the neighbor wells and kills the ones that don't, converging on the true path. 
+Summary Advice for Your Next Submission
+Don't fight the noise: Stop trying to force Gamma Ray matching on isolated wells. Accept higher error there.
+Focus on clusters: Pour your effort into wells with neighbors <150 ft. Simply copying their shape (with small adjustments) will get you most of the way to the leaderboard top.
+Split by Direction: Check your drilling azimuth. If you haven't split your training data by direction, do that first—it’s the easiest win.</p>
+
+#### コメント 1.1 — stevenleehans
+
+- 投稿日時: 2026-07-15 12:01:40.630000
+- 投票数: 0
+- コメントID: `3498350`
+
+<p>Oh my God thank you so much for detailed explanation. Best of luck for this competition!
+I will try to digest this!</p>
+
+##### コメント 1.1.1 — Unknown
+
+- 投稿日時: 2026-07-15 12:06:36.640000
+- 投票数: 0
+- コメントID: `3498351`
+
+_本文なし_
+
+#### コメント 1.2 — Tucker Arrants
+
+- 投稿日時: 2026-07-15 14:30:21.410000
+- 投票数: 8
+- コメントID: `3498428`
+
+<p>To add, you can get your single model CV score below 5ft without using any neighbor well data, so you can take GR matching quite far here. </p>
+
+##### コメント 1.2.1 — Jeevan Jolly
+
+- 投稿日時: 2026-07-16 06:56:26.813000
+- 投票数: 4
+- コメントID: `3498912`
+
+<p>Honestly lost. Still haven't achieved this 🫤. is the score below 5ft mean-per-well or pooled? cuz I can get to mean-per-well 5.22ft, but pooled is at 7ft</p>
+
+##### コメント 1.2.2 — stevenleehans
+
+- 投稿日時: 2026-07-16 08:21:41.860000
+- 投票数: 1
+- コメントID: `3498951`
+
+<p>Same as me though, the more you know the more you don't know
+I'm on the peak of mount stupid I suppose</p>
+
+##### コメント 1.2.3 — GG Ayo (AyoGG)
+
+- 投稿日時: 2026-07-16 08:38:33.937000
+- 投票数: 0
+- コメントID: `3498957`
+
+<p>mean-per-well 5.391ft, pooled 7.941ft ,median 3.331ft qq</p>
+
+##### コメント 1.2.4 — Tucker Arrants
+
+- 投稿日時: 2026-07-16 09:10:17.130000
+- 投票数: 1
+- コメントID: `3498974`
+
+<p>Pooled, like the competition metric. I haven’t checked the mean per well.</p>
+
+##### コメント 1.2.5 — Andrey Chankin
+
+- 投稿日時: 2026-07-16 10:34:09.767000
+- 投票数: 3
+- コメントID: `3499006`
+
+<p>so, you dont have heavy outlier wells to treat them differently?</p>
+
+##### コメント 1.2.6 — stevenleehans
+
+- 投稿日時: 2026-07-16 10:46:41.500000
+- 投票数: 1
+- コメントID: `3499010`
+
+<p>For your 5.x tabular model, is each training sample a station, a complete-well candidate path, or a segment? Are GR/typewell features computed in TVT coordinates, MD coordinates, or from candidate warp parameters?</p>
+
+##### コメント 1.2.7 — James Day
+
+- 投稿日時: 2026-07-16 12:21:13.203000
+- 投票数: 2
+- コメントID: `3499040`
+
+<p><a href="https://www.kaggle.com/tuckerarrants">@tuckerarrants</a>, was your pooled 4.x from a single CV fold, or was it k-fold?</p>
+<p>I have 5.77 pooled 5-fold and have some individual folds in the 4.x range, but have yet to see any 5-fold averages below 5 ft.</p>
+
+##### コメント 1.2.8 — Andrey Chankin
+
+- 投稿日時: 2026-07-16 12:53:48.720000
+- 投票数: 0
+- コメントID: `3499052`
+
+<blockquote>
+  <p><a href="https://www.kaggle.com/tuckerarrants">@tuckerarrants</a>, was your pooled 4.x from a single CV fold, or was it k-fold?</p>
+  <p>I have 5.77 pooled 5-fold and have some individual folds in the 4.x range, but have yet to see any 5-fold averages below 5 ft.</p>
+</blockquote>
+<p>hi <a href="https://www.kaggle.com/jsday96">@jsday96</a> how do you split for CV?</p>
+
+##### コメント 1.2.9 — Tucker Arrants
+
+- 投稿日時: 2026-07-16 13:08:08.993000
+- 投票数: 1
+- コメントID: `3499058`
+
+<p><a href="https://www.kaggle.com/jsday96">@jsday96</a> Yessir 5 folds. Best fold is around 4.5ft, worst fold is 5.3ft.</p>
+<p><a href="https://www.kaggle.com/bluepill">@bluepill</a> Yes I have outlier wells, about 25 wells above 12ft of error, but I do not handle them specially. </p>
+<p><a href="https://www.kaggle.com/stevenleehans">@stevenleehans</a> It is not a tabular model, so each sample is a complete well.</p>
+
+##### コメント 1.2.10 — James Day
+
+- 投稿日時: 2026-07-16 22:23:09.640000
+- 投票数: 2
+- コメントID: `3499295`
+
+<p><a href="https://www.kaggle.com/bluepill">@bluepill</a> - Random group by well, no special geographic groupings or stratification.</p>
+
+##### コメント 1.2.11 — Poobear
+
+- 投稿日時: 2026-07-17 23:41:10.953000
+- 投票数: 0
+- コメントID: `3499794`
+
+<p>One validation detail would help calibrate that claim: is the below-5ft CV grouped by whole well, and does each validation well recreate the organizer's TVT_input visible-prefix/hidden-suffix mask? No architecture details needed.</p>
+
+##### コメント 1.2.12 — Tucker Arrants
+
+- 投稿日時: 2026-07-18 00:17:27.997000
+- 投票数: 0
+- コメントID: `3499800`
+
+<p>Yes CV is grouped by well. Validation is performed with same inputs available at test time. I am sure there are others with CV in the 4.x range at this point in the competition. </p>
+
+##### コメント 1.2.13 — stevenleehans
+
+- 投稿日時: 2026-07-18 17:24:38.157000
+- 投票数: 1
+- コメントID: `3500150`
+
+<p>Thank you Tucker for the pointers. I will keep pushing!</p>
+
+#### コメント 1.3 — stevenleehans
+
+- 投稿日時: 2026-07-18 17:25:34.460000
+- 投票数: 0
+- コメントID: `3500151`
+
+<p>Thank you <a href="https://www.kaggle.com/dedquoc">@dedquoc</a> for extraordinary explanation. It made me clear about these methods instead of just using it blindly and feeding it to LLM </p>
+
+### コメント 2 — victor
+
+- 投稿日時: 2026-07-17 18:07:20.510000
+- 投票数: 0
+- コメントID: `3499646`
+
+<p>the neighbor distance split lining up with the line oracle is the part that stuck. far wells worse than a constant is rough</p>

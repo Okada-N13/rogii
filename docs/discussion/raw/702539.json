@@ -1,0 +1,45 @@
+{
+  "id": 702539,
+  "title": "Images in DataSets",
+  "authorName": "Lounis ALLANE",
+  "postDate": "2026-05-24 21:22:18.619000",
+  "votes": 6,
+  "commentCount": 4,
+  "content": "<p>Hello, I have a question about the images in the dataset. What are they used for?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/702539",
+  "comments": [
+    {
+      "id": 3462908,
+      "authorName": "PatrickAIForFun",
+      "postDate": "2026-05-25 10:16:07.367000",
+      "votes": 2,
+      "content": "<p>They are just visualizations of the given wells. They do not include any additional information but are rather there for you to cross-check your understanding and interpretation of the given data.</p>",
+      "replies": [
+        {
+          "id": 3462997,
+          "authorName": "PC Jimmmy",
+          "postDate": "2026-05-25 14:46:01.863000",
+          "votes": 3,
+          "content": "<p>They do include one additional bit of information - the number of vertical type wells and which horizontal wells share that same typewell.  You need to scrape the images or just use some time and labor.  There are only 57 unique vertical wells in the field by my analysis.</p>",
+          "replies": []
+        },
+        {
+          "id": 3463007,
+          "authorName": "PC Jimmmy",
+          "postDate": "2026-05-25 15:15:51.573000",
+          "votes": 1,
+          "content": "<p>There is another useful bit of information in the presentation file - very likely it shows the location of the real test wells on one of the slides.  <a href=\"https://www.kaggle.com/hengck23\" target=\"_blank\">HENGCK23</a> was the first to point this out in one of his posts.</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3462898,
+      "authorName": "Loong",
+      "postDate": "2026-05-25 09:42:35.280000",
+      "votes": -1,
+      "content": "<p>I'd also like to know.</p>",
+      "replies": []
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": 710044,
+  "title": "Question on Acellerators",
+  "authorName": "Darren Amadeus Martin",
+  "postDate": "2026-06-20 04:32:22.841000",
+  "votes": 1,
+  "commentCount": 1,
+  "content": "<p>Can TPU be used when submitting a notebook in this competition?</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/710044",
+  "comments": [
+    {
+      "id": 3475692,
+      "authorName": "steubk",
+      "postDate": "2026-06-20 04:55:52.247000",
+      "votes": 0,
+      "content": "<p>No because to run a TPU notebook, you need to have internet access enabled.</p>",
+      "replies": []
+    }
+  ]
+}

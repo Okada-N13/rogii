@@ -1,0 +1,136 @@
+{
+  "id": 719389,
+  "title": "Does CV correlates with LB？",
+  "authorName": "yuanzhe zhou",
+  "postDate": "2026-07-04 23:17:13.797000",
+  "votes": 19,
+  "commentCount": 15,
+  "content": "<p>It seems that the CV for public high scoring notebook is around 10 RMSE, but the LB for that notebook is 7. Does your CV correlates with LB? </p>\n<p>LLM helped me to build a model and the CV/LB are both around 10. </p>\n<p>Edit : From the discussions, I believe CV is what we should aim for firstly.</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/719389",
+  "comments": [
+    {
+      "id": 3493317,
+      "authorName": "yu4u",
+      "postDate": "2026-07-07 15:41:11.643000",
+      "votes": 17,
+      "content": "<p>It seems that the conclusion has already been reached, but this competition is clearly a trust-your-CV competition.\nI compute my CV as the average over 5 folds × 5 seeds, and only adopt changes that show a meaningful improvement there.\nAs a result, my CV and LB have been correlating quite cleanly.</p>\n<table>\n<thead>\n<tr>\n<th>CV</th>\n<th>Public LB</th>\n<th>gap (LB−CV)</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>6.983</td>\n<td>7.324</td>\n<td>+0.341</td>\n</tr>\n<tr>\n<td>6.855</td>\n<td>7.154</td>\n<td>+0.299</td>\n</tr>\n<tr>\n<td>6.227</td>\n<td>6.559</td>\n<td>+0.332</td>\n</tr>\n<tr>\n<td>6.051</td>\n<td>6.334</td>\n<td>+0.283</td>\n</tr>\n<tr>\n<td>5.692</td>\n<td>6.017</td>\n<td>+0.325</td>\n</tr>\n</tbody>\n</table>",
+      "replies": [
+        {
+          "id": 3493321,
+          "authorName": "SpeedSci",
+          "postDate": "2026-07-07 15:46:19.487000",
+          "votes": 0,
+          "content": "<p>wow！good！This looks quite stable.</p>",
+          "replies": []
+        },
+        {
+          "id": 3493378,
+          "authorName": "Jeevan Jolly",
+          "postDate": "2026-07-07 17:11:23.457000",
+          "votes": 0,
+          "content": "<p>What is your single model best CV, if you don't mind me asking.</p>",
+          "replies": []
+        },
+        {
+          "id": 3493756,
+          "authorName": "tennogh",
+          "postDate": "2026-07-08 12:45:48.227000",
+          "votes": 2,
+          "content": "<p>Interesting that your CV is consistently below your LB. For me it's the opposite. Maybe my CV scheme is too hard.</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3488531,
+      "authorName": "k256.dev",
+      "postDate": "2026-07-05 03:04:23.737000",
+      "votes": 8,
+      "content": "<p>I think that only part of the CV data is truly correlated with the LB.</p>\n<p>The 773 CV wells can be divided into two groups based on a certain rule. From what I've observed, the LB correlates well with one group but shows little to no correlation with the other. If you look at the relationship between the LB and the CV, while also considering that the LB consists of very few samples and is therefore quite noisy, an interesting pattern emerges. (I'll leave the rule for others to figure out.)</p>\n<p>I've repeatedly observed cases where a <strong>-0.9</strong> improvement in CV resulted in only a <strong>+0.1</strong> change on the LB. Excluding data leakage and pure luck, I believe that genuine improvements in CV are still likely to translate into improvements on the private leaderboard, even if the public LB appears to move in the opposite direction due to noise.</p>",
+      "replies": [
+        {
+          "id": 3488705,
+          "authorName": "SpeedSci",
+          "postDate": "2026-07-05 07:14:54.657000",
+          "votes": 0,
+          "content": "<p>Wouldn't this kind of split cause a lot of fluctuation in the LB score?</p>",
+          "replies": [
+            {
+              "id": 3488752,
+              "authorName": "k256.dev",
+              "postDate": "2026-07-05 08:00:41.647000",
+              "votes": 1,
+              "content": "<p>It depends on the current RMSE, but simply changing the random seed at one point in the algorithm can already cause fluctuations of around 0.2–0.3. I consider that to be a fairly large amount of variance.</p>\n<p>That said, I also expect the variance not to become much larger than that, and I believe there's a specific reason for it—one that's related to the hypothesis I mentioned.</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3488480,
+      "authorName": "Tucker Arrants",
+      "postDate": "2026-07-05 00:08:13.287000",
+      "votes": 4,
+      "content": "<p>I lost basically all correlation between CV and LB once CV starting getting below 6. Before that, it was decently correlated. </p>",
+      "replies": [
+        {
+          "id": 3488782,
+          "authorName": "yuanzhe zhou",
+          "postDate": "2026-07-05 08:23:29.420000",
+          "votes": 3,
+          "content": "<p>Thanks for the info. From the information above (from different kagglers), I believe CV is very important in this competition. But LB also matters (high LB means that you have done something correct, but validate it wrongly).</p>",
+          "replies": []
+        },
+        {
+          "id": 3488796,
+          "authorName": "SpeedSci",
+          "postDate": "2026-07-05 08:31:58.687000",
+          "votes": 0,
+          "content": "<p>Do you think we should deliberately handle those bad wells? And do you think Unet is worth using?</p>",
+          "replies": []
+        },
+        {
+          "id": 3493589,
+          "authorName": "Rishikesh Jani",
+          "postDate": "2026-07-08 04:40:26.960000",
+          "votes": 1,
+          "content": "<p>Same here. Around the 5.8 mark. </p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3488482,
+      "authorName": "ImperfectKitto",
+      "postDate": "2026-07-05 00:21:02.577000",
+      "votes": 1,
+      "content": "<p>correlation isn't \"=\"</p>\n<p>if with lower CV you get lower LB, you're chilling. that said, I had many inversions (lower CV but higher LB, not other way around though)</p>",
+      "replies": []
+    },
+    {
+      "id": 3488459,
+      "authorName": "tennogh",
+      "postDate": "2026-07-04 23:21:37.003000",
+      "votes": 1,
+      "content": "<p>It correlates to some extent, there is a previous thread where people have shared their figures. But LB is very noisy (only ~50 wells vs 773 wells for CV). The public notebooks are probably relying a lot on seed noise and their CV is pretty high. </p>",
+      "replies": []
+    },
+    {
+      "id": 3488457,
+      "authorName": "Sasha Turutin",
+      "postDate": "2026-07-04 23:20:03.953000",
+      "votes": 1,
+      "content": "<p>In my case not very much, but maybe I'm doing something wrong. Never reached CV less than 8 so far.</p>",
+      "replies": []
+    },
+    {
+      "id": 3489528,
+      "authorName": "Georgy Mamarin",
+      "postDate": "2026-07-05 17:41:08.040000",
+      "votes": -14,
+      "content": "<p>Short version: your CV and the public LB are scored on different sets of wells, so they won't line up cleanly. The public LB is only ~50 wells (a friendlier slice of the ~200 hidden), scored with real sampling noise; a pooled by-well CV over all 773 training wells is the honest number, and flat/persistence there is ~15.9, not 7.5. So a public notebook reading CV 10 / LB 7 is mostly the LB well-set being easier plus a lucky draw, not a broken CV.</p>\n<p>On whether to trust a CV gain: the thing to beat is the seed band. pilkwang posted byte-identical notebooks scoring 7.168–7.286 on the public board — ~0.12 from nothing but the reseed — so a gain smaller than that can move the LB the wrong way purely by chance (exactly the −0.9 CV / +0.1 LB inversions people are seeing). Tucker's point that correlation dies below CV ~6 fits: past that, the differences you're chasing are finer than the ~50-well LB can resolve, so they drown in the sampling noise. Trust a by-well grouped CV over the public board, and check a gain clears the seed band before chasing it.</p>",
+      "replies": []
+    }
+  ]
+}

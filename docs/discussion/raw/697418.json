@@ -1,0 +1,104 @@
+{
+  "id": 697418,
+  "title": "Diagram of the problem",
+  "authorName": "Zacchaeus",
+  "postDate": "2026-05-06 01:02:47.450000",
+  "votes": 164,
+  "commentCount": 11,
+  "content": "<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F4080021%2F3f56527c733365a94d929bdc0600c7ef%2Fig_023b4ba06ac0441e0169fa9248ca54819aacb93888a02601a8.png?generation=1778029361497538&amp;alt=media\" alt=\"\"></p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/697418",
+  "comments": [
+    {
+      "id": 3468813,
+      "authorName": "Stitch Clarity",
+      "postDate": "2026-06-09 21:01:13.203000",
+      "votes": 2,
+      "content": "<p>Hi everyone. I’m new here, and before I start commenting more seriously in this competition, I wanted to say this once clearly and respectfully.</p>\n<p>I noticed the line under the comment box: “Be patient, be friendly, and focus on ideas. We’re all here to learn and improve.” I LOVE THAT!, because that is honestly the only reason I want to participate here.</p>\n<p>I’m not here to argue, flex, advertise, or act like I know more than anyone. I’m trying to learn the problem, share useful perspectives, and ask better questions. I come from a very structured way of thinking. Over time I’ve tried to break my own reasoning process into layers: problem, signal, pattern, constraint, contradiction, missing context, and so on. I call that kind of work Stitch Clarity in my own system, but the simple version is this: I try to take messy information and organize it into something people can actually reason through.</p>\n<p>Because of that, my comments can sometimes look very structured. I know that can read strangely online. I’ve had that happen in other communities, where people assumed I was being automated or trying to game attention, when really I was just trying to be careful and helpful. So I want to be transparent up front: I’m a real person, I’m reading, I’m thinking, and I’m trying to contribute in good faith.</p>\n<p>This diagram helped me a lot, and I’ve found myself coming back to it because it exposes the part of the problem I keep thinking about: maybe TVT here is not just “depth” in the simple visual sense. Maybe it behaves more like a local geology-position coordinate, where the hard part is understanding the transform between MD, Z, GR, TVT_input, the typewell, and the hidden prediction zone.</p>\n<p>The questions I keep circling are:</p>\n<ol>\n<li>Is there a per-well or per-group offset/scale between TVT, Z, MD, and the layer surfaces?</li>\n<li>Is TVT mainly constrained by continuity from TVT_input, or can the stratigraphic frame shift after prediction start?</li>\n<li>Should the horizontal GR curve be aligned or warped against the typewell GR curve instead of compared directly?</li>\n<li>Could repeated constants across wells suggest grouped geological transforms?</li>\n<li>Are some errors really geology errors, or are they hidden coordinate/alignment errors?</li>\n<li>Is the typewell best treated as a reference signature rather than a direct vertical lookup?</li>\n</ol>\n<p>I’m not stating any of that as fact. I’m just trying to frame the problem in a way that might reveal useful mathematical structure.</p>\n<p>So before I spend a lot of time posting ideas here, I wanted to ask plainly: is this kind of contribution welcome? If I’m off base, I’m happy to be corrected. If this is useful, I’d like to keep learning and sharing ideas in that spirit.</p>\n<p>Either way, I appreciate the diagram. It gave me a better starting point.\n```</p>",
+      "replies": [
+        {
+          "id": 3478627,
+          "authorName": "maesaer",
+          "postDate": "2026-06-22 21:28:38.453000",
+          "votes": 1,
+          "content": "<p>Welcome — and genuinely, this is exactly the kind of post the comment box is asking for. Structured thinking reads just fine here; nobody's going to mistake careful framing for bad faith. The fact that you're asking whether it's welcome before flooding the board is itself a good sign. Please do keep going.</p>\n<p>Your instinct that TVT is a local geology-position coordinate, not plain depth, is the right one — that reframe is most of the battle. A few things I've found poking at the data that line up with your questions:</p>\n<p>(Q1) Per-well offset/scale. Yes, strongly — but only locally stable. TVT ≈ (−Z) + offset, with slope ~1.0 and a per-well additive datum (the layer surfaces sit on that same −Z datum). The trap: that offset isn't constant into the\n  toe. It drifts a median ~100 ft (and well over 400 ft in the worst wells) from heel to toe, because steering decouples\n  Z from geological position. So −Z + heel offset is a great local predictor and a terrible extrapolator — which is why\n  it pays to model the drift, not raw position.</p>\n<p>(Q2) Continuity vs. frame shift. Continuity dominates — actual TVT movement from last-known to toe is tiny in most\n  wells (median ~10 ft), so carry-forward is a strong prior. But the frame genuinely can shift after prediction start\n  (heel-slope vs toe-slope correlate only ~0.6), and that minority of wells is where almost all the error lives.</p>\n<p>(Q3) Align/warp the GR. Align/warp — comparing raw GR directly is the wrong move. Horizontal GR is indexed by MD,\n  typewell GR by TVT; they only line up after a non-linear warp. That warp's drift estimate carries signal; the raw\n  per-row GR comparison adds basically nothing.</p>\n<p>(Q4) Repeated constants → grouped transforms. Yes. Formation-surface spacings repeat across wells with surprisingly\n  low variation, and heel offsets cluster into a handful of buckets — basin-scale dip, not randomness. There's a shared\n  geological frame you can borrow across wells.</p>\n<p>(Q5) Geology error vs hidden coordinate error. Mostly hidden offset, not geology. About 60% of the error is a\n  near-constant per-well shift rather than within-well scatter — and it's real, not noise (it persists across the\n  prediction zone, and removing it would cut RMSE by ~38%). So it's tempting to chase.</p>\n<p>The honest news: I couldn't recover that shift from test-legal signal. Regressing it on the features gives ~zero\n  correlation, and borrowing it from spatial neighbors is just as flat — once basin/dip is in the model, what's left is\n  idiosyncratic to each well. What is predictable is the size of the shift (not its direction): uncertainty/disagreement\n  measures flag which wells are unreliable. So it's a confidence-weighting handle, not a correction.</p>\n<p>(Q6) Typewell as signature vs lookup. Both, depending on zone. In the known heel the typewell TVT axis is\n  co-registered, so GR(TVT) lookup is geometrically valid. In the prediction zone you obviously can't look up what\n  you're predicting — there it's strictly a reference signature to match against. Valid lookup table in the known zone;\n  signature in the unknown zone.</p>\n<p>So: you're not off base at all. Glad you're here.</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3463979,
+      "authorName": "Ra'uf Fauzan Rambe",
+      "postDate": "2026-05-28 13:39:30.923000",
+      "votes": 1,
+      "content": "<p>This diagram is already good to be used as an education in this Geology Prediction</p>",
+      "replies": []
+    },
+    {
+      "id": 3454599,
+      "authorName": "RMorrison",
+      "postDate": "2026-05-07 14:37:31.537000",
+      "votes": 8,
+      "content": "<p>This diagram makes a lot of sense to me, but I'm still confused on the magnitude of TVT in the data. Each TVT value is larger than both Z or the top depths of the individual layers at a given MD. I'm assuming all units are in feet. This diagram doesn't work if TVT &gt; Z, so I suspect ROGII is using a different convention here. I think TVT is loosely defined and used differently by different parties. A clarification about the definition here by ROGII with a diagram would certainly be appreciated.</p>",
+      "replies": [
+        {
+          "id": 3468025,
+          "authorName": "",
+          "postDate": "2026-06-08 08:46:42.347000",
+          "votes": 0,
+          "content": "",
+          "replies": []
+        },
+        {
+          "id": 3468027,
+          "authorName": "",
+          "postDate": "2026-06-08 08:54:50.490000",
+          "votes": 1,
+          "content": "",
+          "replies": [
+            {
+              "id": 3468064,
+              "authorName": "",
+              "postDate": "2026-06-08 10:55:36.700000",
+              "votes": 1,
+              "content": "",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3454017,
+      "authorName": "eugene",
+      "postDate": "2026-05-06 12:48:22.463000",
+      "votes": 1,
+      "content": "<p>Thank you for this diagram! But what about typewells? Dow you know how does it work ? Why is TVT a straight line in typewell data? Isn't TVT the thickness of the Layers? And if we drill vertically, then we pass through several layers and the TVT should change from layer to layer right? Or is vertical only for TargetLayer? 😵‍💫</p>",
+      "replies": [
+        {
+          "id": 3454407,
+          "authorName": "Manish Swami",
+          "postDate": "2026-05-07 04:32:34.917000",
+          "votes": 0,
+          "content": "<p>Typewell.csv  act as ground truth of horizontal_well.csv</p>",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": 3454421,
+      "authorName": "Navneet",
+      "postDate": "2026-05-07 05:32:15.820000",
+      "votes": 1,
+      "content": "<p>Informative Diagram of the Problem <a href=\"https://www.kaggle.com/zacchaeus\" target=\"_blank\">@zacchaeus</a> </p>",
+      "replies": []
+    },
+    {
+      "id": 3473434,
+      "authorName": "Tabish Shah Mohsin",
+      "postDate": "2026-06-16 15:22:18.830000",
+      "votes": 0,
+      "content": "<p><img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F28339484%2Fa31b02201c72d30f1ea15bd543a1275b%2FProblem%20Diagram.png?generation=1781516015139168&amp;alt=media\" alt=\"Corrected Diagram\"></p>\n<p><a href=\"https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/708367\" target=\"_blank\">Thread.</a></p>\n<p>Thanks <a href=\"https://www.kaggle.com/rmorrison0\" target=\"_blank\">@rmorrison0</a>.</p>",
+      "replies": []
+    }
+  ]
+}

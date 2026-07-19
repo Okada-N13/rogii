@@ -1,0 +1,54 @@
+{
+  "id": 707695,
+  "title": "Private Test Update and Rescore",
+  "authorName": "Ryan Holbrook",
+  "postDate": "2026-06-11 14:04:07.034000",
+  "votes": 19,
+  "commentCount": 5,
+  "content": "<p>Hi everyone,</p>\n<p>There is an outlier well in the private test set that we've decided to exclude from scoring. I will be beginning a rescore shortly. Since this only affects the private set, you won't notice any change in the leaderboard. And, since the data for this well is still a part of the test set, the change shouldn't affect submission runtimes either.</p>\n<p>Basically, this should be an invisible update except you might notice your existing submissions briefly have a score \"pending\" and this is why.</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/707695",
+  "comments": [
+    {
+      "id": 3471558,
+      "authorName": "Kanchana1990",
+      "postDate": "2026-06-11 20:11:12.377000",
+      "votes": -1,
+      "content": "<p><a href=\"https://www.kaggle.com/ryanholbrook\" target=\"_blank\">@ryanholbrook</a> 2 notebooks that lastly scored the best are know showing as an error, is it due to this? thanks for the info</p>",
+      "replies": [
+        {
+          "id": 3471718,
+          "authorName": "Ertuğrul Demir",
+          "postDate": "2026-06-12 07:50:47.473000",
+          "votes": 0,
+          "content": "<p>Same here my best scoring got an error, submit exact same notebook and it worked, weird…</p>",
+          "replies": []
+        },
+        {
+          "id": 3471800,
+          "authorName": "Ryan Holbrook",
+          "postDate": "2026-06-12 13:32:21.387000",
+          "votes": 2,
+          "content": "<p>Apologies for the trouble. I've alerted the team. Have you noticed the error recur since yesterday?</p>",
+          "replies": [
+            {
+              "id": 3472092,
+              "authorName": "Ertuğrul Demir",
+              "postDate": "2026-06-13 09:28:13.143000",
+              "votes": 0,
+              "content": "<p>No worries! It's fine for new submissions on my side</p>",
+              "replies": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3471706,
+      "authorName": "MasonLeSaint",
+      "postDate": "2026-06-12 07:31:04.060000",
+      "votes": 0,
+      "content": "<p>Hi <a href=\"https://www.kaggle.com/ryanholbrook\" target=\"_blank\">@ryanholbrook</a> \nMy submitted notebook run for 16582 seconds but scoring process is still run. So could you explain the way of scoring phase work? <img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F32853119%2F073129b206a03ab7aa0f129a4436c679%2FScreenshot%202026-06-12%20142948.png?generation=1781249429361561&amp;alt=media\" alt=\"\">\n<img src=\"https://www.googleapis.com/download/storage/v1/b/kaggle-forum-message-attachments/o/inbox%2F32853119%2Fefcbf16e521c218bf6ea8b3d7a303c7f%2FScreenshot%202026-06-12%20142929.png?generation=1781249461295848&amp;alt=media\" alt=\"\"></p>",
+      "replies": []
+    }
+  ]
+}

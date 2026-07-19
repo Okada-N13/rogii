@@ -1,0 +1,37 @@
+{
+  "id": 709331,
+  "title": "who can help me submit the result",
+  "authorName": "huyuim",
+  "postDate": "2026-06-18 08:40:01.895000",
+  "votes": 1,
+  "commentCount": 3,
+  "content": "<p>My account is having problems and my identity authentication is not passing, so I cannot submit predictions. Can a friend team up with me to help me submit predictions? I want to see how my grades are. Thanks</p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/709331",
+  "comments": [
+    {
+      "id": 3474838,
+      "authorName": "OpPrime",
+      "postDate": "2026-06-18 21:02:24.130000",
+      "votes": 0,
+      "content": "<p>You need to submit your code as a notebook alongside the csv per <a href=\"https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction\" target=\"_blank\">here</a>: under Code Requirements. Your code will run an unseen set of wells and generates its own CSV file which will get scored for the leaderboard.</p>",
+      "replies": []
+    },
+    {
+      "id": 3474586,
+      "authorName": "Connor Tynan",
+      "postDate": "2026-06-18 09:08:06.153000",
+      "votes": 0,
+      "content": "<p>Have you tried contacting Kaggle support? I also had verification issues and the Support team were great – replied promptly and managed to get things sorted.</p>",
+      "replies": [
+        {
+          "id": 3474589,
+          "authorName": "huyuim",
+          "postDate": "2026-06-18 09:14:57.563000",
+          "votes": 0,
+          "content": "<p>yes, I contact it, but they haven't reply me yet. Maybe I too hurried, I contact it some hours ago. Thank you </p>",
+          "replies": []
+        }
+      ]
+    }
+  ]
+}

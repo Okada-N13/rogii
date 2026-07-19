@@ -1,0 +1,29 @@
+{
+  "id": 703867,
+  "title": "Notebook Timeout run",
+  "authorName": "Savas Papadopoulos",
+  "postDate": "2026-06-02 12:08:56.845000",
+  "votes": 3,
+  "commentCount": 2,
+  "content": "<p>Why does my notebook run out of time if it runs for only a few minutes? </p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/703867",
+  "comments": [
+    {
+      "id": 3465593,
+      "authorName": "Chris Deotte",
+      "postDate": "2026-06-02 12:40:26.413000",
+      "votes": 0,
+      "content": "<p>When we commit our notebook it only infers the 3 fake test wells. When we submit our notebook, the fake wells get replaced with 200 real test wells and our code sees and infers the 200 real test wells. </p>\n<p>If you want to estimate how long your code takes (during a submit), then have your code infer 200 train wells as an example.</p>",
+      "replies": [
+        {
+          "id": 3466036,
+          "authorName": "Savas Papadopoulos",
+          "postDate": "2026-06-03 10:45:11.307000",
+          "votes": 1,
+          "content": "<p>Thank you so much, Chris. Regards from Athens, Greece, Savas</p>",
+          "replies": []
+        }
+      ]
+    }
+  ]
+}

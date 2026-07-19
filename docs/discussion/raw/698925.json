@@ -1,0 +1,20 @@
+{
+  "id": 698925,
+  "title": "Sharing my CV and LB scores",
+  "authorName": "Zacchaeus",
+  "postDate": "2026-05-12 06:12:22.910000",
+  "votes": 10,
+  "commentCount": 1,
+  "content": "<p>My CV setup is basic: 5 folds grouping by well.\nMy current best single model is CV=10.985, LB=10.525. </p>",
+  "url": "https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/698925",
+  "comments": [
+    {
+      "id": 3468347,
+      "authorName": "Aly Ayman",
+      "postDate": "2026-06-08 20:27:30.987000",
+      "votes": -5,
+      "content": "<p>That's great. </p>\n<p>Keep on the good work!</p>",
+      "replies": []
+    }
+  ]
+}
