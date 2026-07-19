@@ -73,3 +73,9 @@ artifacts/<run-id>/
 ├── run.log
 └── well_stats.parquet
 ```
+
+## Stage 1 trend blend
+
+Once `baseline_anchor_full_v001` exists, open `notebooks/20_run_stage1_trends.ipynb`. It pulls the latest code, runs the promoted fixed trend blend on all 773 wells, and compares it with the anchor baseline. The expected development OOF RMSE is approximately `15.700508`.
+
+The standalone linear and quadratic configs are diagnostic controls and are not promoted models. See `docs/stage1_results.md` for their measured failure modes and the nested validation result.

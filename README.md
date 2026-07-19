@@ -20,6 +20,8 @@ Reproducible experiments and Japanese research notes for the Kaggle ROGII Wellbo
 
 See [`docs/colab_workflow.md`](docs/colab_workflow.md) for the complete workflow.
 
+After reproducing the anchor baseline, run [`notebooks/20_run_stage1_trends.ipynb`](notebooks/20_run_stage1_trends.ipynb). Measured Stage 1 results are recorded in [`docs/stage1_results.md`](docs/stage1_results.md).
+
 ## Local commands
 
 ```bash

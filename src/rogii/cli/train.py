@@ -12,7 +12,7 @@ from rogii.data.folds import make_group_folds
 from rogii.data.loading import discover_horizontal_wells, load_horizontal_well
 from rogii.data.schema import validate_horizontal_well
 from rogii.evaluation.metrics import evaluate_predictions
-from rogii.models.anchor import predict_anchor
+from rogii.models.registry import predict_model
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -45,9 +45,10 @@ def main(argv: list[str] | None = None) -> None:
         raise FileExistsError(f"Refusing to overwrite non-empty run directory: {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    model_name = config.get("model", {}).get("name")
-    if model_name not in {"last_tvt_anchor", "flat_surface_anchor"}:
-        raise ValueError(f"Unsupported model for this implementation stage: {model_name!r}")
+    model_config = config.get("model", {})
+    model_name = model_config.get("name")
+    if not model_name:
+        raise ValueError("model.name is required")
 
     paths = discover_horizontal_wells(data_dir, "train")
     if limit_wells is not None:
@@ -58,7 +59,7 @@ def main(argv: list[str] | None = None) -> None:
         frame = load_horizontal_well(path)
         stats = validate_horizontal_well(frame, split="train")
         stats_records.append(stats.to_dict())
-        prediction_frames.append(predict_anchor(frame, mode=str(model_name)))
+        prediction_frames.append(predict_model(frame, model_config))
         if index % 100 == 0:
             print(f"predicted {index}/{len(paths)} wells", flush=True)
 

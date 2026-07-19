@@ -19,6 +19,7 @@ dev = ["pytest>=8,<10"]
 rogii-prepare = "rogii.cli.prepare:main"
 rogii-train = "rogii.cli.train:main"
 rogii-evaluate = "rogii.cli.evaluate:main"
+rogii-compare = "rogii.cli.compare:main"
 
 [build-system]
 requires = ["hatchling"]

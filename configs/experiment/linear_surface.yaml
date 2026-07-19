@@ -1,0 +1,28 @@
+experiment_name: linear_surface
+seed: 42
+
+data:
+  data_dir: null
+  split: train
+  limit_wells: null
+
+cv:
+  n_splits: 5
+  seed: 42
+
+model:
+  name: guarded_trend
+  target: surface
+  degree: 1
+  window_ft: 500
+  minimum_points: 20
+  ridge: 0.001
+  huber_delta: 1.5
+  robust_iterations: 5
+  slope_clip: 1.2
+  max_delta_ft: 250
+  strength: 1.0
+
+output:
+  artifact_dir: null
+
