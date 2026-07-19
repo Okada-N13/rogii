@@ -32,7 +32,7 @@ Stage 5 is a self-contained spatial audit in [`notebooks/60_run_stage5_spatial_a
 
 Generate the final honest Stage 4 CSV with the self-contained [`notebooks/70_generate_submission.ipynb`](notebooks/70_generate_submission.ipynb). Upload instructions and validation checks are documented in [`docs/submission_workflow.md`](docs/submission_workflow.md).
 
-Stage 6 is the separate public-7.x positive control in [`notebooks/80_run_stage6_public7_reproduction.ipynb`](notebooks/80_run_stage6_public7_reproduction.ipynb). It downloads the attributed public Kaggle kernel at runtime, audits the generated CSV, and never mixes its public score with honest OOF. See [`docs/stage6_results.md`](docs/stage6_results.md).
+Stage 6 uses an attributed public Kaggle kernel as a separate public-7.x positive control. Formal submission must be made by copying and committing that Notebook on Kaggle; [`notebooks/80_run_stage6_public7_reproduction.ipynb`](notebooks/80_run_stage6_public7_reproduction.ipynb) is only an optional Colab check against the visible sample wells. See [`docs/stage6_results.md`](docs/stage6_results.md).
 
 ## Local commands
 

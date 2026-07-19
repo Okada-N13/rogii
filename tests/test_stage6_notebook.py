@@ -27,5 +27,6 @@ def test_stage6_notebook_is_valid_and_self_contained() -> None:
 def test_stage6_keeps_public_score_separate_from_honest_oof() -> None:
     payload = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
     all_text = "\n".join("".join(cell.get("source", [])) for cell in payload["cells"])
-    assert "public_leaderboard_positive_control" in all_text
-    assert "not an honest 773-well OOF score" in all_text
+    assert "visible_sample_check_not_submittable" in all_text
+    assert "not honest 773-well OOF" in all_text
+    assert "Do not upload this CSV" in all_text
