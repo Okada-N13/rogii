@@ -1,0 +1,13 @@
+experiment_name: stage5_spatial_knn
+seed: 42
+
+spatial:
+  n_spatial_blocks: 6
+  k_neighbors: 4
+  distance_floor_ft: 100.0
+  distance_shrink_ft: 10000.0
+  distance_power: 1.0
+  bias_clip_ft: 20.0
+  slope_clip_ft_per_kft: 15.0
+  correction_cap_ft: 10.0
+  blend_weight: 0.10

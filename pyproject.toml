@@ -23,6 +23,7 @@ rogii-evaluate = "rogii.cli.evaluate:main"
 rogii-compare = "rogii.cli.compare:main"
 rogii-residual = "rogii.cli.residual:main"
 rogii-stage4 = "rogii.cli.stage4:main"
+rogii-spatial = "rogii.cli.spatial:main"
 
 [build-system]
 requires = ["hatchling"]

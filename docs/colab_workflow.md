@@ -97,3 +97,11 @@ Stage 3 cross-fits a two-seed lightweight residual ensemble on multi-scale GR, P
 Open `notebooks/50_run_stage4_tail_path.ipynb`. It is self-contained and creates Stage 2 and Stage 3 automatically only when their expected Drive artifacts are missing. With `stage3_residual_hgb_full_v001` already present, only the deterministic Stage 4 pass runs.
 
 Stage 4 caps the Stage 3 correction to ±1 ft for the 20% of wells with the highest mean PF seed uncertainty. It then adds 10% of a deterministic GR/typewell trellis correction. The local reference OOF improved from `12.299725` to `12.204505`, while median, P90, and maximum well RMSE also improved. Because the locally composed Stage 3 diagnostics produced a slightly different score from native Colab, treat the first native Colab Stage 4 result as the canonical reproduction value. Allow approximately 2--8 minutes on a Colab CPU runtime when Stage 3 is present.
+
+The native Colab Stage 4 reproduction scored `12.228593`, improving its Stage 3 input by `0.110657`. Its well-paired bootstrap interval was `[-0.157746, -0.037241]`.
+
+## Stage 5 spatial audit
+
+Open `notebooks/60_run_stage5_spatial_audit.ipynb`. It is self-contained and reuses Stage 4 when present. The notebook evaluates the same nearest-well residual correction under ordinary well folds, six geographic holdout blocks, and a shuffled-target control, then prints every promotion gate.
+
+The local candidate improved ordinary OOF by `0.072531`, but improved spatial-block OOF by only `0.009404`, worsened two of six geographic blocks, and increased the worst-10% SSE share. It is therefore an audit result, not a promoted replacement for Stage 4. Allow approximately 2--8 minutes when Stage 4 is already present.

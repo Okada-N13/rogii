@@ -39,3 +39,5 @@ The local whole-OOF trellis optimum was near weight 0.175--0.20. Leave-one-fold-
 For the combined guard/path search, nested folds selected uncertainty quantiles 0.75--0.80, correction caps of 1 ft in four folds and 3 ft in one, and path weights 0.15--0.20. The promoted values 0.80, 1 ft, and 0.10 are the conservative tail-protection point rather than the minimum whole-OOF score.
 
 The integrated Stage 4 pass took `48.05` seconds on the local CPU reference machine. The local Stage 3 reference was composed from separate PF runs and scored `12.299725`, whereas native Colab Stage 3 scored `12.339250`. Native Colab Stage 4 should therefore be recorded separately as the canonical reproduction result.
+
+The first native Colab Stage 4 run scored `12.228593`, improving its exact Stage 3 input by `0.110657`. It improved 454 of 773 wells; the paired bootstrap interval was `[-0.157746, -0.037241]`. Median well RMSE improved from `7.6360` to `7.3626`, and P90 improved from `17.5013` to `17.3698`. This native result is the canonical Stage 4 reference.

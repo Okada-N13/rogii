@@ -28,6 +28,8 @@ For Stage 3, run the self-contained [`notebooks/40_run_stage3_residual.ipynb`](n
 
 For Stage 4, run the self-contained [`notebooks/50_run_stage4_tail_path.ipynb`](notebooks/50_run_stage4_tail_path.ipynb). It adds a fixed uncertainty guard and a small deterministic trellis component. Results are recorded in [`docs/stage4_results.md`](docs/stage4_results.md).
 
+Stage 5 is a self-contained spatial audit in [`notebooks/60_run_stage5_spatial_audit.ipynb`](notebooks/60_run_stage5_spatial_audit.ipynb). Its candidate is intentionally not promoted because it fails the leave-spatial-block and tail gates. See [`docs/stage5_results.md`](docs/stage5_results.md).
+
 ## Local commands
 
 ```bash
