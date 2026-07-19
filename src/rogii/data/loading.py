@@ -8,6 +8,7 @@ import pandas as pd
 
 
 HORIZONTAL_SUFFIX = "__horizontal_well.csv"
+TYPEWELL_SUFFIX = "__typewell.csv"
 
 
 def well_id_from_path(path: str | Path) -> str:
@@ -34,6 +35,26 @@ def load_horizontal_well(path: str | Path) -> pd.DataFrame:
     return frame
 
 
+def load_typewell(horizontal_path: str | Path) -> pd.DataFrame:
+    horizontal = Path(horizontal_path)
+    well_id = well_id_from_path(horizontal)
+    path = horizontal.with_name(f"{well_id}{TYPEWELL_SUFFIX}")
+    if not path.is_file():
+        raise FileNotFoundError(f"Missing companion typewell CSV: {path}")
+    frame = pd.read_csv(path)
+    required = {"TVT", "GR"}
+    missing = sorted(required - set(frame.columns))
+    if missing:
+        raise ValueError(f"{well_id}: typewell is missing columns {missing}")
+    valid = frame[["TVT", "GR"]].copy()
+    valid["TVT"] = pd.to_numeric(valid["TVT"], errors="coerce")
+    valid["GR"] = pd.to_numeric(valid["GR"], errors="coerce")
+    valid = valid.dropna(subset=["TVT"]).sort_values("TVT")
+    if len(valid) < 3:
+        raise ValueError(f"{well_id}: typewell has fewer than three valid TVT rows")
+    return valid.reset_index(drop=True)
+
+
 def iter_horizontal_wells(
     data_dir: str | Path,
     split: str,
@@ -53,4 +74,3 @@ def dataset_fingerprint(paths: Sequence[Path]) -> str:
             while chunk := handle.read(1024 * 1024):
                 digest.update(chunk)
     return digest.hexdigest()
-

@@ -9,7 +9,7 @@ import pandas as pd
 from rogii.artifacts import environment_report, write_json, write_yaml
 from rogii.config import load_config, resolve_artifact_dir, resolve_data_dir
 from rogii.data.folds import make_group_folds
-from rogii.data.loading import discover_horizontal_wells, load_horizontal_well
+from rogii.data.loading import discover_horizontal_wells, load_horizontal_well, load_typewell
 from rogii.data.schema import validate_horizontal_well
 from rogii.evaluation.metrics import evaluate_predictions
 from rogii.models.registry import predict_model
@@ -57,9 +57,10 @@ def main(argv: list[str] | None = None) -> None:
     prediction_frames: list[pd.DataFrame] = []
     for index, path in enumerate(paths, start=1):
         frame = load_horizontal_well(path)
+        typewell = load_typewell(path)
         stats = validate_horizontal_well(frame, split="train")
         stats_records.append(stats.to_dict())
-        prediction_frames.append(predict_model(frame, model_config))
+        prediction_frames.append(predict_model(frame, model_config, typewell))
         if index % 100 == 0:
             print(f"predicted {index}/{len(paths)} wells", flush=True)
 

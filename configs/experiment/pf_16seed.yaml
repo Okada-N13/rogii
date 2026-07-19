@@ -1,0 +1,32 @@
+experiment_name: pf_16seed
+seed: 42
+
+data:
+  data_dir: null
+  split: train
+  limit_wells: null
+
+cv:
+  n_splits: 5
+  seed: 42
+
+model:
+  name: particle_filter
+  seed: 42
+  n_particles: 256
+  n_seeds: 16
+  tracking_stride: 1
+  grid_step: 0.2
+  likelihood_scale: 5.0
+  initial_spread: 4.5
+  momentum: 0.998
+  rate_noise: 0.002
+  position_noise: 0.005
+  rough_position: 0.1
+  rough_rate: 0.001
+  resample_threshold: 0.5
+  hold_weight: 0.0
+
+output:
+  artifact_dir: null
+

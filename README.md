@@ -22,6 +22,8 @@ See [`docs/colab_workflow.md`](docs/colab_workflow.md) for the complete workflow
 
 After reproducing the anchor baseline, run [`notebooks/20_run_stage1_trends.ipynb`](notebooks/20_run_stage1_trends.ipynb). Measured Stage 1 results are recorded in [`docs/stage1_results.md`](docs/stage1_results.md).
 
+For Stage 2, run [`notebooks/30_run_stage2_pf.ipynb`](notebooks/30_run_stage2_pf.ipynb) after the setup notebook. It evaluates the promoted particle-filter + guarded-trend blend. Measured results and leakage controls are recorded in [`docs/stage2_results.md`](docs/stage2_results.md).
+
 ## Local commands
 
 ```bash

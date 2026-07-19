@@ -79,3 +79,9 @@ artifacts/<run-id>/
 Once `baseline_anchor_full_v001` exists, open `notebooks/20_run_stage1_trends.ipynb`. It pulls the latest code, runs the promoted fixed trend blend on all 773 wells, and compares it with the anchor baseline. The expected development OOF RMSE is approximately `15.700508`.
 
 The standalone linear and quadratic configs are diagnostic controls and are not promoted models. See `docs/stage1_results.md` for their measured failure modes and the nested validation result.
+
+## Stage 2 particle filter
+
+Open `notebooks/30_run_stage2_pf.ipynb` after `00_colab_setup.ipynb` in the same runtime. The notebook pulls the latest code and runs an eight-well smoke test before the complete 773-well evaluation. It is not necessary to rerun the Stage 1 notebook first: the promoted Stage 1 component is included in `configs/experiment/pf_trend_blend.yaml`. An existing Stage 1 artifact is used only for the final comparison report.
+
+The promoted model is a fixed blend of 75% two-batch multi-seed particle filter and 25% Stage 1 guarded trend blend. The PF averages two independent 16-seed batches to reduce its material random-seed variance. It uses the complete visible GR/trajectory sequence, the known `TVT_input` prefix, and the paired typewell, and never reads hidden target TVT while predicting. The expected development OOF RMSE is approximately `12.565438`; each 16-seed full CPU pass took about 15 minutes on the local reference machine, so allow roughly 30--45 minutes in Colab.
