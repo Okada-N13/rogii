@@ -57,8 +57,6 @@ def build_residual_features(
         "pf_gr_sigma",
         "pf_log_likelihood_spread",
         "y_pred",
-        "y_true",
-        "fold",
     }
     missing = sorted(required - set(base_oof.columns))
     if missing:
@@ -197,7 +195,8 @@ def build_residual_features(
         for name, values in features.items():
             frame[name] = _finite(values)
         frame["base_y_pred"] = frame["y_pred"].to_numpy(dtype=float)
-        frame["residual_target"] = frame["y_true"] - frame["base_y_pred"]
+        if "y_true" in frame:
+            frame["residual_target"] = frame["y_true"] - frame["base_y_pred"]
         feature_frames.append(frame)
         local_sample = _sample_positions(len(frame), max_rows_per_well)
         sampled_parts.append(offset + local_sample)
@@ -228,6 +227,8 @@ def sampled_training_data(
     target_clip: float,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     frame = features.frame
+    if "residual_target" not in frame or "fold" not in frame:
+        raise ValueError("Training residual features require y_true and fold")
     indices = features.sampled
     if excluded_fold is not None:
         indices = indices[frame.iloc[indices]["fold"].to_numpy(dtype=int) != excluded_fold]

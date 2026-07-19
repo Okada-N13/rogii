@@ -105,3 +105,9 @@ The native Colab Stage 4 reproduction scored `12.228593`, improving its Stage 3 
 Open `notebooks/60_run_stage5_spatial_audit.ipynb`. It is self-contained and reuses Stage 4 when present. The notebook evaluates the same nearest-well residual correction under ordinary well folds, six geographic holdout blocks, and a shuffled-target control, then prints every promotion gate.
 
 The local candidate improved ordinary OOF by `0.072531`, but improved spatial-block OOF by only `0.009404`, worsened two of six geographic blocks, and increased the worst-10% SSE share. It is therefore an audit result, not a promoted replacement for Stage 4. Allow approximately 2--8 minutes when Stage 4 is already present.
+
+## Generate a submission
+
+Open `notebooks/70_generate_submission.ipynb`. It is self-contained, recreates only missing prerequisites, applies the promoted Stage 4 stack to the test wells, and saves validated primary and secondary CSV files under `MyDrive/kaggle/rogii/submissions/stage4_submission_v001/`.
+
+Upload `submission.csv` as the primary Stage 4 entry. `submission_stage3.csv` is a secondary control. See `docs/submission_workflow.md` for the exact checks and upload procedure.

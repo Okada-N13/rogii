@@ -79,3 +79,11 @@ def test_residual_features_do_not_read_hidden_targets(tmp_path: Path) -> None:
         changed.frame[changed.columns].to_numpy(),
     )
     assert not np.allclose(original.frame["residual_target"], changed.frame["residual_target"])
+
+
+def test_residual_features_support_target_free_inference(tmp_path: Path) -> None:
+    path, horizontal = _write_synthetic_well(tmp_path)
+    inference = _base_oof(horizontal).drop(columns=["y_true", "fold"])
+    features = build_residual_features(inference, {"00abc123": path}, [9, 33], 16)
+    assert "residual_target" not in features.frame
+    assert np.isfinite(features.frame[features.columns].to_numpy()).all()

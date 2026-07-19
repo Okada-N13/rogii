@@ -30,6 +30,8 @@ For Stage 4, run the self-contained [`notebooks/50_run_stage4_tail_path.ipynb`](
 
 Stage 5 is a self-contained spatial audit in [`notebooks/60_run_stage5_spatial_audit.ipynb`](notebooks/60_run_stage5_spatial_audit.ipynb). Its candidate is intentionally not promoted because it fails the leave-spatial-block and tail gates. See [`docs/stage5_results.md`](docs/stage5_results.md).
 
+Generate the final honest Stage 4 CSV with the self-contained [`notebooks/70_generate_submission.ipynb`](notebooks/70_generate_submission.ipynb). Upload instructions and validation checks are documented in [`docs/submission_workflow.md`](docs/submission_workflow.md).
+
 ## Local commands
 
 ```bash

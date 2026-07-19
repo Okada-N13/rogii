@@ -1,0 +1,5 @@
+experiment_name: submission_stage4
+seed: 42
+stage2_config: configs/experiment/pf_trend_blend.yaml
+stage3_config: configs/experiment/stage3_residual_hgb.yaml
+stage4_config: configs/experiment/stage4_tail_path.yaml
