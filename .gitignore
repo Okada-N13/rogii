@@ -5,7 +5,7 @@ __pycache__/
 artifacts/
 .pytest_cache/
 .ipynb_checkpoints/
-data/
+/data/
 public_notebook/
 .agents/
 .codex/
