@@ -1,0 +1,8 @@
+experiment_name: stage6_mha_overlay
+seed: 42
+
+overlay:
+  weight: 0.75
+  # The 8--12 ft band was not stable in full OOF; retain clearer near/far modes.
+  excluded_separation_ranges:
+    - [8.0, 12.0]

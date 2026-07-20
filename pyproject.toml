@@ -25,6 +25,7 @@ rogii-residual = "rogii.cli.residual:main"
 rogii-stage4 = "rogii.cli.stage4:main"
 rogii-spatial = "rogii.cli.spatial:main"
 rogii-submit = "rogii.cli.submit:main"
+rogii-mha = "rogii.cli.mha:main"
 
 [build-system]
 requires = ["hatchling"]

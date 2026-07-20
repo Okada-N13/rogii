@@ -111,3 +111,11 @@ The local candidate improved ordinary OOF by `0.072531`, but improved spatial-bl
 Open `notebooks/70_generate_submission.ipynb`. It is self-contained, recreates only missing prerequisites, applies the promoted Stage 4 stack to the test wells, and saves validated primary and secondary CSV files under `MyDrive/kaggle/rogii/submissions/stage4_submission_v001/`.
 
 Upload `submission.csv` as the primary Stage 4 entry. `submission_stage3.csv` is a secondary control. See `docs/submission_workflow.md` for the exact checks and upload procedure.
+
+## Stage 6B stable PF64 bimodal overlay
+
+Open `notebooks/90_run_stage6_pf128_heel_mha.ipynb` directly; `00_colab_setup.ipynb` does not need to be run first. The Notebook mounts Drive, clones or updates the repository, syncs dependencies, copies the data, runs an eight-well smoke check, and then performs the full experiment.
+
+The expensive diagnostic uses four independent 16-seed × 256-particle batches. Four wells run concurrently through `runtime.n_jobs: 4`; this produced byte-identical smoke metrics to sequential execution locally. The diagnostic supplies bimodal shifts only, while the promoted Stage 4 prediction remains the base. Completed artifacts in Drive are reused on rerun. If Colab stops during a run, change the affected `*_RUN_ID` suffix before restarting because experiment commands deliberately refuse to overwrite partial artifacts.
+
+The final cell compares the MHA overlay with `stage4_tail_path_full_v001`. The local reference improved by `0.032720`, although P90 worsened slightly and the paired-bootstrap interval crossed zero. Return the native Colab dictionary before proceeding to the Kaggle execution Notebook; the local number is not a leaderboard estimate.

@@ -1,0 +1,82 @@
+experiment_name: stage6_pf64_stable_mha
+seed: 42
+
+runtime:
+  n_jobs: 4
+
+data:
+  data_dir: null
+  split: train
+  limit_wells: null
+
+cv:
+  n_splits: 5
+  seed: 42
+
+model:
+  name: fixed_blend
+  components:
+    - weight: 0.75
+      model:
+        name: particle_filter
+        # Keep likelihood selection local to each 16-seed batch, then average
+        # the four independent batches to reduce winner's-curse instability.
+        seed_batches: [42, 43, 44, 45]
+        n_particles: 256
+        n_seeds: 16
+        tracking_stride: 1
+        grid_step: 0.2
+        likelihood_scale: 5.0
+        initial_spread: 4.5
+        momentum: 0.998
+        rate_noise: 0.002
+        position_noise: 0.005
+        rough_position: 0.1
+        rough_rate: 0.001
+        resample_threshold: 0.5
+        hold_weight: 0.0
+        mha:
+          enabled: true
+          likelihood_scale: 5.0
+          minimum_mass: 0.22
+          minimum_separation: 4.0
+          maximum_separation: 40.0
+          alpha: 1.4
+          cap: 4.0
+    - weight: 0.25
+      model:
+        name: fixed_blend
+        components:
+          - weight: 0.95
+            model:
+              name: last_tvt_anchor
+          - weight: 0.04
+            model:
+              name: guarded_trend
+              target: surface
+              degree: 1
+              window_ft: 500
+              minimum_points: 20
+              ridge: 0.001
+              huber_delta: 1.5
+              robust_iterations: 5
+              slope_clip: 1.2
+              max_delta_ft: 250
+              strength: 1.0
+          - weight: 0.01
+            model:
+              name: guarded_trend
+              target: surface
+              degree: 2
+              window_ft: 1000
+              minimum_points: 30
+              ridge: 0.01
+              huber_delta: 1.5
+              robust_iterations: 5
+              slope_clip: 1.2
+              curvature_clip: 0.0001
+              max_delta_ft: 250
+              strength: 0.5
+
+output:
+  artifact_dir: null

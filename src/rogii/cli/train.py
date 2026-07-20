@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -13,6 +14,13 @@ from rogii.data.loading import discover_horizontal_wells, load_horizontal_well, 
 from rogii.data.schema import validate_horizontal_well
 from rogii.evaluation.metrics import evaluate_predictions
 from rogii.models.registry import predict_model
+
+
+def _predict_path(path: Path, model_config: dict[str, object]) -> tuple[dict[str, object], pd.DataFrame]:
+    frame = load_horizontal_well(path)
+    typewell = load_typewell(path)
+    stats = validate_horizontal_well(frame, split="train")
+    return stats.to_dict(), predict_model(frame, model_config, typewell)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -55,14 +63,24 @@ def main(argv: list[str] | None = None) -> None:
         paths = paths[: int(limit_wells)]
     stats_records: list[dict[str, object]] = []
     prediction_frames: list[pd.DataFrame] = []
-    for index, path in enumerate(paths, start=1):
-        frame = load_horizontal_well(path)
-        typewell = load_typewell(path)
-        stats = validate_horizontal_well(frame, split="train")
-        stats_records.append(stats.to_dict())
-        prediction_frames.append(predict_model(frame, model_config, typewell))
-        if index % 100 == 0:
-            print(f"predicted {index}/{len(paths)} wells", flush=True)
+    n_jobs = int(config.get("runtime", {}).get("n_jobs", 1))
+    if n_jobs < 1:
+        raise ValueError("runtime.n_jobs must be at least one")
+    if n_jobs == 1:
+        results = map(lambda path: _predict_path(path, model_config), paths)
+        executor = None
+    else:
+        executor = ThreadPoolExecutor(max_workers=n_jobs, thread_name_prefix="rogii-well")
+        results = executor.map(lambda path: _predict_path(path, model_config), paths)
+    try:
+        for index, (stats, prediction) in enumerate(results, start=1):
+            stats_records.append(stats)
+            prediction_frames.append(prediction)
+            if index % 100 == 0:
+                print(f"predicted {index}/{len(paths)} wells", flush=True)
+    finally:
+        if executor is not None:
+            executor.shutdown(wait=True, cancel_futures=True)
 
     stats_frame = pd.DataFrame.from_records(stats_records)
     n_splits = int(cv_config.get("n_splits", 5))
@@ -79,6 +97,7 @@ def main(argv: list[str] | None = None) -> None:
         "artifact_dir": str(artifact_root),
         "run_id": run_id,
         "limit_wells": limit_wells,
+        "n_jobs": n_jobs,
     }
     predictions.to_parquet(output_dir / "oof.parquet", index=False)
     well_metrics.to_parquet(output_dir / "per_well_metrics.parquet", index=False)

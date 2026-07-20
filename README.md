@@ -34,6 +34,8 @@ Generate the final honest Stage 4 CSV with the self-contained [`notebooks/70_gen
 
 Stage 6 uses an attributed public Kaggle kernel as a separate public-7.x positive control. Formal submission must be made by copying and committing that Notebook on Kaggle; [`notebooks/80_run_stage6_public7_reproduction.ipynb`](notebooks/80_run_stage6_public7_reproduction.ipynb) is only an optional Colab check against the visible sample wells. See [`docs/stage6_results.md`](docs/stage6_results.md).
 
+For actual model development, run the self-contained [`notebooks/90_run_stage6_pf128_heel_mha.ipynb`](notebooks/90_run_stage6_pf128_heel_mha.ipynb). It keeps Stage 4 and applies a guarded bimodal overlay derived from four stable 16-seed PF batches. The misleading PF128 filename is retained for link continuity; the rejected 128-seed winner-pool configuration is not run. Use its full OOF comparison before building a Kaggle submission Notebook.
+
 ## Local commands
 
 ```bash

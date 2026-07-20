@@ -43,3 +43,13 @@ The Stage 6 positive control passes only after Kaggle reports a 7.x public score
 6. same-well overlap override.
 
 Overlap-derived target transfer stays isolated from the core model. Components are promoted to the honest pipeline only when they improve pooled OOF and tail metrics without target leakage.
+
+## Stage 6B — stable PF64 bimodal overlay
+
+`notebooks/90_run_stage6_pf128_heel_mha.ipynb` implements the first honest improvement candidate rather than replaying a public artifact. Despite the historical filename, the promoted experiment does **not** use one 128-seed winner pool. Full OOF showed that configuration was unstable: the 128-seed core scored `15.691689` on the eight-well smoke set, and the public geometry/heel combination scored `13.506625`, both worse than the existing PF.
+
+The retained diagnostic runs four independent 16-seed, 256-particle likelihood ensembles and averages the batches. Its prediction is not used to replace Stage 4. It only supplies a direction-free midpoint shift when the weighted seed paths form two credible modes (minor mass at least 0.22, separation 4–40 ft, absolute shift capped at 4 ft). The empirically unstable 8–12 ft separation band is excluded and 75% of the remaining shift is added to Stage 4.
+
+On the local 773-well OOF reference, Stage 4 moved from `12.204505` to `12.171786` (`-0.032720`). The overlay was active on 180 wells. P90 changed from `17.206059` to `17.380282`; the well-paired bootstrap 95% interval was `[-0.078682, 0.016820]`, so the point gain is real in this OOF calculation but not statistically conclusive. The public write-up's roughly 0.16 improvement on another fork is supporting evidence, not a guarantee here.
+
+No hidden TVT, leaderboard score, same-well target transfer, global score-derived bias, or leaderboard probe is used. Native Colab must reproduce the point gain before the overlay is ported to the Internet-off Kaggle execution Notebook. A 7.x leaderboard score cannot be inferred from local OOF.
