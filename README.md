@@ -36,6 +36,8 @@ Stage 6 uses an attributed public Kaggle kernel as a separate public-7.x positiv
 
 For actual model development, run the self-contained [`notebooks/90_run_stage6_pf128_heel_mha.ipynb`](notebooks/90_run_stage6_pf128_heel_mha.ipynb). It keeps Stage 4 and applies a guarded bimodal overlay derived from four stable 16-seed PF batches. The misleading PF128 filename is retained for link continuity; the rejected 128-seed winner-pool configuration is not run. Use its full OOF comparison before building a Kaggle submission Notebook.
 
+For the public-7.x stack improvement, use the attributed and sanitized [`notebooks/95_kaggle_public_mha_safe.ipynb`](notebooks/95_kaggle_public_mha_safe.ipynb). It retains the public 128-seed MHA path while removing leaderboard probes, probe-decoded bias, same-well target transfer, and ambiguous output artifacts. Kaggle import and execution instructions are in [`docs/stage6_public_mha_safe.md`](docs/stage6_public_mha_safe.md).
+
 ## Local commands
 
 ```bash
@@ -50,4 +52,4 @@ uv run rogii-train \
 ```
 
 The competition dataset and generated experiment artifacts are intentionally excluded from Git.
-Downloaded third-party public notebooks are also kept local and are not republished by this repository.
+Unmodified downloaded third-party notebooks are kept local. The repository includes only the explicitly attributed, mechanically sanitized Stage 6 derivative needed for reproducible competition execution.
