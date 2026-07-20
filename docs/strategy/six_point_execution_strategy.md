@@ -178,6 +178,8 @@ Stage 7Bの実測もbase `10.370056`に対してnested candidate `10.386946`（`
 
 Stage 7C監査ではfleongg packageにOOFがなく、pilkwang packageにID/正解表と全行family・TCN・blend OOFがあることを確認した。Stage 7Dはpilkwangだけを対象に、IDとtargetを再照合してからbranchと1--40% weightをnested選択する。fleonggのfull/inference predictionをtrain scoreへ混ぜることはしない。
 
+Stage 7DはID・targetが全3,783,989行で完全一致し、通常nested OOFを`10.370056 -> 10.042318`（`-0.327738`）、5/5 folds、bootstrap `[-0.3013, -0.0633]`まで改善した。空間aggregateも`-0.305595`だったがblock一貫性gateだけが不通過だった。Stage 7Eではbranchをpostprocessed packageに固定し、全inner folds/blocksで悪化しない20/30/40% weightだけを選ぶrobust nested確認を行う。
+
 ### B1. residual CatBoost/HGB
 
 最初は軽く、解釈しやすい tree corrector を作る。

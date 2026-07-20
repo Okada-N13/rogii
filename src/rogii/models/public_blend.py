@@ -98,6 +98,8 @@ def nested_select_blend(
     folds: np.ndarray,
     specs: list[BlendSpec],
     minimum_selection_gain: float,
+    require_all_training_folds_improve: bool = False,
+    minimum_inner_fold_gain: float = 0.0,
 ) -> tuple[np.ndarray, list[dict[str, object]], list[dict[str, object]]]:
     fold_array = np.asarray(folds)
     truth = base["y_true"].to_numpy(dtype=np.float64)
@@ -122,9 +124,26 @@ def nested_select_blend(
         )
         train_sse = spec_fold_sse.sum(axis=1) - spec_fold_sse[:, position]
         scores = np.sqrt(train_sse / train_count)
-        best_index = int(np.argmin(scores))
-        gain = base_train_rmse - float(scores[best_index])
-        selected = specs[best_index] if gain >= minimum_selection_gain else None
+        inner_positions = [index for index in range(len(unique_folds)) if index != position]
+        inner_deltas = np.column_stack(
+            [
+                np.sqrt(spec_fold_sse[:, index] / fold_counts[index])
+                - np.sqrt(base_fold_sse[index] / fold_counts[index])
+                for index in inner_positions
+            ]
+        )
+        eligible = np.ones(len(specs), dtype=bool)
+        if require_all_training_folds_improve:
+            eligible &= np.max(inner_deltas, axis=1) <= -minimum_inner_fold_gain + 1e-12
+        eligible_indices = np.flatnonzero(eligible)
+        if len(eligible_indices):
+            best_index = int(eligible_indices[np.argmin(scores[eligible_indices])])
+            gain = base_train_rmse - float(scores[best_index])
+            selected = specs[best_index] if gain >= minimum_selection_gain else None
+        else:
+            best_index = -1
+            gain = 0.0
+            selected = None
         if selected is not None:
             valid = fold_masks[position]
             prediction = apply_blend_spec(base_prediction, branches, selected)
@@ -137,6 +156,10 @@ def nested_select_blend(
                 "selection_gain": gain,
                 "selected_index": best_index if selected else -1,
                 "selected_spec": selected.to_dict() if selected else None,
+                "eligible_specs": int(eligible.sum()),
+                "selected_worst_inner_fold_delta": (
+                    float(np.max(inner_deltas[best_index])) if selected is not None else None
+                ),
             }
         )
     base_rmse = float(np.sqrt(base_fold_sse.sum() / total_count))
@@ -148,4 +171,3 @@ def nested_select_blend(
         )
     ranking.sort(key=lambda row: float(row["rmse"]))
     return output, selections, ranking
-

@@ -145,3 +145,9 @@ This is an inexpensive CPU metadata run, not an experiment or submission. Return
 The package audit found no OOF in the fleongg inference package, so that branch is excluded from honest blend fitting. The pilkwang package includes complete family, TCN, raw-blend, and postprocessed OOF plus an ID/ground-truth table.
 
 Open `notebooks/130_colab_public_verified_blend_gate.ipynb`. It verifies exact row IDs and target values, then nested-selects a pilkwang branch and a 1--40% weight against the ravaghi base. It repeats selection across geographic blocks and applies the standard bootstrap/tail gates. Do not port the reported all-OOF inference spec unless `promoted` is true.
+
+## Stage 7E spatially robust public blend
+
+Stage 7D strongly improved ordinary OOF and aggregate spatial RMSE but failed the required spatial-block consistency. Open `notebooks/140_colab_public_robust_blend_gate.ipynb` for a restricted confirmation: only the postprocessed pilkwang branch and 20/30/40% weights remain, and a weight is eligible only if it does not hurt any inner fold or block.
+
+This uses the same OOF population and is therefore a robustness analysis rather than a fresh independent test. Even if it passes, Kaggle integration replaces only the ravaghi branch; it does not apply the reported package weight directly to the complete Safe MHA submission.

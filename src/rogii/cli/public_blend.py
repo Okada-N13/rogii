@@ -56,15 +56,31 @@ def main(argv: list[str] | None = None) -> None:
     weights = [float(value) for value in blend_config.get("weights", [0.01, 0.02, 0.05, 0.1])]
     specs = make_blend_specs(list(branches), weights)
     minimum_gain = float(blend_config.get("minimum_selection_gain", 0.02))
+    require_all_training_folds_improve = bool(
+        blend_config.get("require_all_training_folds_improve", False)
+    )
+    minimum_inner_fold_gain = float(blend_config.get("minimum_inner_fold_gain", 0.0))
     standard_folds = base["fold"].to_numpy(dtype=np.int16)
     spatial_wells = pd.read_parquet(base_run / "spatial_wells.parquet")
     spatial_map = spatial_wells.set_index("well_id")["spatial_fold"]
     spatial_folds = base["well_id"].map(spatial_map).to_numpy(dtype=np.int16)
     standard_prediction, standard_selections, ranking = nested_select_blend(
-        base, branches, standard_folds, specs, minimum_gain
+        base,
+        branches,
+        standard_folds,
+        specs,
+        minimum_gain,
+        require_all_training_folds_improve,
+        minimum_inner_fold_gain,
     )
     spatial_prediction, spatial_selections, spatial_ranking = nested_select_blend(
-        base, branches, spatial_folds, specs, minimum_gain
+        base,
+        branches,
+        spatial_folds,
+        specs,
+        minimum_gain,
+        require_all_training_folds_improve,
+        minimum_inner_fold_gain,
     )
     baseline = _prediction_frame(base, base["y_pred"].to_numpy(), standard_folds)
     candidate = _prediction_frame(base, standard_prediction, standard_folds)

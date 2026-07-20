@@ -52,3 +52,31 @@ def test_nested_public_blend_selects_decorrelated_branch() -> None:
     assert all(row["selected_spec"] is not None for row in selections)
     assert ranking[0]["weight"] == 0.5
 
+
+def test_robust_selector_rejects_candidate_that_hurts_one_inner_fold() -> None:
+    truth = np.zeros(60)
+    folds = np.repeat(np.arange(3), 20)
+    base_prediction = np.ones(60)
+    branch = np.zeros(60)
+    branch[folds == 1] = 3.0
+    base = pd.DataFrame(
+        {
+            "id": [f"r{i}" for i in range(60)],
+            "well_id": np.repeat([f"w{i}" for i in range(6)], 10),
+            "MD": np.tile(np.arange(10), 6),
+            "y_true": truth,
+            "y_pred": base_prediction,
+        }
+    )
+    prediction, selections, _ = nested_select_blend(
+        base,
+        {"unstable": branch},
+        folds,
+        [BlendSpec("unstable", 1.0)],
+        minimum_selection_gain=0.0,
+        require_all_training_folds_improve=True,
+    )
+    # Folds whose selection data includes the harmed fold must keep the base.
+    assert selections[0]["selected_spec"] is None
+    assert selections[2]["selected_spec"] is None
+    assert np.all(prediction[folds != 1] == 1.0)

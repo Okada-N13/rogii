@@ -1,0 +1,17 @@
+experiment_name: public_robust_blend_gate
+seed: 42
+
+blend:
+  branch_files:
+    package_postprocessed: oof/blend_oof_postprocessed.npy
+  weights: [0.20, 0.30, 0.40]
+  minimum_selection_gain: 0.02
+  require_all_training_folds_improve: true
+  minimum_inner_fold_gain: 0.0
+
+gates:
+  minimum_standard_gain: 0.05
+  minimum_spatial_gain: 0.02
+  minimum_improved_fold_fraction: 0.8
+  bootstrap_resamples: 2000
+
