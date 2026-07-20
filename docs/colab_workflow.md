@@ -127,3 +127,9 @@ Open `notebooks/100_colab_public_residual_gate.ipynb` directly. It is standalone
 The Notebook rebuilds the ravaghi public-stack OOF from five saved `koolbox.Trainer` objects, cross-fits a conservative residual correction, and evaluates ordinary well folds, geographic-block refits, paired-well bootstrap, P90, and worst-well concentration. It saves the validation report and trained correction models to Drive.
 
 Only continue to a Kaggle Internet-OFF inference Notebook when the final result says `promoted: true`. A small `LIMIT_WELLS` run is only a wiring check and cannot authorize a submission. See `docs/stage7_public_residual_gate.md` for the exact gates and limitations.
+
+## Stage 7B nested physics gate
+
+Stage 7's learned HGB correction worsened all five folds and was rejected. Open `notebooks/110_colab_public_physics_gate.ipynb` for the next experiment. It reuses only Stage 7's unmodified public base OOF and spatial fold map, so it does not download or deserialize the public pretrained artifact again.
+
+For every outer fold, Stage 7B selects a small visible-prefix `TVT + Z` polynomial correction using only the other wells. It repeats the nested selection across geographic blocks and applies the same bootstrap and tail gates. Continue to Kaggle integration only if the final dictionary reports `promoted: true`.

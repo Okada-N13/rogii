@@ -170,6 +170,10 @@ base 自体の学習と residual model の validation prediction を混ぜない
 
 最初の実装は `notebooks/100_colab_public_residual_gate.ipynb` とする。公開artifactに保存された5モデルの正規OOFからravaghi branchを再構築し、残差HGBを通常GroupKFoldと空間block refitの両方で検証する。これはSafe MHA全体ではなく構成branchの一次ゲートであるため、通過後にのみMHAへの組み込みとKaggle最終推論を実装する。
 
+実測ではbase OOF `10.370056`に対し残差HGBは`10.532476`へ悪化し、通常foldは`0/5`、bootstrap区間は`[+0.0795, +0.1434]`、空間差分も`+0.0843`だった。重み`0.10`でも悪化したため、符号反転や重み縮小を行わず不採用とする。
+
+次のStage 7Bは`notebooks/110_colab_public_physics_gate.ipynb`で行う。既知prefixだけから作る低次`TVT+Z`補正とbase変位scaleを候補にし、各outer foldの設定を残りのfoldだけで選ぶnested方式とする。通常foldと地理blockの両方で通過した場合だけSafe MHAへの組み込みへ進む。
+
 ### B1. residual CatBoost/HGB
 
 最初は軽く、解釈しやすい tree corrector を作る。

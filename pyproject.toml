@@ -27,6 +27,7 @@ rogii-spatial = "rogii.cli.spatial:main"
 rogii-submit = "rogii.cli.submit:main"
 rogii-mha = "rogii.cli.mha:main"
 rogii-public-oof = "rogii.cli.public_oof:main"
+rogii-public-physics = "rogii.cli.public_physics:main"
 
 [build-system]
 requires = ["hatchling"]
