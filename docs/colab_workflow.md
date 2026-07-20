@@ -133,3 +133,9 @@ Only continue to a Kaggle Internet-OFF inference Notebook when the final result 
 Stage 7's learned HGB correction worsened all five folds and was rejected. Open `notebooks/110_colab_public_physics_gate.ipynb` for the next experiment. It reuses only Stage 7's unmodified public base OOF and spatial fold map, so it does not download or deserialize the public pretrained artifact again.
 
 For every outer fold, Stage 7B selects a small visible-prefix `TVT + Z` polynomial correction using only the other wells. It repeats the nested selection across geographic blocks and applies the same bootstrap and tail gates. Continue to Kaggle integration only if the final dictionary reports `promoted: true`.
+
+## Stage 7C public package OOF audit
+
+Stage 7B also failed its nested gates. Open `notebooks/120_colab_public_package_audit.ipynb` to inspect the fleongg and pilkwang public packages before attempting a model-level blend. The Notebook downloads both public Datasets, inventories OOF/fold/manifest assets, and verifies row IDs against the Stage 7 ravaghi base OOF.
+
+This is an inexpensive CPU metadata run, not an experiment or submission. Return its final summary before building the nested blend. A same-length prediction array is not treated as OOF unless its ordering and fold provenance can be demonstrated.
