@@ -26,6 +26,7 @@ rogii-stage4 = "rogii.cli.stage4:main"
 rogii-spatial = "rogii.cli.spatial:main"
 rogii-submit = "rogii.cli.submit:main"
 rogii-mha = "rogii.cli.mha:main"
+rogii-public-oof = "rogii.cli.public_oof:main"
 
 [build-system]
 requires = ["hatchling"]

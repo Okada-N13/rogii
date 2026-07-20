@@ -1,0 +1,34 @@
+experiment_name: public_residual_gate
+seed: 42
+model_seeds: [42, 43]
+
+public_stack:
+  n_splits: 5
+  ridge_alpha: 1.6602834637650032
+  ridge_tol: 0.0005030247295617308
+  alpha: 1.0
+  tau_md: 85.0
+  pf_weight: 0.09
+
+residual:
+  max_rows_per_well: 256
+  target_clip: 60.0
+  correction_weight: 0.25
+  weight_grid: [0.10, 0.20, 0.25, 0.35, 0.50]
+  n_spatial_blocks: 6
+
+model:
+  name: public_stack_hist_gradient_boosting_residual
+  loss: squared_error
+  learning_rate: 0.035
+  max_iter: 220
+  max_leaf_nodes: 15
+  min_samples_leaf: 50
+  l2_regularization: 15.0
+  max_bins: 127
+
+gates:
+  minimum_standard_gain: 0.05
+  minimum_spatial_gain: 0.02
+  minimum_improved_fold_fraction: 0.8
+  bootstrap_resamples: 2000

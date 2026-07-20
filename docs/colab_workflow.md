@@ -119,3 +119,11 @@ Open `notebooks/90_run_stage6_pf128_heel_mha.ipynb` directly; `00_colab_setup.ip
 The expensive diagnostic uses four independent 16-seed × 256-particle batches. Four wells run concurrently through `runtime.n_jobs: 4`; this produced byte-identical smoke metrics to sequential execution locally. The diagnostic supplies bimodal shifts only, while the promoted Stage 4 prediction remains the base. Completed artifacts in Drive are reused on rerun. If Colab stops during a run, change the affected `*_RUN_ID` suffix before restarting because experiment commands deliberately refuse to overwrite partial artifacts.
 
 The final cell compares the MHA overlay with `stage4_tail_path_full_v001`. The local reference improved by `0.032720`, although P90 worsened slightly and the paired-bootstrap interval crossed zero. Return the native Colab dictionary before proceeding to the Kaggle execution Notebook; the local number is not a leaderboard estimate.
+
+## Stage 7 public pretrained residual gate
+
+Open `notebooks/100_colab_public_residual_gate.ipynb` directly. It is standalone and does not require `00_colab_setup.ipynb`. Colab is the correct environment for this stage because it needs Internet access to fetch the ravaghi pretrained artifact and enough time to reconstruct full OOF diagnostics; it does not produce a submission.
+
+The Notebook rebuilds the ravaghi public-stack OOF from five saved `koolbox.Trainer` objects, cross-fits a conservative residual correction, and evaluates ordinary well folds, geographic-block refits, paired-well bootstrap, P90, and worst-well concentration. It saves the validation report and trained correction models to Drive.
+
+Only continue to a Kaggle Internet-OFF inference Notebook when the final result says `promoted: true`. A small `LIMIT_WELLS` run is only a wiring check and cannot authorize a submission. See `docs/stage7_public_residual_gate.md` for the exact gates and limitations.
