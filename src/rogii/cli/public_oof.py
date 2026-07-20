@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import multiprocessing as mp
 import pickle
+import tempfile
 from pathlib import Path
 
 import joblib
@@ -69,22 +71,44 @@ def _load_frame(csv_path: Path, requested_features: list[str]) -> pd.DataFrame:
     return frame
 
 
-def _load_model_oof(paths: list[Path], mask: np.ndarray, expected_rows: int) -> np.ndarray:
-    predictions: list[np.ndarray] = []
-    for path in paths:
-        print(f"loading public trainer: {path}", flush=True)
-        try:
-            trainer = joblib.load(path)
-        except ModuleNotFoundError as error:
+def _extract_trainer_oof(trainer_path: str, output_path: str) -> None:
+    """Load one large Trainer in an isolated process and retain only float32 OOF."""
+    trainer = joblib.load(trainer_path)
+    values = np.asarray(trainer.oof_preds, dtype=np.float32).reshape(-1)
+    np.save(output_path, values, allow_pickle=False)
+
+
+def _extract_model_oof(paths: list[Path], temporary_root: Path) -> list[Path]:
+    extracted: list[Path] = []
+    context = mp.get_context("spawn")
+    for index, path in enumerate(paths):
+        output = temporary_root / f"public_oof_{index}.npy"
+        print(f"extracting OOF from public trainer {index + 1}/{len(paths)}: {path}", flush=True)
+        process = context.Process(target=_extract_trainer_oof, args=(str(path), str(output)))
+        process.start()
+        process.join()
+        if process.exitcode != 0:
             raise RuntimeError(
-                "Loading public trainers requires lightgbm, catboost, and koolbox. "
-                "Run the supplied Colab notebook, which installs them before this command."
-            ) from error
-        values = np.asarray(trainer.oof_preds, dtype=np.float64).reshape(-1)
+                f"Could not extract OOF from {path}; child exit code was {process.exitcode}. "
+                "Check that lightgbm, catboost, and koolbox are installed."
+            )
+        if not output.is_file():
+            raise RuntimeError(f"OOF extraction did not create {output}")
+        extracted.append(output)
+    return extracted
+
+
+def _load_extracted_oof(
+    paths: list[Path], mask: np.ndarray, expected_rows: int
+) -> np.ndarray:
+    predictions: list[np.ndarray] = []
+    select_all = bool(mask.all())
+    for path in paths:
+        values = np.load(path, mmap_mode="r", allow_pickle=False)
         if len(values) != expected_rows:
             raise ValueError(f"{path}: OOF rows {len(values)} != train.csv rows {expected_rows}")
-        predictions.append(values[mask])
-        del trainer
+        selected = values if select_all else values[mask]
+        predictions.append(np.asarray(selected, dtype=np.float32))
     return np.column_stack(predictions)
 
 
@@ -134,18 +158,27 @@ def main(argv: list[str] | None = None) -> None:
     if not csv_path.is_file():
         raise FileNotFoundError(f"Missing public artifact train.csv: {csv_path}")
     requested_features = [str(value) for value in residual_config.get("features", DEFAULT_PUBLIC_FEATURES)]
-    full_frame = _load_frame(csv_path, requested_features)
-    expected_rows = len(full_frame)
-    selected_wells = full_frame["well_id"].drop_duplicates()
-    if args.limit_wells is not None:
-        if args.limit_wells < n_splits:
-            raise ValueError("limit-wells must be at least the number of folds")
-        selected_wells = selected_wells.iloc[: args.limit_wells]
-    mask = full_frame["well_id"].isin(selected_wells).to_numpy()
-    frame = full_frame.loc[mask].reset_index(drop=True)
-    del full_frame
-
-    base_model_oof = _load_model_oof(_trainer_paths(public_root), mask, expected_rows)
+    # Trainer objects contain full fitted trees and can be large. Extract their OOF arrays
+    # before loading the multi-million-row feature table, and let each child process release
+    # the Trainer memory on exit.
+    with tempfile.TemporaryDirectory(prefix="rogii_public_oof_") as temporary_directory:
+        extracted_paths = _extract_model_oof(
+            _trainer_paths(public_root), Path(temporary_directory)
+        )
+        full_frame = _load_frame(csv_path, requested_features)
+        expected_rows = len(full_frame)
+        selected_wells = full_frame["well_id"].drop_duplicates()
+        if args.limit_wells is not None:
+            if args.limit_wells < n_splits:
+                raise ValueError("limit-wells must be at least the number of folds")
+            selected_wells = selected_wells.iloc[: args.limit_wells]
+            mask = full_frame["well_id"].isin(selected_wells).to_numpy()
+            frame = full_frame.loc[mask].reset_index(drop=True)
+            del full_frame
+        else:
+            mask = np.ones(expected_rows, dtype=bool)
+            frame = full_frame
+        base_model_oof = _load_extracted_oof(extracted_paths, mask, expected_rows)
     ridge_delta, folds = crossfit_positive_ridge(
         base_model_oof,
         frame["target"].to_numpy(dtype=np.float64),

@@ -167,7 +167,9 @@ def build_public_residual_features(
     missing = sorted(required - set(frame.columns))
     if missing:
         raise ValueError(f"Public artifact frame is missing columns: {missing}")
-    result = frame.copy()
+    # A shallow view avoids duplicating the multi-million-row public feature table.
+    # Existing numeric columns are treated as immutable; derived columns are new arrays.
+    result = frame.copy(deep=False)
     base_models = np.asarray(base_model_oof, dtype=np.float64)
     if base_models.ndim != 2 or len(base_models) != len(result):
         raise ValueError("base_model_oof does not align with public artifact rows")
@@ -194,9 +196,11 @@ def build_public_residual_features(
             f"Only {len(columns)} residual features were found. The public artifact schema is incompatible."
         )
     for name in columns:
-        result[name] = pd.to_numeric(result[name], errors="coerce").replace(
-            [np.inf, -np.inf], np.nan
-        )
+        if not pd.api.types.is_numeric_dtype(result[name]):
+            result[name] = pd.to_numeric(result[name], errors="coerce")
+        values = result[name].to_numpy(copy=False)
+        if np.isinf(values).any():
+            result[name] = result[name].replace([np.inf, -np.inf], np.nan)
     sampled = _sample_by_well(result, max_rows_per_well)
     return PublicResidualFeatures(frame=result, columns=columns, sampled=sampled)
 
