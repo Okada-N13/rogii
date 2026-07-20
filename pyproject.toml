@@ -29,6 +29,7 @@ rogii-mha = "rogii.cli.mha:main"
 rogii-public-oof = "rogii.cli.public_oof:main"
 rogii-public-physics = "rogii.cli.public_physics:main"
 rogii-public-package-audit = "rogii.cli.public_package_audit:main"
+rogii-public-blend = "rogii.cli.public_blend:main"
 
 [build-system]
 requires = ["hatchling"]

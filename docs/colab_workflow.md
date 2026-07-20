@@ -139,3 +139,9 @@ For every outer fold, Stage 7B selects a small visible-prefix `TVT + Z` polynomi
 Stage 7B also failed its nested gates. Open `notebooks/120_colab_public_package_audit.ipynb` to inspect the fleongg and pilkwang public packages before attempting a model-level blend. The Notebook downloads both public Datasets, inventories OOF/fold/manifest assets, and verifies row IDs against the Stage 7 ravaghi base OOF.
 
 This is an inexpensive CPU metadata run, not an experiment or submission. Return its final summary before building the nested blend. A same-length prediction array is not treated as OOF unless its ordering and fold provenance can be demonstrated.
+
+## Stage 7D verified public OOF blend
+
+The package audit found no OOF in the fleongg inference package, so that branch is excluded from honest blend fitting. The pilkwang package includes complete family, TCN, raw-blend, and postprocessed OOF plus an ID/ground-truth table.
+
+Open `notebooks/130_colab_public_verified_blend_gate.ipynb`. It verifies exact row IDs and target values, then nested-selects a pilkwang branch and a 1--40% weight against the ravaghi base. It repeats selection across geographic blocks and applies the standard bootstrap/tail gates. Do not port the reported all-OOF inference spec unless `promoted` is true.

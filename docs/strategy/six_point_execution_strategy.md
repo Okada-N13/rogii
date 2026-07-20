@@ -176,6 +176,8 @@ base 自体の学習と residual model の validation prediction を混ぜない
 
 Stage 7Bの実測もbase `10.370056`に対してnested candidate `10.386946`（`+0.016890`）で不採用となった。通常foldの選択設定と空間blockの選択設定ではdelta scaleの方向も一致しなかったため、全OOF最良specを後付け採用しない。Stage 7Cではfleongg/pilkwang packageの正規OOFとfold provenanceを監査し、証明できたbranchだけをnested nonnegative blendへ進める。
 
+Stage 7C監査ではfleongg packageにOOFがなく、pilkwang packageにID/正解表と全行family・TCN・blend OOFがあることを確認した。Stage 7Dはpilkwangだけを対象に、IDとtargetを再照合してからbranchと1--40% weightをnested選択する。fleonggのfull/inference predictionをtrain scoreへ混ぜることはしない。
+
 ### B1. residual CatBoost/HGB
 
 最初は軽く、解釈しやすい tree corrector を作る。

@@ -1,0 +1,20 @@
+experiment_name: public_verified_blend_gate
+seed: 42
+
+blend:
+  branch_files:
+    package_postprocessed: oof/blend_oof_postprocessed.npy
+    package_raw: oof/blend_oof.npy
+    package_catboost: oof/catboost_oof.npy
+    package_sequence_tcn: oof/sequence_tcn_oof.npy
+    package_hgb: oof/hgb_oof.npy
+    package_lgb: oof/lgb_oof.npy
+  weights: [0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.30, 0.40]
+  minimum_selection_gain: 0.02
+
+gates:
+  minimum_standard_gain: 0.05
+  minimum_spatial_gain: 0.02
+  minimum_improved_fold_fraction: 0.8
+  bootstrap_resamples: 2000
+
