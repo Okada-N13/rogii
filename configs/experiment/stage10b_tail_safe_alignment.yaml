@@ -1,0 +1,76 @@
+experiment_name: stage10b_tail_safe_alignment
+seed: 42
+
+profiles:
+  loose_w015:
+    branch: loose
+    weight: 0.15
+  loose_w0175:
+    branch: loose
+    weight: 0.175
+  fixed_loose_w020:
+    branch: loose
+    weight: 0.20
+  cap12:
+    branch: loose
+    weight: 0.20
+    correction_cap: 12.0
+  cap8:
+    branch: loose
+    weight: 0.20
+    correction_cap: 8.0
+  w015_cap8:
+    branch: loose
+    weight: 0.15
+    correction_cap: 8.0
+  w0175_cap8:
+    branch: loose
+    weight: 0.175
+    correction_cap: 8.0
+  cap6:
+    branch: loose
+    weight: 0.20
+    correction_cap: 6.0
+  cap4:
+    branch: loose
+    weight: 0.20
+    correction_cap: 4.0
+  prefix010_cap8:
+    branch: loose
+    weight: 0.20
+    correction_cap: 8.0
+    minimum_prefix_correlation: 0.10
+  prefix020_cap8:
+    branch: loose
+    weight: 0.20
+    correction_cap: 8.0
+    minimum_prefix_correlation: 0.20
+  prefix030_cap8:
+    branch: loose
+    weight: 0.20
+    correction_cap: 8.0
+    minimum_prefix_correlation: 0.30
+  prefix010_cap6:
+    branch: loose
+    weight: 0.20
+    correction_cap: 6.0
+    minimum_prefix_correlation: 0.10
+  prefix020_cap6:
+    branch: loose
+    weight: 0.20
+    correction_cap: 6.0
+    minimum_prefix_correlation: 0.20
+  balanced_w020:
+    branch: balanced
+    weight: 0.20
+
+selection:
+  minimum_selection_gain: 0.02
+  inner_fold_tolerance: 0.0
+
+validation:
+  spatial_blocks: 6
+  minimum_standard_gain: 0.05
+  minimum_spatial_gain: 0.05
+  minimum_improved_fold_fraction: 0.8
+  bootstrap_resamples: 2000

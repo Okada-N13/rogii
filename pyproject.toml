@@ -34,6 +34,7 @@ rogii-safe-cutback = "rogii.cli.safe_cutback:main"
 rogii-well-gate = "rogii.cli.well_gate:main"
 rogii-sequence = "rogii.cli.sequence:main"
 rogii-alignment = "rogii.cli.alignment:main"
+rogii-alignment-gate = "rogii.cli.alignment_gate:main"
 
 [build-system]
 requires = ["hatchling"]
