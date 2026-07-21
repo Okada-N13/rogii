@@ -31,6 +31,7 @@ rogii-public-physics = "rogii.cli.public_physics:main"
 rogii-public-package-audit = "rogii.cli.public_package_audit:main"
 rogii-public-blend = "rogii.cli.public_blend:main"
 rogii-safe-cutback = "rogii.cli.safe_cutback:main"
+rogii-well-gate = "rogii.cli.well_gate:main"
 
 [build-system]
 requires = ["hatchling"]

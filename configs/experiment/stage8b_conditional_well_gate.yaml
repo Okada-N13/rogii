@@ -1,0 +1,23 @@
+experiment_name: stage8b_conditional_well_gate
+seed: 42
+
+model:
+  learning_rate: 0.04
+  max_iter: 140
+  max_leaf_nodes: 7
+  min_samples_leaf: 30
+  l2_regularization: 12.0
+  max_bins: 127
+  target_clip: 10.0
+
+selection:
+  thresholds: [-0.25, 0.0, 0.10, 0.25, 0.50, 0.75, 1.0]
+  minimum_selection_gain: 0.02
+  inner_fold_tolerance: 0.0
+  minimum_selected_wells: 10
+
+validation:
+  minimum_standard_gain: 0.03
+  minimum_spatial_gain: 0.02
+  minimum_improved_fold_fraction: 0.8
+  bootstrap_resamples: 2000
