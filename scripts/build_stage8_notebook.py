@@ -92,7 +92,7 @@ else:
 
 Keep `LIMIT_WELLS = None` for the promotion decision. Use 10 or more only for a wiring smoke test.
 """),
-    code("""RUN_ID = 'stage8_safe_cutback_gate_full_v001'
+    code("""RUN_ID = 'stage8_safe_cutback_gate_full_v002'
 LIMIT_WELLS = None
 run_dir = artifact_dir / RUN_ID
 if not (run_dir / 'gate_summary.json').is_file():
@@ -106,7 +106,25 @@ if not (run_dir / 'gate_summary.json').is_file():
     ]
     if LIMIT_WELLS is not None:
         command += ['--limit-wells', str(LIMIT_WELLS)]
-    subprocess.run(command, cwd=repo_dir, check=True)
+    log_path = artifact_dir / f'{RUN_ID}_driver.log'
+    with log_path.open('w', encoding='utf-8') as log_handle:
+        process = subprocess.Popen(
+            command,
+            cwd=repo_dir,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1,
+        )
+        for line in process.stdout:
+            print(line, end='')
+            log_handle.write(line)
+            log_handle.flush()
+        return_code = process.wait()
+    if return_code != 0:
+        tail = log_path.read_text(encoding='utf-8', errors='replace').splitlines()[-80:]
+        print('\\n'.join(tail))
+        raise RuntimeError(f'Stage 8 failed with exit code {return_code}. Full log: {log_path}')
 else:
     print('Reusing completed run:', run_dir)
 """),

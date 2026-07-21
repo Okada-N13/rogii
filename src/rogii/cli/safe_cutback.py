@@ -142,8 +142,14 @@ def main(argv: list[str] | None = None) -> None:
         if "TVT" in horizontal:
             truth = horizontal.loc[row_index, "TVT"].to_numpy(dtype=float)
             difference = np.abs(truth - well_base["y_true"].to_numpy(dtype=float))
-            if not np.isfinite(difference).all() or float(difference.max(initial=0.0)) > 1e-5:
-                raise RuntimeError(f"Base OOF truth does not align with horizontal TVT for {well_id}")
+            maximum_difference = float(difference.max(initial=0.0))
+            # The public artifact stores target and last_known_tvt as float32.
+            # Reconstructing absolute TVT can therefore introduce a few 1e-4 ft.
+            if not np.isfinite(difference).all() or maximum_difference > 1e-3:
+                raise RuntimeError(
+                    "Base OOF truth does not align with horizontal TVT for "
+                    f"{well_id}; max_abs_difference={maximum_difference:.8g}"
+                )
         physics, report = select_cutback_physics(
             horizontal,
             cut_fractions=[float(value) for value in cutback.get("fractions", [0.55, 0.70, 0.84])],
