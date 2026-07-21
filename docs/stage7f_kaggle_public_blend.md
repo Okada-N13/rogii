@@ -27,3 +27,7 @@ pre-MHA final  = 0.55 * SP45 + 0.45 * fleongg
 実行後は`/kaggle/working/submission.csv`だけを提出する。`stage7f_public_blend_audit.json`にはpackageの検出先、weight、行数、ravaghiとの差分RMSEを保存する。最終セルはID順序、有限値、曖昧なsubmission CSVの除去、SHA-256を再検査する。
 
 この提出はStage 7EのOOF改善がSafe MHA全体でも同じ比率で再現することを保証しない。最初のKaggle提出では6.997のSafe MHAをcontrolとして残し、Stage 7Fとの差だけを比較する。
+
+## Kaggle結果
+
+実行監査ではpackageが正しく検出され、ravaghiとの差はvisible sampleで`19.5302 RMSE`、最終MHA前の実効weightは`0.066`だった。Kaggle hidden scoreは`7.115`で、Safe MHAの`6.997`から`+0.118`悪化した。したがってStage 7Fは不採用とし、Safe MHAを引き続きcontrolとする。

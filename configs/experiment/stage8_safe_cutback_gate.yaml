@@ -1,0 +1,49 @@
+experiment_name: stage8_safe_cutback_gate
+seed: 42
+
+cutback:
+  fractions: [0.55, 0.70, 0.84]
+  degrees: [1, 2, 3]
+  tails: [80, 160, 320, all]
+  minimum_holdout_rows: 35
+
+profiles:
+  conservative:
+    minimum_anchor_gain: 1.0
+    maximum_best_score: 9.0
+    minimum_consistency: 0.67
+    maximum_difference_p95: 55.0
+    base_alpha: 0.06
+    gain_alpha: 0.024
+    maximum_alpha: 0.22
+    correction_cap: 18.0
+    fade_tau: 85.0
+  balanced:
+    minimum_anchor_gain: 0.55
+    maximum_best_score: 12.0
+    minimum_consistency: 0.50
+    maximum_difference_p95: 75.0
+    base_alpha: 0.08
+    gain_alpha: 0.040
+    maximum_alpha: 0.36
+    correction_cap: 28.0
+    fade_tau: 85.0
+  aggressive:
+    minimum_anchor_gain: 0.25
+    maximum_best_score: 15.0
+    minimum_consistency: 0.34
+    maximum_difference_p95: 110.0
+    base_alpha: 0.12
+    gain_alpha: 0.064
+    maximum_alpha: 0.56
+    correction_cap: 45.0
+    fade_tau: 85.0
+
+validation:
+  spatial_blocks: 6
+  minimum_selection_gain: 0.02
+  inner_fold_tolerance: 0.0
+  minimum_standard_gain: 0.05
+  minimum_spatial_gain: 0.02
+  minimum_improved_fold_fraction: 0.8
+  bootstrap_resamples: 2000
