@@ -528,3 +528,5 @@ Stage 11 implements F0 and the first F1 baseline in `notebooks/250_run_stage11_m
 - OOF coefficients, row predictions, tail metrics, bootstrap, schema hash, and environment artifacts.
 
 The model is validation-only and uses no public prediction. A full 773-well pass decides whether F2 raw-NCC/learned-emission work starts immediately or F1 requires another iteration.
+
+The full Stage 11 run improved ordinary OOF by 4.0877, all five folds, spatial holdout by 3.0359, and typewell holdout by 3.3680. Stage 11C now performs nested weight/cap selection and replaces the relative worst-10% share veto with absolute-tail SSE/CVaR/P90 gates before F2 begins.

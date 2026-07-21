@@ -8,6 +8,7 @@ import pandas as pd
 import yaml
 
 from rogii.cli.delta_u import main
+from rogii.cli.delta_u_gate import main as gate_main
 
 
 def _write_well(root: Path, index: int) -> None:
@@ -87,3 +88,43 @@ def test_stage11_cli_writes_audited_artifacts(tmp_path: Path) -> None:
         "environment.json",
     ]:
         assert (run / name).is_file(), name
+
+    gate_config = {
+        "seed": 42,
+        "grid": {"weights": [0.35, 1.0], "correction_caps_ft": [20.0]},
+        "selection": {
+            "minimum_selection_gain": 0.0,
+            "inner_fold_tolerance": 100.0,
+            "inference_fold_tolerance": 100.0,
+            "tail_tolerance": 10.0,
+        },
+        "validation": {
+            "minimum_standard_gain": 0.0,
+            "minimum_improved_fold_fraction": 0.0,
+            "bootstrap_resamples": 50,
+            "cut_fractions": [0.4, 0.65],
+        },
+    }
+    gate_config_path = tmp_path / "gate_config.yaml"
+    gate_config_path.write_text(yaml.safe_dump(gate_config), encoding="utf-8")
+    gate_main(
+        [
+            "--config",
+            str(gate_config_path),
+            "--stage11-run",
+            str(run),
+            "--run-id",
+            "stage11c_test",
+            "--data-dir",
+            str(data_dir),
+            "--artifact-dir",
+            str(artifact_dir),
+        ]
+    )
+    gate_run = artifact_dir / "stage11c_test"
+    gate_summary = json.loads((gate_run / "gate_summary.json").read_text(encoding="utf-8"))
+    assert gate_summary["n_specs"] == 2
+    assert len(gate_summary["cut_report"]) == 2
+    assert (gate_run / "nested_oof.parquet").is_file()
+    assert (gate_run / "spec_report.parquet").is_file()
+    assert (gate_run / "cut_report.parquet").is_file()

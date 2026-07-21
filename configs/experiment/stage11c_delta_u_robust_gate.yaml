@@ -1,0 +1,18 @@
+experiment_name: stage11c_delta_u_robust_gate
+seed: 42
+
+grid:
+  weights: [0.35, 0.50, 0.75, 1.00]
+  correction_caps_ft: [30.0, 40.0, 50.0]
+
+selection:
+  minimum_selection_gain: 0.10
+  inner_fold_tolerance: 0.0
+  inference_fold_tolerance: 0.0
+  tail_tolerance: 0.0
+
+validation:
+  minimum_standard_gain: 0.50
+  minimum_improved_fold_fraction: 1.0
+  bootstrap_resamples: 2000
+  cut_fractions: [0.35, 0.50, 0.65, 0.80]

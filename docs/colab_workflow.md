@@ -159,3 +159,9 @@ Open `notebooks/250_run_stage11_multicut_delta_u.ipynb` directly. It is standalo
 The notebook creates four pseudo-test cuts per training well, predicts low-frequency `U = TVT + Z` slope and curvature corrections, and audits the same model under ordinary well folds, geographic blocks, and typewell-signature blocks. It also runs a hidden-suffix target invariance check before fitting. Stage 11 uses CPU only; choose a high-RAM Colab session when available and leave `LIMIT_WELLS = None` for the decision run.
 
 No submission is generated. Return the final validation dictionary and fold-delta table. A true promotion result authorizes the Stage 12 GR-alignment benchmark, not a Kaggle submission.
+
+## Stage 11C robust delta-U gate
+
+Open `notebooks/260_run_stage11c_delta_u_robust_gate.ipynb` after Stage 11. It reuses the coefficient OOF artifacts and reconstructs twelve predeclared weight/cap profiles under nested ordinary, spatial, and typewell selection. It also evaluates absolute worst-tail SSE, well-level CVaR, P90, and each pseudo-test cut fraction.
+
+Use CPU/high RAM. No model is retrained and no submission is generated. Return the decision dictionary and top-spec table; only `promoted_to_stage12: True` starts the independent alignment stage.
