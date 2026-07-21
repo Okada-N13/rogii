@@ -151,3 +151,11 @@ Open `notebooks/130_colab_public_verified_blend_gate.ipynb`. It verifies exact r
 Stage 7D strongly improved ordinary OOF and aggregate spatial RMSE but failed the required spatial-block consistency. Open `notebooks/140_colab_public_robust_blend_gate.ipynb` for a restricted confirmation: only the postprocessed pilkwang branch and 20/30/40% weights remain, and a weight is eligible only if it does not hurt any inner fold or block.
 
 This uses the same OOF population and is therefore a robustness analysis rather than a fresh independent test. Even if it passes, Kaggle integration replaces only the ravaghi branch; it does not apply the reported package weight directly to the complete Safe MHA submission.
+
+## Stage 11 independent multi-cut delta-U baseline
+
+Open `notebooks/250_run_stage11_multicut_delta_u.ipynb` directly. It is standalone and begins the independent 5-point research track; it does not require any public artifact or earlier experiment run.
+
+The notebook creates four pseudo-test cuts per training well, predicts low-frequency `U = TVT + Z` slope and curvature corrections, and audits the same model under ordinary well folds, geographic blocks, and typewell-signature blocks. It also runs a hidden-suffix target invariance check before fitting. Stage 11 uses CPU only; choose a high-RAM Colab session when available and leave `LIMIT_WELLS = None` for the decision run.
+
+No submission is generated. Return the final validation dictionary and fold-delta table. A true promotion result authorizes the Stage 12 GR-alignment benchmark, not a Kaggle submission.

@@ -1,0 +1,37 @@
+experiment_name: stage11_multicut_delta_u_surface
+seed: 42
+
+multicut:
+  fractions: [0.35, 0.50, 0.65, 0.80]
+  min_prefix_rows: 64
+  min_suffix_rows: 64
+  prefix_window_ft: 800.0
+  target_ridge: 0.001
+
+model:
+  learning_rate: 0.05
+  max_iter: 350
+  max_leaf_nodes: 31
+  min_samples_leaf: 20
+  l2_regularization: 2.0
+  max_bins: 127
+  regional:
+    k_neighbors: 16
+    distance_floor_ft: 100.0
+    distance_shrink_ft: 3000.0
+
+evaluation:
+  max_eval_rows_per_cut: 1024
+  correction_weight: 0.35
+  diagnostic_weights: [0.10, 0.20, 0.35, 0.50, 0.75, 1.00]
+  correction_cap_ft: 50.0
+  slope_correction_cap: 80.0
+  curvature_cap: 30.0
+
+validation:
+  n_splits: 5
+  n_spatial_blocks: 6
+  n_typewell_blocks: 5
+  minimum_standard_gain: 0.10
+  minimum_improved_fold_fraction: 0.80
+  bootstrap_resamples: 2000

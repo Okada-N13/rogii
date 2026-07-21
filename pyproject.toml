@@ -35,6 +35,7 @@ rogii-well-gate = "rogii.cli.well_gate:main"
 rogii-sequence = "rogii.cli.sequence:main"
 rogii-alignment = "rogii.cli.alignment:main"
 rogii-alignment-gate = "rogii.cli.alignment_gate:main"
+rogii-delta-u = "rogii.cli.delta_u:main"
 
 [build-system]
 requires = ["hatchling"]

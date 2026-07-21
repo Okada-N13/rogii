@@ -514,3 +514,17 @@ runtime and memory
 -似たPF/GBDT同士の高い誤差相関
 
 本戦略はこれらを、learned emission、deterministic posterior lattice、fold-local regional prior、risk-aware residual modelで直接狙う。成功可能性を上げる鍵は、architectureの大きさではなく、正しい疑似test、確率的branch処理、空間リークのない検証である。
+
+## 19. Implementation status
+
+Stage 11 implements F0 and the first F1 baseline in `notebooks/250_run_stage11_multicut_delta_u.ipynb`.
+
+- four fixed pseudo-test cuts per training well;
+- ordinary well, six-block spatial, and typewell-signature holdouts;
+- hidden-suffix target invariance audit;
+- independent `U = TVT + Z` HGB surface prior;
+- fold-local leave-one-well-out regional features;
+- fixed 0.35 correction shrinkage and diagnostic-only weight grid;
+- OOF coefficients, row predictions, tail metrics, bootstrap, schema hash, and environment artifacts.
+
+The model is validation-only and uses no public prediction. A full 773-well pass decides whether F2 raw-NCC/learned-emission work starts immediately or F1 requires another iteration.
