@@ -12,7 +12,7 @@ from rogii.artifacts import environment_report, write_json, write_yaml
 from rogii.config import load_config
 from rogii.evaluation.gates import evaluate_candidate_gates
 from rogii.models.sequence_features import SEQUENCE_FEATURE_NAMES, SequenceWell, build_sequence_well
-from rogii.models.sequence_tcn import predict_tcn, train_tcn_fold
+from rogii.models.sequence_tcn import ResidualTCN, predict_tcn, train_tcn_fold
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -117,8 +117,6 @@ def main(argv: list[str] | None = None) -> None:
     args = build_parser().parse_args(argv)
     config = load_config(args.config)
     output_dir = args.artifact_dir.resolve() / args.run_id
-    if output_dir.exists() and any(output_dir.iterdir()):
-        raise FileExistsError(f"Refusing to overwrite non-empty run directory: {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
     checkpoint_dir = output_dir / "checkpoints"
     checkpoint_dir.mkdir(exist_ok=True)
@@ -148,30 +146,41 @@ def main(argv: list[str] | None = None) -> None:
     for fold in folds:
         train_wells = [well for well in wells if well.fold != fold]
         valid_wells = [well for well in wells if well.fold == fold]
-        print(f"training fold {fold}: train={len(train_wells)} valid={len(valid_wells)}", flush=True)
-        model, mean, scale, history = train_tcn_fold(
-            train_wells,
-            valid_wells,
-            model_config,
-            int(config.get("seed", 42)) + fold,
-            device,
-        )
+        checkpoint_path = checkpoint_dir / f"fold_{fold}.pt"
+        if checkpoint_path.is_file():
+            print(f"resuming fold {fold} from {checkpoint_path}", flush=True)
+            payload = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+            model = ResidualTCN(len(SEQUENCE_FEATURE_NAMES), payload["config"]).to(device)
+            model.load_state_dict(payload["state_dict"])
+            mean = np.asarray(payload["mean"], dtype=np.float32)
+            scale = np.asarray(payload["scale"], dtype=np.float32)
+            history = list(payload.get("history", []))
+        else:
+            print(f"training fold {fold}: train={len(train_wells)} valid={len(valid_wells)}", flush=True)
+            model, mean, scale, history = train_tcn_fold(
+                train_wells,
+                valid_wells,
+                model_config,
+                int(config.get("seed", 42)) + fold,
+                device,
+            )
+            torch.save(
+                {
+                    "state_dict": {name: value.detach().cpu() for name, value in model.state_dict().items()},
+                    "mean": mean,
+                    "scale": scale,
+                    "feature_names": SEQUENCE_FEATURE_NAMES,
+                    "config": model_config,
+                    "fold": fold,
+                    "history": history,
+                },
+                checkpoint_path,
+            )
         predictions = predict_tcn(model, valid_wells, mean, scale, device)
         for well, prediction in zip(valid_wells, predictions, strict=True):
             raw_by_well[well.well_id] = prediction
         histories[str(fold)] = history
-        torch.save(
-            {
-                "state_dict": {name: value.detach().cpu() for name, value in model.state_dict().items()},
-                "mean": mean,
-                "scale": scale,
-                "feature_names": SEQUENCE_FEATURE_NAMES,
-                "config": model_config,
-                "fold": fold,
-            },
-            checkpoint_dir / f"fold_{fold}.pt",
-        )
-        print(f"fold {fold} best history: {history[-1]}", flush=True)
+        print(f"fold {fold} final history: {history[-1] if history else 'checkpoint'}", flush=True)
         del model
         if device.type == "cuda":
             torch.cuda.empty_cache()
