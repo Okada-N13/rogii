@@ -517,15 +517,17 @@ Stage 17Aは全gateを通過した。primaryの50.063%で公開OOFをtarget-safe
 
 Stage 17Bも全gateを通過した。uncovered primary RMSEは`29.162 → 17.123`、Stage 17Aを含むfull primaryは`22.118 → 14.524`で、5/5 fold改善した。ただしfold 3の改善は`-0.119`と小さい。
 
-現在のactive taskは **Stage 17C: target-free selector gate** である。詳細は`docs/strategy/stage17_public_replay.md`を参照する。
+Stage 17C gateは棄却した。always-selector `14.524`に対してgateは`15.069`（`+0.545`）、4/5 foldとP90を悪化させ、bootstrap 95%も`[+0.0668,+0.5367]`だった。threshold gridも全滅のためStage 17B always-selectorを維持する。
+
+現在のactive taskは **Stage 17D: fixed-subset selector resolution audit** である。詳細は`docs/strategy/stage17_public_replay.md`を参照する。
 
 実装開始時の具体的順序:
 
-1. Stage 17Bのselector auditからtarget-free cut特徴を作る。
-2. stage16 well foldでselector gain modelをcross-fitする。
-3. fixed threshold 0でselector/last-knownを切り替える。
-4. always-selectorに対するpooled、5 fold、P90、bootstrapを判定する。
-5. 通過時だけstratified resolution/beam auditへ進む。
+1. Stage 17B primary uncoveredをfold × fractionで固定抽出する。
+2. medium profileでparticles/seeds/stepsを増やす。
+3. nested high profileでさらに解像度を上げる。
+4. baseline gain、fold consistency、screenとの差を判定する。
+5. 安定ならStage 17を完了しStage 18 retrievalへ進む。
 
 Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入しない。
 
@@ -543,3 +545,4 @@ Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入
 - 2026-07-22: Stage 16B v003の4 hashがColabと完全一致。manifestを凍結し、Stage 17A public OOF replay実装へ移行。
 - 2026-07-22: Stage 17A通過。primary row coverage 50.063%、eligible `-3.384 RMSE`、full hybrid `-0.978 RMSE`、双方5/5 fold改善。active taskをStage 17Bへ更新。
 - 2026-07-22: Stage 17B通過。uncovered selector `-12.038 RMSE`、full primary `-7.594 RMSE`、5/5 fold改善。ただしfold 3がほぼ中立のためactive taskをStage 17C gateへ更新。
+- 2026-07-22: Stage 17C gate棄却。RMSE `+0.545`、4/5 fold悪化、bootstrapも有意に悪化。always-selectorを凍結しStage 17D resolution auditへ移行。

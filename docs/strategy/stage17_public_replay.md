@@ -99,3 +99,28 @@ PF signalがこの軽量条件でも改善しない場合、full 128-seed PFやb
 - full-data modelは将来のtest inference用に保存
 
 gateがalways-selectorをpooled、fold、P90、well bootstrapで改善した場合だけresolution/beam auditへ進む。
+
+### Stage 17C Colab結果
+
+gateは棄却した。
+
+- always-selector RMSE: `14.524`
+- gated RMSE: `15.069`（`+0.545`悪化）
+- fold 0/1/2/4で悪化、fold 3も`-0.0013`だけ
+- cut P90: `+0.313`悪化
+- bootstrap 95%: `[+0.0668, +0.5367]`
+- predicted gain correlation: `0.475`
+- threshold `-2, 0, 2, 4`はすべて悪化
+
+gain signal自体はあるが、selectorを止めた場合のfalse negative損失が大きい。Stage 17C modelと全thresholdを不採用とし、Stage 17B always-selector `14.524`を維持する。
+
+## Stage 17D
+
+gate不通過はalways-selector自体を棄却する理由ではない。Stage 17Bの改善がtracking近似に依存しないことを確認するため、`notebooks/400_run_stage17d_selector_resolution.ipynb`で固定subset監査を行う。
+
+- medium: 各fold × fractionから8 cuts、128 particles、12 seeds、768 steps
+- high: 各fold × fractionから2 cuts、192 particles、24 seeds、1536 steps
+- cut選択はSHA-256で固定し、結果を見て変更しない
+- baseline gain、5 fold consistency、screenとの差を評価
+
+解像度を上げてもbaselineに対する改善が維持されればStage 17を完了し、Stage 18 retrievalへ進む。

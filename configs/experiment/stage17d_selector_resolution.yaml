@@ -1,0 +1,26 @@
+experiment_name: stage17d_selector_resolution_audit
+seed: 42
+
+provenance:
+  stage16b_manifest_sha256: af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c
+
+profiles:
+  medium:
+    cuts_per_stratum: 8
+    particles: 128
+    seeds: 12
+    seed_base: 0
+    maximum_tracking_steps: 768
+    typewell_grid_step: 0.2
+  high:
+    cuts_per_stratum: 2
+    particles: 192
+    seeds: 24
+    seed_base: 0
+    maximum_tracking_steps: 1536
+    typewell_grid_step: 0.2
+
+gates:
+  minimum_baseline_gain: 1.0
+  minimum_improved_folds: 4
+  maximum_delta_vs_screen: 1.0

@@ -50,6 +50,7 @@ rogii-testlike-validation = "rogii.cli.testlike_validation:main"
 rogii-public-replay = "rogii.cli.public_replay:main"
 rogii-selector-replay = "rogii.cli.selector_replay:main"
 rogii-selector-gate = "rogii.cli.selector_gate:main"
+rogii-selector-resolution = "rogii.cli.selector_resolution:main"
 
 [build-system]
 requires = ["hatchling"]
