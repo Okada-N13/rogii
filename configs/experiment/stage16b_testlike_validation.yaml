@@ -1,0 +1,22 @@
+experiment_name: stage16b_testlike_branch_validation
+seed: 42
+
+pseudo_test:
+  fractions: [0.18, 0.22, 0.26, 0.30, 0.34]
+  diagnostic_fractions: [0.40, 0.50, 0.65]
+  min_prefix_rows: 64
+  min_suffix_rows: 64
+  prefix_slope_window_ft: 800.0
+
+donor_graph:
+  trajectory_samples: 48
+  query_prefix_samples: 24
+  point_neighbors: 512
+  donor_neighbors: 16
+  branch_distance_ft: 150.0
+  minimum_matched_points: 3
+
+validation:
+  n_standard_folds: 5
+  n_spatial_folds: 6
+  n_branch_group_folds: 5

@@ -507,18 +507,21 @@ workspace: C:\Users\owner\kaggle\ROGII
 
 ## 14. 現在の次アクション
 
-現在のactive taskは **Stage 16A: 6.685/6.693 frontier差分監査** である。
+Stage 16Aは完了した。230/240の上流codeとdependencyは同一で、唯一の予測差は最終midpoint hedgeだった。詳細は`docs/strategy/stage16a_frontier_diff_report.md`を参照する。
+
+Stage 16Bもローカルfullで完了した。773 wells、6,184 cuts、26,225,067 suffix rowsを固定し、manifest hashは`0d85e3e2842eb635a2a9231ee5086923166bcd0fa6d49d6ad87f871099968312`となった。詳細は`docs/strategy/stage16b_testlike_validation_report.md`を参照する。
+
+現在のactive taskは **Stage 17: V599/public strong-baseのtrain replay** である。
 
 実装開始時の具体的順序:
 
-1. 230/240 Notebookの全code cellを抽出・正規化する。
-2. import、Dataset path、model file、係数、postprocessを構造化diffする。
-3. 各段階のpredictionを保存できるhookを設計する。
-4. sanitation条件を再監査する。
-5. `docs/strategy`と`artifacts/stage16a_frontier_diff`へ結果を書く。
-6. Stage 16Aでは提出しない。
+1. 230 NotebookのV599/PF/learned branchをtrain pseudo-cutへ適用可能なcomponentへ分離する。
+2. public artifactのOOF provenanceを再監査する。
+3. Stage 16B manifestを変更せずstrong-base predictionを生成する。
+4. primary全suffix RMSEをlast-known TVT `23.096`と比較する。
+5. replay不能なtest-only/precomputed branchを明示し、CV値へ混入させない。
 
-Stage 16A完了後、Stage 16Bの疑似test基盤を実装する。5点台を急ぐためにも、この二段階を飛ばして新しいモデルや係数をKaggleへ投入しない。
+Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入しない。
 
 ## 15. 決定ログ
 
@@ -527,3 +530,5 @@ Stage 16A完了後、Stage 16Bの疑似test基盤を実装する。5点台を急
 - 2026-07-22: Stage 15 fold-safe independentは`35.110`。旧CVとLBの対応仮説を棄却し、追加提出を停止。
 - 2026-07-22: 5点台を必須目標とし、public strong-base + test-like branch-overlap validation +独自correctorへ計画を再編。
 - 2026-07-22: 次のactive taskをStage 16A frontier差分監査に設定。
+- 2026-07-22: Stage 16A完了。230/240は上流同一で、6.693版に新しいbranch-overlap modelがないことを確認。active taskをStage 16Bへ更新。
+- 2026-07-22: Stage 16Bローカルfull完了。短prefix primaryでlast-known TVT RMSE 23.096、constant-U 103.911、linear-U 59.808。旧delta-U検証の分布不一致を確認し、active taskをStage 17へ更新。

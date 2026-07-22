@@ -45,6 +45,8 @@ rogii-emission-residual = "rogii.cli.emission_residual:main"
 rogii-emission-residual-gate = "rogii.cli.emission_residual_gate:main"
 rogii-stage15-package = "rogii.cli.stage15_package:main"
 rogii-stage15-infer = "rogii.cli.stage15_infer:main"
+rogii-frontier-diff = "rogii.cli.frontier_diff:main"
+rogii-testlike-validation = "rogii.cli.testlike_validation:main"
 
 [build-system]
 requires = ["hatchling"]

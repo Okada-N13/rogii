@@ -1,0 +1,11 @@
+experiment_name: stage16a_frontier_diff
+
+left:
+  label: v599_a130_branch_conservative
+  path: notebooks/230_kaggle_v599_a130_frontier_safe.ipynb
+  actual_lb: 6.685
+
+right:
+  label: advertised_6594_branch_overlap
+  path: notebooks/240_kaggle_branch_overlap_6594_safe.ipynb
+  actual_lb: 6.693
