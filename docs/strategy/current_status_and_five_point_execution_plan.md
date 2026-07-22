@@ -529,15 +529,17 @@ Stage 18Cも全gateを通過した。全3,865 primary cuts・18.84M rowsで`14.5
 
 Stage 18Dも全gateを通過した。固定retrieval比`12.784 → 12.645`（`-0.139`）、5/5 standard folds、4/5 branch folds、5/5 fractions、P90・max改善、bootstrap 95% `[-0.205, -0.0099]`だった。rankerを昇格する。
 
-現在のactive taskは **Stage 18E: fold-safe ranked-retrieval inference package** である。詳細は`docs/strategy/stage18_branch_retrieval.md`を参照する。
+Stage 18E packageは完成した。5 fold-safe rankers、43,758 candidate rows、same-well target leakage guardを含み、manifest SHA-256は`7bddc1914f3d046b678dbb8f5d1cc17427b03bc85c1a06d1f2088cbe68d3935d`である。
+
+現在のactive taskは **Stage 18F: frozen 6.685 V599 + ranked retrievalのInternet-OFF Kaggle実行と1回提出** である。Kaggle用Notebookは`notebooks/460_kaggle_v599_stage18_ranked_retrieval.ipynb`、推奨Dataset名は`rogii-stage18e-ranked-retrieval-package`。詳細は`docs/strategy/stage18_branch_retrieval.md`を参照する。
 
 実装開始時の具体的順序:
 
-1. Stage 18Dの5 fold-safe rankerを再学習してpackage化する。
-2. frozen branch fold assignmentと同一well donor禁止をpackageへ含める。
-3. package zipをKaggle Datasetへアップロードする。
-4. 6.685 V599 notebookの最終audit直前へStage 18 retrievalを追加する。
-5. Internet-OFF hidden rerunとsubmission auditを確認後、1回だけ提出する。
+1. `stage18e_ranked_retrieval_package.zip`をKaggle Datasetへアップロードする。
+2. `460_kaggle_v599_stage18_ranked_retrieval.ipynb`へ既存V599 inputsとStage 18E Datasetを追加する。
+3. Internet OFF、T4 x2でRun All / Save Versionする。
+4. `STAGE18E_TEST_AUDIT`で3 wellsすべて`applied`、最終auditで14,151 rows・finite・sample順一致を確認する。
+5. 生成された単一`submission.csv`を1回だけ提出し、6.685 controlと比較する。
 
 Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入しない。
 
@@ -561,3 +563,4 @@ Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入
 - 2026-07-22: Stage 18B全gate通過。非重複150 cutsで`-1.611`、5/5 folds、P90 `-2.223`、bootstrap上限`-0.339`。固定20% branch retrievalをStage 18C全primary cutsへ昇格。
 - 2026-07-22: Stage 18C全gate通過。全3,865 cutsで`-1.740`、5/5 folds、5/5 fractions、coverage 100%、P90・max・bootstrapすべて改善。固定top-4 retrievalを凍結しStage 18D learned donor rankingへ移行。
 - 2026-07-22: Stage 18D全gate通過。固定retrieval比`-0.139`、standard 5/5、branch 4/5、fraction 5/5、bootstrap上限`-0.0099`。5個のfold-safe modelを使うStage 18E inference packageへ昇格。
+- 2026-07-22: Stage 18E package完成。5 fold-safe models、43,758 rows、manifest SHA-256 `7bddc191...d3935d`。active taskをStage 18F Kaggle inferenceへ更新。

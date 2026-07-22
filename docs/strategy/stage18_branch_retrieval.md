@@ -156,3 +156,26 @@ fold安全性:
 - inferenceはInternet-OFF、competition train/testとpackageだけで完結する。
 
 package構築Notebookは`notebooks/450_build_stage18e_ranked_retrieval_package.ipynb`。推奨Kaggle Dataset名は`rogii-stage18e-ranked-retrieval-package`。
+
+## Stage 18E実測とStage 18F提出候補
+
+Stage 18E packageは正常に完成した。
+
+- fold-safe ranker: 5 models
+- training candidate rows: 43,758
+- same-well target leakage guard: 有効
+- package manifest SHA-256: `7bddc1914f3d046b678dbb8f5d1cc17427b03bc85c1a06d1f2088cbe68d3935d`
+- archive: `stage18e_ranked_retrieval_package.zip`
+
+Kaggle用Notebookは`notebooks/460_kaggle_v599_stage18_ranked_retrieval.ipynb`。これは実測6.685の`230_kaggle_v599_a130_frontier_safe.ipynb`を固定し、既存branch hedgeの後・final auditの前にだけStage 18 retrievalを追加する。
+
+実行条件:
+
+- Internet OFF
+- AcceleratorはT4 x2（既存V599推論に合わせる）
+- 既存V599 Notebookで使用した全Datasetに加え、推奨名`rogii-stage18e-ranked-retrieval-package`を追加
+- DatasetはZIPのままでも展開済みでも検出可能
+- 3 test wellsすべてで`status=applied`にならなければhard fail
+- `STAGE18E_TEST_AUDIT`、最終`V599_FRONTIER_SAFE_AUDIT`、`submission.csv`だけを採用する
+
+これはStage 18Fの初回提出候補であり、5点台を保証するものではない。疑似testで確認した改善が実testでも再現するかを、6.685 controlに対する単一の事前固定比較として評価する。LB結果が悪化した場合、weight変更の連続提出はせず、auditと分布差を診断する。
