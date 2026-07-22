@@ -42,6 +42,7 @@ rogii-emission-tcn = "rogii.cli.emission_tcn:main"
 rogii-emission-lattice = "rogii.cli.emission_lattice:main"
 rogii-emission-uncertainty = "rogii.cli.emission_uncertainty:main"
 rogii-emission-residual = "rogii.cli.emission_residual:main"
+rogii-emission-residual-gate = "rogii.cli.emission_residual_gate:main"
 
 [build-system]
 requires = ["hatchling"]

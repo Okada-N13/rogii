@@ -195,3 +195,9 @@ Return the decision dictionary and profile table. Strict spatial/typewell promot
 Open `notebooks/310_run_stage14_crossfit_emission_residual.ipynb` on CPU. It trains generic HGB residual models independently under standard, spatial, and typewell folds, plus a standard-only stacked branch using model disagreement and entropy. All models are well-isolated, and correction weight/cap is nested-selected after cross-fit.
 
 Twenty-one small models are checkpointed to Drive and resumed automatically. Return the decision dictionary and profile table; no Kaggle submission is created.
+
+## Stage 14B extended residual gate
+
+Open `notebooks/320_run_stage14b_extended_residual_gate.ipynb` on CPU. It does not retrain Stage 14. It extends correction weight/cap using the saved cross-fitted residuals and replaces worst-tail share with absolute worst-tail SSE, CVaR, P90, and maximum-well gates.
+
+Return the decision dictionary and extended profile table. A promotion authorizes full-data training and an independent test inference package, not a leaderboard submission by itself.
