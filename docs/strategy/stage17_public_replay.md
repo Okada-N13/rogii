@@ -47,3 +47,30 @@ replay_eligible = original_public_cut_index <= pseudo_cut_index
 ## 実行
 
 `notebooks/370_run_stage17_public_replay.ipynb`をCPU Colabで単独実行する。Stage 16B v003と以前のStage 7 `base_oof.parquet`がDriveに必要である。Kaggle提出は行わない。
+
+## Colab full結果
+
+Stage 17A v002は全gateを通過した。
+
+- primary eligible cuts: 1,868 / 3,865
+- primary eligible rows: 9,432,505 / 18,841,328（50.063%）
+- eligible RMSE: last-known `14.738` → public OOF `11.354`（`-3.384`）
+- full primary hybrid: `23.096` → `22.118`（`-0.978`）
+- eligible改善: 5/5 folds
+- full hybrid改善: 5/5 folds
+- diagnostic hybrid: `12.727` → `11.867`（`-0.860`）
+- target最大差: `0.00046875 ft`（float32 roundoff内）
+
+結論: Ravaghi public OOFは強いが、primary suffix行の49.937%は元prefixが未来情報になるため利用できない。このuncovered短prefixがStage 17Bの対象である。
+
+## Stage 17B
+
+`notebooks/380_run_stage17b_selector_replay.ipynb`で、uncovered cutだけにSP45 likelihood PFをscreenする。
+
+- 8 seeds × 96 particles
+- suffixを最大512 tracking stepsへ圧縮し、全行へMD補間
+- V599 selectorのscale/hold binを使用
+- beam weightは記録するがscreenでは未適用
+- uncovered subset、Stage 17A full hybrid、5 foldをすべて評価
+
+PF signalがこの軽量条件でも改善しない場合、full 128-seed PFやbeamへ計算時間を追加しない。

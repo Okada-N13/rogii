@@ -1,0 +1,17 @@
+experiment_name: stage17b_uncovered_selector_screen
+seed: 42
+
+provenance:
+  stage16b_manifest_sha256: af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c
+
+selector:
+  particles: 96
+  seeds: 8
+  seed_base: 0
+  maximum_tracking_steps: 512
+  typewell_grid_step: 0.2
+
+gates:
+  minimum_uncovered_gain: 0.05
+  minimum_full_gain: 0.02
+  minimum_improved_folds: 4

@@ -48,6 +48,7 @@ rogii-stage15-infer = "rogii.cli.stage15_infer:main"
 rogii-frontier-diff = "rogii.cli.frontier_diff:main"
 rogii-testlike-validation = "rogii.cli.testlike_validation:main"
 rogii-public-replay = "rogii.cli.public_replay:main"
+rogii-selector-replay = "rogii.cli.selector_replay:main"
 
 [build-system]
 requires = ["hatchling"]

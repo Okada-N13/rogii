@@ -513,15 +513,17 @@ Stage 16Bもローカルfullで完了した。773 wells、6,184 cuts、26,225,06
 
 Stage 16B v003はローカル/Colabで4 hashが完全一致し、固定manifestとして確定した。
 
-現在のactive taskは **Stage 17A: provenance-safe public OOF replay** である。詳細は`docs/strategy/stage17_public_replay.md`を参照する。
+Stage 17Aは全gateを通過した。primaryの50.063%で公開OOFをtarget-safeに再利用でき、eligible RMSEは`14.738 → 11.354`、未coveredをlast-knownとしたfull hybridも`23.096 → 22.118`へ改善した。両指標とも5/5 fold改善である。
+
+現在のactive taskは **Stage 17B: uncovered short-prefix selector screen** である。詳細は`docs/strategy/stage17_public_replay.md`を参照する。
 
 実装開始時の具体的順序:
 
-1. Stage 7のRavaghi GroupKFold `base_oof.parquet`を読み込む。
-2. 元known prefixが疑似prefixに含まれるcutだけへ厳密にreplayする。
-3. eligible subsetと、未coveredをlast-knownにしたfull hybridを別々に評価する。
-4. public OOFで検証できないV599成分を`unvalidated`として固定する。
-5. 通過後、Stage 17Bで未covered短prefixへSP45 selectorを計算量制限付きでreplayする。
+1. Stage 17Aで未coveredとなったprimary 49.937%だけを対象にする。
+2. V599/SP45 likelihood PFを8 seeds × 96 particles、最大512 stepsでscreenする。
+3. frozen selector binのscale/holdを使い、beamはまだ混入させない。
+4. uncovered gain、Stage 17A full hybridからのgain、5 fold consistencyを判定する。
+5. 通過時だけfull-resolution PF/beamへ進み、不通過ならStage 18 retrievalへ移る。
 
 Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入しない。
 
@@ -537,3 +539,4 @@ Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入
 - 2026-07-22: Stage 16B初版hashのpandas/scikit-learn環境依存を検出。決定論的foldとcanonical byte hashへ置換し、Colab再照合用v002を作成。指標とcut構成は不変。
 - 2026-07-22: v002でfold/donorのtie break差を検出。同サイズgroup、空間fold番号、同距離donorをwell IDで固定したv003へ更新。
 - 2026-07-22: Stage 16B v003の4 hashがColabと完全一致。manifestを凍結し、Stage 17A public OOF replay実装へ移行。
+- 2026-07-22: Stage 17A通過。primary row coverage 50.063%、eligible `-3.384 RMSE`、full hybrid `-0.978 RMSE`、双方5/5 fold改善。active taskをStage 17Bへ更新。
