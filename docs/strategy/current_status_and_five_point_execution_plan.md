@@ -523,15 +523,17 @@ Stage 17Dは全gateを通過した。medium/highともbaseline比で大幅改善
 
 Stage 18A全体gateは棄却した。standard primaryは`18.565 → 16.356`（`-2.209`）だが4/5 folds、cut P90悪化、bootstrap上限が正だった。spatial除外は近接donorが32/150 cutsにしか残らず`+3.707`悪化した。一方、branch-group除外は`18.565 → 15.850`（`-2.715`）、5/5 folds、cut P90非悪化だった。
 
-現在のactive taskは **Stage 18B: independent branch-group confirmation** である。詳細は`docs/strategy/stage18_branch_retrieval.md`を参照する。
+Stage 18Bは全gateを通過した。Stage 18Aと重複0の独立150 cutsでbranch-group primaryは`12.010 → 10.399`（`-1.611`）、5/5 folds、cut P90 `-2.223`、bootstrap 95% `[-1.317, -0.339]`だった。
+
+現在のactive taskは **Stage 18C: all-primary-cut branch-group retrieval** である。詳細は`docs/strategy/stage18_branch_retrieval.md`を参照する。
 
 実装開始時の具体的順序:
 
-1. Stage 18Aと非重複の次順位150 cutsを固定する。
-2. branch-group除外 + prefix calibration + GR + 20%だけを評価する。
-3. RMSE、5 folds、cut P90、well bootstrapを確認する。
-4. 全gate通過時だけall-primary-cut retrievalへ進む。
-5. 不通過なら係数探索をせずlearned donor rankingへ移る。
+1. 全primary cutsへbranch-group除外 + prefix calibration + GR + 20%を適用する。
+2. 5 foldsと5 prefix fractionsの一貫性を確認する。
+3. coverage、cut P90、well bootstrapを確認する。
+4. 全gate通過時はall-cut controlを凍結する。
+5. 次にlearned donor rankingを固定control比で検証する。
 
 Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入しない。
 
@@ -552,3 +554,4 @@ Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入
 - 2026-07-22: Stage 17C gate棄却。RMSE `+0.545`、4/5 fold悪化、bootstrapも有意に悪化。always-selectorを凍結しStage 17D resolution auditへ移行。
 - 2026-07-22: Stage 17D通過。medium/highはbaseline比`-19.971/-11.356`、screen比`-0.834/-2.577`、双方5/5 fold。Stage 17完了、active taskをStage 18A retrievalへ更新。
 - 2026-07-22: Stage 18A全体gate棄却。standardは`-2.209`だが4/5 folds・P90・bootstrapで不合格。spatialはeligible 32/150で別問題化。一方branch-groupは`-2.715`、5/5 folds、P90非悪化のため、非重複150 cutsのStage 18B確認へ移行。
+- 2026-07-22: Stage 18B全gate通過。非重複150 cutsで`-1.611`、5/5 folds、P90 `-2.223`、bootstrap上限`-0.339`。固定20% branch retrievalをStage 18C全primary cutsへ昇格。

@@ -68,6 +68,15 @@ def _metrics(rows: pd.DataFrame) -> dict[str, Any]:
         fold_base = _rmse(float(frame["base_sse"].sum()), fold_rows)
         fold_candidate = _rmse(float(frame["candidate_sse"].sum()), fold_rows)
         fold_report.append({"fold": int(fold), "base_rmse": fold_base, "candidate_rmse": fold_candidate, "delta": fold_candidate - fold_base})
+    fraction_report = []
+    for fraction, frame in rows.groupby("requested_fraction", sort=True):
+        fraction_rows = int(frame["suffix_rows"].sum())
+        fraction_base = _rmse(float(frame["base_sse"].sum()), fraction_rows)
+        fraction_candidate = _rmse(float(frame["candidate_sse"].sum()), fraction_rows)
+        fraction_report.append({
+            "requested_fraction": float(fraction), "base_rmse": fraction_base,
+            "candidate_rmse": fraction_candidate, "delta": fraction_candidate - fraction_base,
+        })
     base_cut = np.sqrt(rows["base_sse"] / rows["suffix_rows"])
     candidate_cut = np.sqrt(rows["candidate_sse"] / rows["suffix_rows"])
     return {
@@ -76,7 +85,8 @@ def _metrics(rows: pd.DataFrame) -> dict[str, Any]:
         "cut_rmse_p90_delta": float(candidate_cut.quantile(0.9) - base_cut.quantile(0.9)),
         "cut_rmse_max_delta": float(candidate_cut.max() - base_cut.max()),
         "improved_folds": int(sum(item["delta"] < 0 for item in fold_report)),
-        "fold_report": fold_report,
+        "improved_fractions": int(sum(item["delta"] < 0 for item in fraction_report)),
+        "fold_report": fold_report, "fraction_report": fraction_report,
     }
 
 
@@ -107,7 +117,10 @@ def main(argv: list[str] | None = None) -> None:
     primary_cuts = cuts[cuts["evaluation_role"] == "primary"]
     cuts_per_stratum = int(config.get("cuts_per_stratum", 6))
     sample_offset = int(config.get("sample_offset_per_stratum", 0))
-    selected = stable_sample(primary_cuts, cuts_per_stratum, sample_offset)
+    if bool(config.get("all_primary_cuts", False)):
+        selected = primary_cuts.sort_values(["well_id", "cut_index", "cut_id"], kind="stable").reset_index(drop=True)
+    else:
+        selected = stable_sample(primary_cuts, cuts_per_stratum, sample_offset)
     cut_ids = selected["cut_id"].astype(str).tolist()
     reference_overlap_cuts = 0
     if sample_offset:
@@ -126,9 +139,13 @@ def main(argv: list[str] | None = None) -> None:
     base_predictions = pd.concat(frames, ignore_index=True)
     if set(base_predictions["cut_id"].astype(str).unique()) != set(cut_ids):
         raise AssertionError("Strong-base predictions do not cover the fixed retrieval sample")
+    base_predictions["cut_id"] = base_predictions["cut_id"].astype(str)
+    base_by_cut = base_predictions.groupby("cut_id", sort=False)
 
     graph = pd.read_parquet(stage16 / "donor_graph.parquet")
     graph = graph[graph["cut_id"].astype(str).isin(cut_ids)].sort_values(["cut_id", "donor_rank"], kind="stable")
+    graph["cut_id"] = graph["cut_id"].astype(str)
+    graph_by_cut = graph.groupby("cut_id", sort=False)
     assignments = pd.read_parquet(stage16 / "well_assignments.parquet").set_index("well_id")
     manifest = pd.read_parquet(stage16 / "pseudo_test_manifest.parquet").set_index("cut_id")
     retrieval_config = dict(config.get("retrieval", {}))
@@ -138,6 +155,20 @@ def main(argv: list[str] | None = None) -> None:
     @lru_cache(maxsize=64)
     def load_well(well_id: str) -> pd.DataFrame:
         return pd.read_csv(data_train / f"{well_id}__horizontal_well.csv", usecols=["X", "Y", "Z", "GR", "TVT"])
+
+    @lru_cache(maxsize=64)
+    def align_donor(well_id: str, donor_id: str) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        target = load_well(well_id)
+        donor = load_well(donor_id)
+        target_xyz = target[["X", "Y", "Z"]].to_numpy(float)
+        donor_xyz = donor[["X", "Y", "Z"]].to_numpy(float)
+        index = NearestNeighbors(n_neighbors=1, algorithm="kd_tree").fit(donor_xyz)
+        distance, nearest = index.kneighbors(target_xyz)
+        nearest = nearest[:, 0]
+        donor_u = donor["TVT"].to_numpy(float)[nearest] + donor["Z"].to_numpy(float)[nearest]
+        target_gr = pd.to_numeric(target["GR"], errors="coerce").interpolate(limit_direction="both").to_numpy(float)
+        donor_gr = pd.to_numeric(donor["GR"], errors="coerce").interpolate(limit_direction="both").to_numpy(float)[nearest]
+        return donor_u, distance[:, 0], np.abs(target_gr - donor_gr)
 
     result_rows: list[dict[str, Any]] = []
     all_families = {"standard": "fold", "spatial": "spatial_fold", "branch": "branch_group_fold"}
@@ -150,7 +181,7 @@ def main(argv: list[str] | None = None) -> None:
         cut = selected[selected["cut_id"].astype(str) == cut_id].iloc[0]
         well_id, cut_index = str(cut["well_id"]), int(cut["cut_index"])
         target = load_well(well_id)
-        base = base_predictions[base_predictions["cut_id"].astype(str) == cut_id].sort_values("row_index", kind="stable")
+        base = base_by_cut.get_group(cut_id).sort_values("row_index", kind="stable")
         row_index = base["row_index"].to_numpy(np.int64)
         if not np.array_equal(row_index, np.arange(cut_index, len(target))):
             raise AssertionError(f"{cut_id}: base row alignment mismatch")
@@ -158,20 +189,11 @@ def main(argv: list[str] | None = None) -> None:
         if float(np.max(np.abs(truth - base["y_true"].to_numpy(float)))) > 0.005:
             raise AssertionError(f"{cut_id}: base target mismatch")
         base_pred = base["y_pred"].to_numpy(float)
-        target_xyz = target[["X", "Y", "Z"]].to_numpy(float)
-        target_gr = pd.to_numeric(target["GR"], errors="coerce").interpolate(limit_direction="both").to_numpy(float)
         target_u = target["TVT"].to_numpy(float) + target["Z"].to_numpy(float)
-        edge_frame = graph[graph["cut_id"].astype(str) == cut_id]
+        edge_frame = graph_by_cut.get_group(cut_id)
         mapping: dict[str, tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
         for donor_id in edge_frame["donor_well_id"].astype(str).unique():
-            donor = load_well(donor_id)
-            donor_xyz = donor[["X", "Y", "Z"]].to_numpy(float)
-            index = NearestNeighbors(n_neighbors=1, algorithm="kd_tree").fit(donor_xyz)
-            distance, nearest = index.kneighbors(target_xyz)
-            nearest = nearest[:, 0]; distance = distance[:, 0]
-            donor_u = donor["TVT"].to_numpy(float)[nearest] + donor["Z"].to_numpy(float)[nearest]
-            donor_gr = pd.to_numeric(donor["GR"], errors="coerce").interpolate(limit_direction="both").to_numpy(float)[nearest]
-            mapping[donor_id] = (donor_u, distance, np.abs(target_gr - donor_gr))
+            mapping[donor_id] = align_donor(well_id, donor_id)
 
         for family, fold_column in families.items():
             target_fold = int(assignments.loc[well_id, fold_column])
@@ -200,7 +222,8 @@ def main(argv: list[str] | None = None) -> None:
                 candidate[finite] += blend * (retrieval_prediction[finite] - base_pred[finite])
                 result_rows.append({
                     "family": family, "profile": profile_name, "cut_id": cut_id, "well_id": well_id,
-                    "stage16_fold": int(cut["stage16_fold"]), "suffix_rows": len(truth),
+                    "stage16_fold": int(cut["stage16_fold"]),
+                    "requested_fraction": float(cut["requested_fraction"]), "suffix_rows": len(truth),
                     "donors": len(donor_ids), "active_fraction": float(finite.mean()),
                     "mean_minimum_distance": float(distances[:, cut_index:].min(axis=0).mean()),
                     "base_sse": float(np.square(base_pred - truth).sum()),
@@ -216,20 +239,24 @@ def main(argv: list[str] | None = None) -> None:
         reports[f"{family}__{profile}"] = _metrics(frame)
     primary_profile = str(config.get("primary_profile", "prefix_gr_w020"))
     validation_mode = str(config.get("validation_mode", "exploratory"))
-    primary_family = "branch" if validation_mode == "branch_confirmation" else "standard"
+    primary_family = "branch" if validation_mode in {"branch_confirmation", "all_cut_branch"} else "standard"
     primary_key = f"{primary_family}__{primary_profile}"
     primary_rows = results[(results["family"] == primary_family) & (results["profile"] == primary_profile)]
+    primary_coverage_fraction = float(primary_rows["cut_id"].nunique() / len(cut_ids))
     ci = _bootstrap(primary_rows, int(config.get("bootstrap_resamples", 1000)), int(config.get("seed", 42)))
     gates_config = dict(config.get("gates", {}))
-    if validation_mode == "branch_confirmation":
+    if validation_mode in {"branch_confirmation", "all_cut_branch"}:
         gates = {
             "hidden_target_invariance": True, "same_branch_group_fold_donor_excluded": True,
-            "independent_from_stage18a": reference_overlap_cuts == 0,
+            "cut_coverage": primary_coverage_fraction >= float(gates_config.get("minimum_cut_coverage", 0.99)),
             "branch_group_gain": reports[primary_key]["rmse_delta"] <= -float(gates_config.get("minimum_branch_gain", 0.30)),
             "fold_consistency": reports[primary_key]["improved_folds"] >= int(gates_config.get("minimum_improved_folds", 4)),
+            "fraction_consistency": reports[primary_key]["improved_fractions"] >= int(gates_config.get("minimum_improved_fractions", 5)),
             "p90_nonworse": reports[primary_key]["cut_rmse_p90_delta"] <= 0,
             "bootstrap_upper_below_zero": ci[1] < 0,
         }
+        if validation_mode == "branch_confirmation":
+            gates["independent_from_stage18a"] = reference_overlap_cuts == 0
     else:
         standard_key, spatial_key, branch_key = (
             f"standard__{primary_profile}", f"spatial__{primary_profile}", f"branch__{primary_profile}"
@@ -247,17 +274,21 @@ def main(argv: list[str] | None = None) -> None:
     summary = {
         "stage18a_complete": validation_mode != "branch_confirmation",
         "stage18b_complete": validation_mode == "branch_confirmation",
+        "stage18c_complete": validation_mode == "all_cut_branch",
         "promoted_to_all_cut_retrieval": promoted,
         "stage16b_manifest_sha256": expected_hash, "sample_cuts": len(cut_ids),
         "validation_mode": validation_mode, "sample_offset_per_stratum": sample_offset,
         "sample_sha256": sample_sha256, "reference_overlap_cuts": reference_overlap_cuts,
         "primary_family": primary_family, "primary_profile": primary_profile, "reports": reports,
+        "primary_coverage_fraction": primary_coverage_fraction,
         "bootstrap_95pct": ci, "gates": gates,
         "next_step": (
             "Run all-cut branch-group-safe retrieval, then learned donor ranking."
             if promoted and validation_mode == "branch_confirmation"
+            else "Start learned donor ranking on the frozen all-cut branch retrieval control."
+            if promoted and validation_mode == "all_cut_branch"
             else "Do not promote fixed retrieval; redesign donor ranking before all-cut validation."
-            if validation_mode == "branch_confirmation"
+            if validation_mode in {"branch_confirmation", "all_cut_branch"}
             else "Run independent branch-group confirmation before all-cut retrieval."
         ),
     }
