@@ -1,0 +1,52 @@
+experiment_name: stage12c_spatial_kbest_lattice
+seed: 42
+
+ncc:
+  offset_min_ft: -60.0
+  offset_max_ft: 60.0
+  offset_step_ft: 2.0
+  alignment_stride: 4
+  max_rows_per_cut: 256
+  windows: [5, 13, 25]
+  mix_windows: [13, 25]
+  mix_weights: [0.40, 0.60]
+  slope_correction_cap: 80.0
+  curvature_cap: 30.0
+
+model:
+  channels: 32
+  blocks: 4
+  kernel_size: 5
+  dropout: 0.10
+  batch_size: 2
+  epochs: 8
+  patience: 2
+  learning_rate: 0.0008
+  weight_decay: 0.0001
+  gradient_clip: 1.0
+  label_smoothing: 0.02
+  hard_negative_weight: 0.20
+  hard_negative_margin: 0.50
+
+profiles:
+  - {name: soft_j2_w025, max_jump_states: 2, transition_penalty: 0.04, zero_penalty: 0.0001, initial_penalty: 0.02, blend_weight: 0.25}
+  - {name: soft_j3_w050, max_jump_states: 3, transition_penalty: 0.04, zero_penalty: 0.0001, initial_penalty: 0.02, blend_weight: 0.50}
+  - {name: medium_j2_w050, max_jump_states: 2, transition_penalty: 0.10, zero_penalty: 0.0002, initial_penalty: 0.05, blend_weight: 0.50}
+  - {name: medium_j3_w075, max_jump_states: 3, transition_penalty: 0.10, zero_penalty: 0.0002, initial_penalty: 0.05, blend_weight: 0.75}
+  - {name: stiff_j2_w075, max_jump_states: 2, transition_penalty: 0.20, zero_penalty: 0.0004, initial_penalty: 0.08, blend_weight: 0.75}
+  - {name: stiff_j3_w100, max_jump_states: 3, transition_penalty: 0.20, zero_penalty: 0.0004, initial_penalty: 0.08, blend_weight: 1.00}
+
+selection:
+  minimum_selection_gain: 0.02
+  inner_fold_tolerance: 0.05
+  tail_tolerance: 0.02
+  bootstrap_resamples: 1000
+
+validation:
+  minimum_standard_gain: 0.05
+  minimum_spatial_gain: 0.02
+  minimum_typewell_gain: 0.02
+  inference_fold_tolerance: 0.05
+  tail_tolerance: 0.01
+  k_best: 16
+  kbest_tolerance: 0.02

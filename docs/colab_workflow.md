@@ -177,3 +177,9 @@ Use CPU/high RAM and leave `LIMIT_WELLS = None`. Raw row-wise RMSE is diagnostic
 Open `notebooks/280_run_stage12b_learned_emission_tcn.ipynb` directly. It mounts Drive, updates the repository, verifies or rebuilds the Stage 11/11C/12A prerequisites, and trains five well-OOF 61-state emission models. Use a T4 GPU; the implementation uses one GPU and does not benefit from T4 x2.
 
 Leave `LIMIT_WELLS = None` for the decision run. Fold checkpoints and histories are written immediately and `--resume` reuses them after a Colab disconnect. Return the complete decision dictionary. A promotion authorizes spatial/typewell cross-fit and K-best path decoding; it still does not authorize a Kaggle submission.
+
+## Stage 12C spatial/typewell K-best lattice
+
+Open `notebooks/290_run_stage12c_spatial_kbest_lattice.ipynb` directly with a T4 and High-RAM. The notebook reuses the five Stage 12B standard checkpoints, trains six spatial and five typewell-signature models, and nested-selects a small fixed set of path profiles. Expect roughly twice the Stage 12B training time. Completed fold checkpoints are resumed automatically.
+
+Return the final decision dictionary and selection table. Promotion means that a full-data independent alignment package may be built; this notebook still creates no Kaggle submission.
