@@ -11,10 +11,8 @@ from sklearn.neighbors import NearestNeighbors
 
 from rogii.artifacts import environment_report, write_json, write_yaml
 from rogii.config import load_config
-from rogii.data.folds import make_group_folds
 from rogii.data.loading import discover_horizontal_wells, load_horizontal_well, load_typewell, well_id_from_path
 from rogii.data.multicut import build_cut_record, feature_columns, make_cut_indices, typewell_signature
-from rogii.models.spatial import make_spatial_blocks
 
 
 CONTROL_NAMES = ("last_tvt", "constant_u", "linear_u")
@@ -38,8 +36,27 @@ def _sample_indices(length: int, count: int, stop: int | None = None) -> np.ndar
 
 
 def _frame_hash(frame: pd.DataFrame) -> str:
-    hashed = pd.util.hash_pandas_object(frame, index=False).to_numpy(np.uint64)
-    return hashlib.sha256(hashed.tobytes()).hexdigest()
+    """Canonical cross-version hash; do not depend on pandas' internal hash keys."""
+    digest = hashlib.sha256()
+    for column in frame.columns:
+        digest.update(str(column).encode("utf-8") + b"\0")
+        values = frame[column]
+        if pd.api.types.is_bool_dtype(values):
+            array = values.to_numpy(np.uint8, copy=True)
+            digest.update(b"bool\0" + array.tobytes())
+        elif pd.api.types.is_integer_dtype(values):
+            array = values.to_numpy("<i8", copy=True)
+            digest.update(b"int64\0" + array.tobytes())
+        elif pd.api.types.is_numeric_dtype(values):
+            array = values.to_numpy("<f8", copy=True)
+            array[np.isnan(array)] = np.nan
+            digest.update(b"float64\0" + array.tobytes())
+        else:
+            digest.update(b"string\0")
+            for value in values:
+                encoded = ("<NA>" if pd.isna(value) else str(value)).encode("utf-8")
+                digest.update(len(encoded).to_bytes(8, "little") + encoded)
+    return digest.hexdigest()
 
 
 def _slope(md: np.ndarray, values: np.ndarray, window_ft: float) -> float:
@@ -109,7 +126,7 @@ def _donor_graph(
     point_wells = point_table["well_id"].astype(str).to_numpy()
     point_gr = pd.to_numeric(point_table["GR"], errors="coerce").to_numpy(float)
     neighbors = min(int(config.get("point_neighbors", 64)), len(point_table))
-    index = NearestNeighbors(n_neighbors=neighbors, algorithm="auto").fit(coordinates)
+    index = NearestNeighbors(n_neighbors=neighbors, algorithm="kd_tree").fit(coordinates)
     signature = summaries.set_index("well_id")
     output: list[dict[str, Any]] = []
     for position, cut in enumerate(manifest.itertuples(index=False), 1):
@@ -186,12 +203,48 @@ def _balanced_group_folds(groups: pd.DataFrame, n_folds: int) -> pd.Series:
     return groups["branch_group"].map(assignment).astype(np.int16)
 
 
+def _stable_standard_folds(wells: pd.Series, n_folds: int, seed: int) -> pd.Series:
+    """Version-independent balanced assignment based only on well ID and seed."""
+    keys = wells.astype(str).map(
+        lambda value: hashlib.sha256(f"{seed}:{value}".encode("utf-8")).hexdigest()
+    )
+    order = np.argsort(keys.to_numpy(), kind="stable")
+    values = np.empty(len(wells), np.int16)
+    values[order] = np.arange(len(wells), dtype=np.int64) % int(n_folds)
+    return pd.Series(values, index=wells.index, name="fold")
+
+
+def _stable_spatial_folds(wells: pd.DataFrame, n_folds: int) -> pd.Series:
+    """Deterministic recursive median spatial partition without KMeans."""
+    groups = [wells.index.to_numpy(np.int64)]
+    while len(groups) < int(n_folds):
+        split_at = max(range(len(groups)), key=lambda index: (len(groups[index]), -int(groups[index].min())))
+        selected = groups.pop(split_at)
+        values = wells.loc[selected, ["x", "y"]]
+        spans = values.max() - values.min()
+        dimension = "x" if float(spans["x"]) >= float(spans["y"]) else "y"
+        ordered = wells.loc[selected].sort_values([dimension, "well_id"], kind="stable").index.to_numpy(np.int64)
+        middle = len(ordered) // 2
+        groups.extend([ordered[:middle], ordered[middle:]])
+    centroids = [
+        (float(wells.loc[group, "x"].mean()), float(wells.loc[group, "y"].mean()), group)
+        for group in groups
+    ]
+    output = pd.Series(np.full(len(wells), -1, np.int16), index=wells.index, name="spatial_fold")
+    for fold, (_, _, group) in enumerate(sorted(centroids, key=lambda value: (value[0], value[1]))):
+        output.loc[group] = fold
+    if (output < 0).any():
+        raise RuntimeError("Stable spatial fold assignment is incomplete")
+    return output
+
+
 def _assignments(summaries: pd.DataFrame, groups: pd.DataFrame, config: dict[str, Any], seed: int) -> pd.DataFrame:
     result = summaries.merge(groups, on="well_id", validate="one_to_one")
-    standard = make_group_folds(result[["well_id"]], int(config.get("n_standard_folds", 5)), seed)
-    result = result.merge(standard[["well_id", "fold"]], on="well_id", validate="one_to_one")
-    result["spatial_fold"] = make_spatial_blocks(
-        result, min(int(config.get("n_spatial_folds", 6)), len(result)), seed
+    result["fold"] = _stable_standard_folds(
+        result["well_id"], min(int(config.get("n_standard_folds", 5)), len(result)), seed
+    )
+    result["spatial_fold"] = _stable_spatial_folds(
+        result, min(int(config.get("n_spatial_folds", 6)), len(result))
     )
     result["branch_group_fold"] = _balanced_group_folds(
         result[["well_id", "branch_group"]], min(int(config.get("n_branch_group_folds", 5)), len(result))
@@ -315,12 +368,21 @@ def main(argv: list[str] | None = None) -> None:
     cut_metrics.to_parquet(output / "control_cut_metrics.parquet", index=False)
     write_json(output / "control_metrics.json", control_report)
     write_json(output / "hidden_target_invariance.json", invariance)
+    core_columns = [
+        "well_id", "cut_id", "cut_index", "n_rows", "suffix_rows", "requested_fraction",
+        "cut_fraction", "evaluation_role", "target_visible_to_features", "visible_prefix_sha256",
+    ]
+    fold_columns = ["well_id", "fold", "spatial_fold", "branch_group", "branch_group_fold"]
+    donor_columns = ["cut_id", "well_id", "donor_well_id", "donor_rank"]
     summary = {
         "stage16b_complete": True, "n_wells": len(horizontal_by_well), "n_cuts": len(manifest),
         "n_primary_cuts": int((manifest["evaluation_role"] == "primary").sum()),
         "n_donor_edges": len(graph), "n_branch_groups": int(groups["branch_group"].nunique()),
         "hidden_target_invariance": True,
-        "manifest_sha256": _frame_hash(manifest.sort_values("cut_id").reset_index(drop=True)),
+        "manifest_sha256": _frame_hash(manifest.sort_values("cut_id")[core_columns].reset_index(drop=True)),
+        "fold_sha256": _frame_hash(assignments.sort_values("well_id")[fold_columns].reset_index(drop=True)),
+        "donor_structure_sha256": _frame_hash(graph.sort_values(["cut_id", "donor_rank"])[donor_columns].reset_index(drop=True)),
+        "branch_group_sha256": _frame_hash(groups.sort_values("well_id").reset_index(drop=True)),
         "control_metrics": control_report,
         "next_step": "Replay the frozen V599 strong base on this fixed pseudo-test manifest.",
     }

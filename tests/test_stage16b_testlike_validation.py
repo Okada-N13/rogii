@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from rogii.cli.testlike_validation import _pseudo_manifest
+from rogii.cli.testlike_validation import _pseudo_manifest, _stable_spatial_folds, _stable_standard_folds
 
 
 def _well(well_id: str, rows: int = 200) -> pd.DataFrame:
@@ -30,3 +30,18 @@ def test_manifest_uses_short_prefix_and_never_exposes_target() -> None:
     assert not manifest["target_visible_to_features"].any()
     assert manifest["visible_prefix_sha256"].str.len().eq(64).all()
     assert not manifest["cut_id"].duplicated().any()
+
+
+def test_fold_assignments_are_deterministic_and_balanced() -> None:
+    wells = pd.DataFrame({
+        "well_id": [f"w{index:02d}" for index in range(20)],
+        "x": np.arange(20, dtype=float), "y": np.square(np.arange(20, dtype=float)),
+    })
+    standard_a = _stable_standard_folds(wells["well_id"], 5, 42)
+    standard_b = _stable_standard_folds(wells["well_id"], 5, 42)
+    spatial_a = _stable_spatial_folds(wells, 6)
+    spatial_b = _stable_spatial_folds(wells, 6)
+    assert standard_a.equals(standard_b)
+    assert standard_a.value_counts().nunique() == 1
+    assert spatial_a.equals(spatial_b)
+    assert set(spatial_a.unique()) == set(range(6))

@@ -1,7 +1,7 @@
 # Stage 16B: test-like branch-overlap validation結果
 
 実施日: 2026-07-22  
-ローカルfull run: `artifacts/stage16b_full_local_v001`
+ローカルfull run: `artifacts/stage16b_full_local_v003`
 
 ## 固定した条件
 
@@ -14,7 +14,10 @@
 - donor graph: 95,752 target-free edges
 - branch groups: 682
 - hidden-target invariance: pass
-- manifest SHA-256: `0d85e3e2842eb635a2a9231ee5086923166bcd0fa6d49d6ad87f871099968312`
+- manifest SHA-256: `af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c`
+- fold SHA-256: `74f1a0452088205d03092b8d1e21ee152688f4c72df1e945d4b0533df2dc6eec`
+- donor structure SHA-256: `042e2c1cfdc15b70f2a0901b879acd7c2c97659197d7d9117ec1cf18589475f8`
+- branch group SHA-256: `09a10bf7eae9aa590d5755375e4ef60ebeedcec481426de0f50b7a22a9d04ec3`
 
 branch groupは610 singleton、72 multi-well groupsで、163 wellsがmulti-well groupに属した。最大group sizeは6だった。
 
@@ -45,6 +48,8 @@ last-known TVTのprefix fraction別RMSE:
 
 Stage 15の35.110は、短prefix条件で不安定なconstant/linear-U系surfaceを主経路にした結果として説明可能である。旧CVで良かったdelta-U surfaceを調整して再提出する方針は棄却する。
 
+初版のmanifest hashはpandas内部hashとscikit-learnのfold実装に依存しており、ローカルとColabで一致しなかった。v002では値のバイト表現、通常fold、空間foldを明示的な決定論実装へ変更し、manifest、fold、donor構造、branch groupを別々に照合する。cut数とcontrol指標は変更されていない。
+
 ## 決定
 
 - Stage 16B manifestとfoldを以後固定する。
@@ -64,5 +69,8 @@ n_wells: 773
 n_cuts: 6184
 n_primary_cuts: 3865
 hidden_target_invariance: True
-manifest_sha256: 0d85e3e2842eb635a2a9231ee5086923166bcd0fa6d49d6ad87f871099968312
+manifest_sha256: af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c
+fold_sha256: 74f1a0452088205d03092b8d1e21ee152688f4c72df1e945d4b0533df2dc6eec
+donor_structure_sha256: 042e2c1cfdc15b70f2a0901b879acd7c2c97659197d7d9117ec1cf18589475f8
+branch_group_sha256: 09a10bf7eae9aa590d5755375e4ef60ebeedcec481426de0f50b7a22a9d04ec3
 ```
