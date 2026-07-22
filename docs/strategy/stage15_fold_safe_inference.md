@@ -24,7 +24,7 @@ Stage 14Bで検証を通過した `generic_w080_cap16` をcompetition testへ移
 - Drive上のDataset用フォルダ: `artifacts/stage15_fold_safe_package_v001/package`
 - 保管用zip: `artifacts/stage15_fold_safe_package_v001/stage15_inference_package.zip`
 
-Kaggle Datasetにはzipの中身を手作業で展開せず、`package` フォルダの内容をそのまま登録する。Datasetのルートかその直下に `manifest.json`, `sha256.json`, `src/`, `surface/`, `emission/`, `residual/` があればよい。
+Kaggle Datasetには`package`フォルダの内容を登録するのが基本だが、保管用zipをそのまま登録してもよい。Notebookは`manifest.json`を直接検出できない場合、`stage15_inference_package.zip`を自動検出して`/kaggle/working`へ展開する。
 
 ## Kaggle: Internet-OFF推論
 
