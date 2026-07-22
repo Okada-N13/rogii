@@ -72,29 +72,39 @@ def main(argv: list[str] | None = None) -> None:
 
     surface_config = dict(config["surface_model"])
     seed = int(config.get("seed", 42))
+    available_folds = {
+        family: sorted(int(value) for value in assignments[family].unique())
+        for family in FAMILIES
+    }
     for family in FAMILIES:
-        for fold in sorted(int(value) for value in overlap[family].unique()):
+        for fold in available_folds[family]:
             bundle = fit_surface_bundle(records, family, fold, surface_config, seed)
             save_surface_bundle(package / "surface" / f"{family}_{fold}.joblib", bundle)
 
-    for fold in sorted(int(value) for value in overlap["fold"].unique()):
+    for fold in available_folds["fold"]:
         _copy(stage12b / f"fold_{fold}.pt", package / "emission" / f"fold_{fold}.pt")
         _copy(stage14 / f"fold_generic_fold_{fold}.joblib", package / "residual" / f"fold_generic_{fold}.joblib")
         stacked = stage14 / f"fold_stacked_fold_{fold}.joblib"
         if stacked.is_file():
             _copy(stacked, package / "residual" / f"fold_stacked_{fold}.joblib")
     for family in ("spatial_fold", "typewell_fold"):
-        for fold in sorted(int(value) for value in overlap[family].unique()):
+        for fold in available_folds[family]:
             _copy(stage12c / f"{family}_{fold}.pt", package / "emission" / f"{family}_{fold}.pt")
 
     source = Path(__file__).resolve().parents[2]
     shutil.copytree(source / "rogii", package / "src" / "rogii", dirs_exist_ok=True,
                     ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
     assignment_rows = overlap[["well_id", *FAMILIES]].sort_values("well_id").to_dict("records")
+    all_assignment_rows = assignments[["well_id", *FAMILIES]].sort_values("well_id").to_dict("records")
     manifest = {
         "stage": "15_fold_safe_independent_inference",
+        "package_version": 2,
         "test_well_assignments": assignment_rows,
+        "well_fold_assignments": all_assignment_rows,
+        "available_folds": available_folds,
+        "unseen_well_policy": "average_all_fold_safe_models",
         "same_well_target_leakage_guard": True,
+        "supports_unseen_test_wells": True,
         "surface": {"weight": 0.75, "correction_cap_ft": 50.0},
         "ncc": dict(config["ncc"]),
         "primary_residual": {"branch": "generic", "weight": 0.80, "cap_ft": 16.0},
@@ -109,9 +119,11 @@ def main(argv: list[str] | None = None) -> None:
         "package_ready": True,
         "test_wells": test_wells,
         "fold_safe_assignments": assignment_rows,
+        "training_well_assignments": len(all_assignment_rows),
         "files": len(integrity),
         "zip": str(output / "stage15_inference_package.zip"),
         "same_well_target_leakage_guard": True,
+        "supports_unseen_test_wells": True,
     }
     write_json(output / "package_summary.json", report)
     print(report, flush=True)

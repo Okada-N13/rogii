@@ -59,3 +59,12 @@ def test_stage15_notebooks_are_self_contained_and_compile() -> None:
     kaggle = json.loads((ROOT / "notebooks" / "340_kaggle_stage15_internet_off_inference.ipynb").read_text(encoding="utf-8"))
     assert kaggle["metadata"]["stage15"]["internet_off"] is True
     assert kaggle["metadata"]["stage15"]["single_submission_csv"] is True
+
+
+def test_stage15_runtime_has_unseen_well_fallback() -> None:
+    source = (ROOT / "src" / "rogii" / "cli" / "stage15_infer.py").read_text(encoding="utf-8")
+    builder = (ROOT / "src" / "rogii" / "cli" / "stage15_package.py").read_text(encoding="utf-8")
+    assert "assignments.get(well_id)" in source
+    assert "all_fold_safe_ensemble" in source
+    assert '"available_folds"' in builder
+    assert '"supports_unseen_test_wells": True' in builder

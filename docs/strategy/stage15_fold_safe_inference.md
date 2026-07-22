@@ -19,10 +19,10 @@ Stage 14Bで検証を通過した `generic_w080_cap16` をcompetition testへ移
 3. 上から全セルを実行する。
 4. 最後の結果で `package_ready: true` と `same_well_target_leakage_guard: true` を確認する。
 
-出力先は次の2つ。
+出力先は次の2つ（非公開test対応のv002）。
 
-- Drive上のDataset用フォルダ: `artifacts/stage15_fold_safe_package_v001/package`
-- 保管用zip: `artifacts/stage15_fold_safe_package_v001/stage15_inference_package.zip`
+- Drive上のDataset用フォルダ: `artifacts/stage15_fold_safe_package_v002/package`
+- 保管用zip: `artifacts/stage15_fold_safe_package_v002/stage15_inference_package.zip`
 
 Kaggle Datasetには`package`フォルダの内容を登録するのが基本だが、保管用zipをそのまま登録してもよい。Notebookは`manifest.json`を直接検出できない場合、`stage15_inference_package.zip`を自動検出して`/kaggle/working`へ展開する。
 
@@ -62,5 +62,6 @@ Stage 14Bのnested standard値は11.8047だが、test推論の固定仕様はsta
 - 全収録ファイルのSHA-256を保存し、Kaggle推論開始時に再検証する。
 - `TVT_input` は有限値が連続prefixであることを検証する。
 - test horizontalにhidden `TVT` 列が渡された場合は停止する。
+- trainにfold assignmentがあるtest IDは対応するheld-out foldだけを使い、trainにも存在しない非公開testの未知IDは全fold-safeモデルの平均へ自動的に切り替える。
 - sample submissionへone-to-oneで結合し、順序、欠損、有限値を検証する。
 - 出力ディレクトリには提出候補CSVを複数作らない。
