@@ -74,3 +74,28 @@ Stage 17A v002は全gateを通過した。
 - uncovered subset、Stage 17A full hybrid、5 foldをすべて評価
 
 PF signalがこの軽量条件でも改善しない場合、full 128-seed PFやbeamへ計算時間を追加しない。
+
+### Stage 17B Colab結果
+
+軽量selector screenは全gateを通過した。
+
+- uncovered primary: 9,408,823 rows（49.937%）
+- uncovered RMSE: last-known `29.162` → selector `17.123`（`-12.038`）
+- full primary: Stage 17A `22.118` → selector hybrid `14.524`（`-7.594`）
+- diagnostic: `11.867` → `11.783`（`-0.084`）
+- 5/5 fold改善
+
+ただしfold 3の改善は`-0.119`だけで、他foldの`-5.27`から`-13.93`に比べて不安定である。このため全cutでPF計算量を増やす前にStage 17C gateを行う。
+
+## Stage 17C
+
+`notebooks/390_run_stage17c_selector_gate.ipynb`で、selector gainをtarget-free特徴からwell-isolated cross-fitする。
+
+- target label: cut単位の`baseline RMSE - selector RMSE`
+- feature: prefix fraction、suffix length、selector code、scale/hold、tracking ratio、GR sigma、likelihood spread
+- target由来のRMSE/SSEはfeatureへ入れない
+- fixed threshold `predicted_gain >= 0`
+- primary判定後のthreshold変更は禁止
+- full-data modelは将来のtest inference用に保存
+
+gateがalways-selectorをpooled、fold、P90、well bootstrapで改善した場合だけresolution/beam auditへ進む。

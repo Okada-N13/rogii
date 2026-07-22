@@ -49,6 +49,7 @@ rogii-frontier-diff = "rogii.cli.frontier_diff:main"
 rogii-testlike-validation = "rogii.cli.testlike_validation:main"
 rogii-public-replay = "rogii.cli.public_replay:main"
 rogii-selector-replay = "rogii.cli.selector_replay:main"
+rogii-selector-gate = "rogii.cli.selector_gate:main"
 
 [build-system]
 requires = ["hatchling"]

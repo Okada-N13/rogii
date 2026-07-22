@@ -1,0 +1,21 @@
+experiment_name: stage17c_crossfit_selector_gate
+seed: 42
+primary_threshold: 0.0
+diagnostic_thresholds: [-2.0, 0.0, 2.0, 4.0]
+bootstrap_resamples: 1000
+
+provenance:
+  stage16b_manifest_sha256: af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c
+
+model:
+  learning_rate: 0.05
+  max_iter: 180
+  max_leaf_nodes: 15
+  min_samples_leaf: 25
+  l2_regularization: 15.0
+
+gates:
+  minimum_gain: 0.02
+  minimum_improved_folds: 4
+  maximum_worst_fold_delta: 0.02
+  maximum_p90_delta: 0.0
