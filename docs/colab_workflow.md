@@ -183,3 +183,9 @@ Leave `LIMIT_WELLS = None` for the decision run. Fold checkpoints and histories 
 Open `notebooks/290_run_stage12c_spatial_kbest_lattice.ipynb` directly with a T4 and High-RAM. The notebook reuses the five Stage 12B standard checkpoints, trains six spatial and five typewell-signature models, and nested-selects a small fixed set of path profiles. Expect roughly twice the Stage 12B training time. Completed fold checkpoints are resumed automatically.
 
 Return the final decision dictionary and selection table. Promotion means that a full-data independent alignment package may be built; this notebook still creates no Kaggle submission.
+
+## Stage 13 emission uncertainty gate
+
+Stage 12C rejected every path profile. Open `notebooks/300_run_stage13_emission_uncertainty_gate.ipynb` on a CPU runtime. It reuses the saved OOF artifacts and nested-tests conservative correction caps, target-free risk shrinkage, and small standard-only cross-family blends. No neural model is retrained, so it is much faster than Stage 12C.
+
+Return the decision dictionary and profile table. Strict spatial/typewell promotion uses only family-local, hidden-target-invariant risk features; cross-family blends remain standard-OOF diagnostics.

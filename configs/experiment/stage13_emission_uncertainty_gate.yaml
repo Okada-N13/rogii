@@ -1,0 +1,26 @@
+experiment_name: stage13_emission_uncertainty_gate
+
+local_profiles:
+  - {name: scale0975, global_scale: 0.975}
+  - {name: cap30, correction_cap: 30.0}
+  - {name: cap40, correction_cap: 40.0}
+  - {name: risk80_s075, risk_threshold: 0.80, high_risk_scale: 0.75}
+  - {name: risk90_s050, risk_threshold: 0.90, high_risk_scale: 0.50}
+  - {name: cap40_risk85_s075, correction_cap: 40.0, risk_threshold: 0.85, high_risk_scale: 0.75}
+
+standard_ensemble_profiles:
+  - {name: blend_s90_sp05_tw05, standard_weight: 0.90, spatial_weight: 0.05, typewell_weight: 0.05}
+  - {name: blend_s80_sp10_tw10, standard_weight: 0.80, spatial_weight: 0.10, typewell_weight: 0.10}
+  - {name: blend_s90_sp05_tw05_risk90, standard_weight: 0.90, spatial_weight: 0.05, typewell_weight: 0.05, risk_threshold: 0.90, high_risk_scale: 0.75}
+
+selection:
+  minimum_selection_gain: 0.01
+  inner_fold_tolerance: 0.03
+  tail_tolerance: 0.01
+  bootstrap_resamples: 2000
+
+validation:
+  minimum_standard_gain: 0.02
+  holdout_tolerance: 0.01
+  inference_fold_tolerance: 0.03
+  tail_tolerance: 0.005

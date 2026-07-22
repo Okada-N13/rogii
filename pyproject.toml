@@ -40,6 +40,7 @@ rogii-delta-u-gate = "rogii.cli.delta_u_gate:main"
 rogii-raw-ncc = "rogii.cli.raw_ncc:main"
 rogii-emission-tcn = "rogii.cli.emission_tcn:main"
 rogii-emission-lattice = "rogii.cli.emission_lattice:main"
+rogii-emission-uncertainty = "rogii.cli.emission_uncertainty:main"
 
 [build-system]
 requires = ["hatchling"]
