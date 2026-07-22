@@ -189,3 +189,9 @@ Return the final decision dictionary and selection table. Promotion means that a
 Stage 12C rejected every path profile. Open `notebooks/300_run_stage13_emission_uncertainty_gate.ipynb` on a CPU runtime. It reuses the saved OOF artifacts and nested-tests conservative correction caps, target-free risk shrinkage, and small standard-only cross-family blends. No neural model is retrained, so it is much faster than Stage 12C.
 
 Return the decision dictionary and profile table. Strict spatial/typewell promotion uses only family-local, hidden-target-invariant risk features; cross-family blends remain standard-OOF diagnostics.
+
+## Stage 14 cross-fitted learned residual
+
+Open `notebooks/310_run_stage14_crossfit_emission_residual.ipynb` on CPU. It trains generic HGB residual models independently under standard, spatial, and typewell folds, plus a standard-only stacked branch using model disagreement and entropy. All models are well-isolated, and correction weight/cap is nested-selected after cross-fit.
+
+Twenty-one small models are checkpointed to Drive and resumed automatically. Return the decision dictionary and profile table; no Kaggle submission is created.

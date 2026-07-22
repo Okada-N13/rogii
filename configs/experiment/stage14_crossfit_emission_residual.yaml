@@ -1,0 +1,31 @@
+experiment_name: stage14_crossfit_emission_residual
+seed: 42
+
+model:
+  learning_rate: 0.04
+  max_iter: 180
+  max_leaf_nodes: 15
+  min_samples_leaf: 500
+  l2_regularization: 5.0
+  max_bins: 127
+  maximum_training_rows: 300000
+
+correction_specs:
+  - {name: w010_cap2, weight: 0.10, cap: 2.0}
+  - {name: w020_cap2, weight: 0.20, cap: 2.0}
+  - {name: w020_cap4, weight: 0.20, cap: 4.0}
+  - {name: w035_cap4, weight: 0.35, cap: 4.0}
+  - {name: w035_cap8, weight: 0.35, cap: 8.0}
+  - {name: w050_cap8, weight: 0.50, cap: 8.0}
+
+selection:
+  minimum_selection_gain: 0.02
+  inner_fold_tolerance: 0.03
+  tail_tolerance: 0.01
+  bootstrap_resamples: 2000
+
+validation:
+  minimum_standard_gain: 0.05
+  minimum_holdout_gain: 0.02
+  inference_fold_tolerance: 0.03
+  tail_tolerance: 0.005
