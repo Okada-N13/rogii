@@ -530,3 +530,5 @@ Stage 11 implements F0 and the first F1 baseline in `notebooks/250_run_stage11_m
 The model is validation-only and uses no public prediction. A full 773-well pass decides whether F2 raw-NCC/learned-emission work starts immediately or F1 requires another iteration.
 
 The full Stage 11 run improved ordinary OOF by 4.0877, all five folds, spatial holdout by 3.0359, and typewell holdout by 3.3680. Stage 11C now performs nested weight/cap selection and replaces the relative worst-10% share veto with absolute-tail SSE/CVaR/P90 gates before F2 begins.
+
+Stage 11C passed every gate. All ordinary outer folds independently selected `w100_cap50`, while `w075_cap50` was the robust inference profile because it also kept every spatial and typewell fold nonworse. Stage 12A fixes `w075_cap50` and establishes the raw multi-scale NCC offset-rank benchmark required before learned emission training.

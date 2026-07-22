@@ -1,0 +1,24 @@
+experiment_name: stage12a_raw_ncc_benchmark
+seed: 42
+
+ncc:
+  offset_min_ft: -60.0
+  offset_max_ft: 60.0
+  offset_step_ft: 2.0
+  alignment_stride: 4
+  max_eval_rows_per_cut: 512
+  windows: [5, 13, 25]
+  mix_windows: [13, 25]
+  mix_weights: [0.40, 0.60]
+  slope_correction_cap: 80.0
+  curvature_cap: 30.0
+
+validation:
+  required_surface_spec: w075_cap50
+  primary_variant: ncc_mix
+  minimum_emission_valid_fraction: 0.65
+  minimum_top10_random_multiplier: 1.25
+  maximum_median_rank: 25.0
+  minimum_improved_recall_folds: 4
+  minimum_oracle_gain: 2.0
+  cut_fractions: [0.35, 0.50, 0.65, 0.80]

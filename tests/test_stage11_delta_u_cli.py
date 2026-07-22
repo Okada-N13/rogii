@@ -9,6 +9,7 @@ import yaml
 
 from rogii.cli.delta_u import main
 from rogii.cli.delta_u_gate import main as gate_main
+from rogii.cli.raw_ncc import main as raw_ncc_main
 
 
 def _write_well(root: Path, index: int) -> None:
@@ -128,3 +129,59 @@ def test_stage11_cli_writes_audited_artifacts(tmp_path: Path) -> None:
     assert (gate_run / "nested_oof.parquet").is_file()
     assert (gate_run / "spec_report.parquet").is_file()
     assert (gate_run / "cut_report.parquet").is_file()
+
+    gate_summary["promoted_to_stage12"] = True
+    gate_summary["selected_inference_parameters"] = {
+        "name": "w075_cap50",
+        "weight": 0.75,
+        "cap": 50.0,
+    }
+    (gate_run / "gate_summary.json").write_text(
+        json.dumps(gate_summary), encoding="utf-8"
+    )
+    ncc_config = {
+        "ncc": {
+            "offset_min_ft": -10.0,
+            "offset_max_ft": 10.0,
+            "offset_step_ft": 5.0,
+            "alignment_stride": 4,
+            "max_eval_rows_per_cut": 16,
+            "windows": [3, 5],
+            "mix_windows": [3, 5],
+            "mix_weights": [0.5, 0.5],
+        },
+        "validation": {
+            "required_surface_spec": "w075_cap50",
+            "primary_variant": "ncc_mix",
+            "minimum_emission_valid_fraction": 0.0,
+            "minimum_top10_random_multiplier": 0.0,
+            "maximum_median_rank": 100.0,
+            "minimum_improved_recall_folds": 0,
+            "minimum_oracle_gain": -100.0,
+            "cut_fractions": [0.4, 0.65],
+        },
+    }
+    ncc_config_path = tmp_path / "ncc_config.yaml"
+    ncc_config_path.write_text(yaml.safe_dump(ncc_config), encoding="utf-8")
+    raw_ncc_main(
+        [
+            "--config",
+            str(ncc_config_path),
+            "--stage11-run",
+            str(run),
+            "--stage11c-run",
+            str(gate_run),
+            "--run-id",
+            "stage12a_test",
+            "--data-dir",
+            str(data_dir),
+            "--artifact-dir",
+            str(artifact_dir),
+        ]
+    )
+    ncc_run = artifact_dir / "stage12a_test"
+    ncc_summary = json.loads((ncc_run / "benchmark_summary.json").read_text(encoding="utf-8"))
+    assert ncc_summary["surface_spec"]["name"] == "w075_cap50"
+    assert ncc_summary["n_wells"] == 12
+    assert (ncc_run / "standard_benchmark.parquet").is_file()
+    assert (ncc_run / "variant_report.parquet").is_file()

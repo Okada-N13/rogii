@@ -165,3 +165,9 @@ No submission is generated. Return the final validation dictionary and fold-delt
 Open `notebooks/260_run_stage11c_delta_u_robust_gate.ipynb` after Stage 11. It reuses the coefficient OOF artifacts and reconstructs twelve predeclared weight/cap profiles under nested ordinary, spatial, and typewell selection. It also evaluates absolute worst-tail SSE, well-level CVaR, P90, and each pseudo-test cut fraction.
 
 Use CPU/high RAM. No model is retrained and no submission is generated. Return the decision dictionary and top-spec table; only `promoted_to_stage12: True` starts the independent alignment stage.
+
+## Stage 12A raw NCC benchmark
+
+Open `notebooks/270_run_stage12a_raw_ncc_benchmark.ipynb` after Stage 11C. It fixes the robust `w075_cap50` surface and evaluates 61 residual TVT offsets with multi-scale horizontal/typewell GR normalized correlation under ordinary, spatial, typewell, and cut audits.
+
+Use CPU/high RAM and leave `LIMIT_WELLS = None`. Raw row-wise RMSE is diagnostic; promotion is based on valid coverage, true-state rank, Top-K recall versus random, holdout consistency, and oracle headroom. No submission is generated.
