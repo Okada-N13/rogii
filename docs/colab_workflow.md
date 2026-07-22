@@ -171,3 +171,9 @@ Use CPU/high RAM. No model is retrained and no submission is generated. Return t
 Open `notebooks/270_run_stage12a_raw_ncc_benchmark.ipynb` after Stage 11C. It fixes the robust `w075_cap50` surface and evaluates 61 residual TVT offsets with multi-scale horizontal/typewell GR normalized correlation under ordinary, spatial, typewell, and cut audits.
 
 Use CPU/high RAM and leave `LIMIT_WELLS = None`. Raw row-wise RMSE is diagnostic; promotion is based on valid coverage, true-state rank, Top-K recall versus random, holdout consistency, and oracle headroom. No submission is generated.
+
+## Stage 12B learned emission TCN
+
+Open `notebooks/280_run_stage12b_learned_emission_tcn.ipynb` directly. It mounts Drive, updates the repository, verifies or rebuilds the Stage 11/11C/12A prerequisites, and trains five well-OOF 61-state emission models. Use a T4 GPU; the implementation uses one GPU and does not benefit from T4 x2.
+
+Leave `LIMIT_WELLS = None` for the decision run. Fold checkpoints and histories are written immediately and `--resume` reuses them after a Colab disconnect. Return the complete decision dictionary. A promotion authorizes spatial/typewell cross-fit and K-best path decoding; it still does not authorize a Kaggle submission.

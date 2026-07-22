@@ -38,6 +38,7 @@ rogii-alignment-gate = "rogii.cli.alignment_gate:main"
 rogii-delta-u = "rogii.cli.delta_u:main"
 rogii-delta-u-gate = "rogii.cli.delta_u_gate:main"
 rogii-raw-ncc = "rogii.cli.raw_ncc:main"
+rogii-emission-tcn = "rogii.cli.emission_tcn:main"
 
 [build-system]
 requires = ["hatchling"]

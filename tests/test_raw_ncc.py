@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 
 from rogii.models.raw_ncc import alignment_costs, benchmark_cut, rolling_ncc_cost
+from rogii.models.emission_features import CANDIDATE_CHANNELS, build_emission_sequence, feature_invariance
 
 
 def test_rolling_ncc_prefers_matching_sequence() -> None:
@@ -99,3 +100,28 @@ def test_alignment_costs_ignore_hidden_tvt() -> None:
     np.testing.assert_array_equal(original[1], perturbed[1])
     for name in original[3]:
         np.testing.assert_array_equal(original[3][name], perturbed[3][name])
+
+
+def test_emission_sequence_has_paired_gr_channels_and_is_target_invariant() -> None:
+    record, horizontal, typewell = _case()
+    record.spatial_fold = 1
+    record.typewell_fold = 2
+    config = {
+        "offset_min_ft": -20.0,
+        "offset_max_ft": 20.0,
+        "offset_step_ft": 2.0,
+        "alignment_stride": 2,
+        "max_rows_per_cut": 32,
+        "windows": [5, 13, 25],
+        "mix_windows": [13, 25],
+        "mix_weights": [0.4, 0.6],
+    }
+    sequence = build_emission_sequence(
+        record, horizontal, typewell, config, weight=0.75, correction_cap_ft=50.0
+    )
+    assert sequence.costs.shape == (32, len(CANDIDATE_CHANNELS), 21)
+    assert sequence.row_features.shape == (32, 4)
+    assert sequence.valid.any()
+    assert feature_invariance(
+        record, horizontal, typewell, config, weight=0.75, correction_cap_ft=50.0
+    )
