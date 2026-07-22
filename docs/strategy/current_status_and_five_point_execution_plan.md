@@ -527,15 +527,17 @@ Stage 18Bは全gateを通過した。Stage 18Aと重複0の独立150 cutsでbran
 
 Stage 18Cも全gateを通過した。全3,865 primary cuts・18.84M rowsで`14.524 → 12.784`（`-1.740`）、coverage 100%、5/5 folds、5/5 prefix fractions、P90 `-1.229`、bootstrap 95% `[-1.125, -0.680]`だった。固定top-4 branch retrievalを新controlとして凍結する。
 
-現在のactive taskは **Stage 18D: cross-fitted learned donor ranking** である。詳細は`docs/strategy/stage18_branch_retrieval.md`を参照する。
+Stage 18Dも全gateを通過した。固定retrieval比`12.784 → 12.645`（`-0.139`）、5/5 standard folds、4/5 branch folds、5/5 fractions、P90・max改善、bootstrap 95% `[-0.205, -0.0099]`だった。rankerを昇格する。
+
+現在のactive taskは **Stage 18E: fold-safe ranked-retrieval inference package** である。詳細は`docs/strategy/stage18_branch_retrieval.md`を参照する。
 
 実装開始時の具体的順序:
 
-1. branch-group外の最大12 donorsへtarget-free特徴を作る。
-2. 評価foldをtarget/donor両roleから除外した5-fold rankerを学習する。
-3. OOF上位4 donorsで固定20% retrievalを再構築する。
-4. Stage 18C固定top-4 control比でfold、fraction、P90、bootstrapを評価する。
-5. 全gate通過時だけ全data rankerとtest inferenceへ進む。
+1. Stage 18Dの5 fold-safe rankerを再学習してpackage化する。
+2. frozen branch fold assignmentと同一well donor禁止をpackageへ含める。
+3. package zipをKaggle Datasetへアップロードする。
+4. 6.685 V599 notebookの最終audit直前へStage 18 retrievalを追加する。
+5. Internet-OFF hidden rerunとsubmission auditを確認後、1回だけ提出する。
 
 Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入しない。
 
@@ -558,3 +560,4 @@ Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入
 - 2026-07-22: Stage 18A全体gate棄却。standardは`-2.209`だが4/5 folds・P90・bootstrapで不合格。spatialはeligible 32/150で別問題化。一方branch-groupは`-2.715`、5/5 folds、P90非悪化のため、非重複150 cutsのStage 18B確認へ移行。
 - 2026-07-22: Stage 18B全gate通過。非重複150 cutsで`-1.611`、5/5 folds、P90 `-2.223`、bootstrap上限`-0.339`。固定20% branch retrievalをStage 18C全primary cutsへ昇格。
 - 2026-07-22: Stage 18C全gate通過。全3,865 cutsで`-1.740`、5/5 folds、5/5 fractions、coverage 100%、P90・max・bootstrapすべて改善。固定top-4 retrievalを凍結しStage 18D learned donor rankingへ移行。
+- 2026-07-22: Stage 18D全gate通過。固定retrieval比`-0.139`、standard 5/5、branch 4/5、fraction 5/5、bootstrap上限`-0.0099`。5個のfold-safe modelを使うStage 18E inference packageへ昇格。

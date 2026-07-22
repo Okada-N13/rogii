@@ -53,6 +53,7 @@ rogii-selector-gate = "rogii.cli.selector_gate:main"
 rogii-selector-resolution = "rogii.cli.selector_resolution:main"
 rogii-branch-retrieval = "rogii.cli.branch_retrieval:main"
 rogii-donor-ranker = "rogii.cli.donor_ranker:main"
+rogii-stage18-package = "rogii.cli.stage18_package:main"
 
 [build-system]
 requires = ["hatchling"]

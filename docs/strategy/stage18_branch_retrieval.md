@@ -125,3 +125,34 @@ fold安全性:
 合格条件は固定control比`-0.05`以上、4/5 folds、4/5 fractions、P90非悪化、well bootstrap上限`< 0`、coverage 99%以上。通過時だけ全data rankerとindependent test inferenceへ進む。
 
 実行Notebookは`notebooks/440_run_stage18d_learned_donor_ranker.ipynb`。CPU Colabで実行し、Kaggle提出は行わない。
+
+## Stage 18D実測と判断
+
+43,758 candidate rows、全3,865 cutsで全gateを通過した。
+
+- OOF score Spearman: `0.9625`
+- oracle top-1 recall: `0.5915`
+- 固定top-4との平均donor overlap: `0.5463`
+- Stage 18C固定retrieval比: `12.784 → 12.645`（`-0.139`）
+- standard folds: 5/5改善
+- branch-group folds: 4/5改善。fold 3のみ`+0.0099`
+- prefix fractions: 5/5改善
+- cut P90: `-0.243`
+- cut max: `-0.545`
+- well bootstrap 95%: `[-0.205, -0.0099]`
+- strong base比: `-1.879`
+
+改善幅は小さいが、fold/fraction/tail/有意性の事前gateをすべて満たしたためrankerを昇格する。LB係数探索は行わない。
+
+## Stage 18E: fold-safe test inference package
+
+実testへcross-fit条件を維持するため、単一full-data modelではなく5個のfold-safe modelをpackage化する。
+
+- test well IDがtrain assignmentsにも存在する場合、その凍結branch-group foldを使う。
+- 評価foldモデルは、学習時にそのfoldをtarget roleとdonor roleの両方から除外済み。
+- 同じwell IDのtrain TVTをtest donorとして使うことを明示的に禁止する。
+- test IDがtrainにない場合だけvisible-prefix branch vote、さらに該当なしならstable hash foldを使う。
+- final 6.685 V599 submissionへ、選択4 donorのretrievalを20%適用する。
+- inferenceはInternet-OFF、competition train/testとpackageだけで完結する。
+
+package構築Notebookは`notebooks/450_build_stage18e_ranked_retrieval_package.ipynb`。推奨Kaggle Dataset名は`rogii-stage18e-ranked-retrieval-package`。
