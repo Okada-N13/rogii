@@ -1,0 +1,26 @@
+experiment_name: stage15_fold_safe_independent_inference
+seed: 42
+
+surface_model:
+  learning_rate: 0.05
+  max_iter: 350
+  max_leaf_nodes: 31
+  min_samples_leaf: 20
+  l2_regularization: 2.0
+  max_bins: 127
+  regional:
+    k_neighbors: 16
+    distance_floor_ft: 100.0
+    distance_shrink_ft: 3000.0
+
+ncc:
+  offset_min_ft: -60.0
+  offset_max_ft: 60.0
+  offset_step_ft: 2.0
+  alignment_stride: 4
+  max_rows_per_cut: 256
+  windows: [5, 13, 25]
+  mix_windows: [13, 25]
+  mix_weights: [0.40, 0.60]
+  slope_correction_cap: 80.0
+  curvature_cap: 30.0

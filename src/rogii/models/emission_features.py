@@ -6,7 +6,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from rogii.models.raw_ncc import alignment_costs
+from rogii.models.raw_ncc import alignment_costs, offset_grid
 
 
 COST_CHANNELS = ("ncc_w5", "ncc_w13", "ncc_w25", "ncc_mix")
@@ -14,7 +14,7 @@ CANDIDATE_CHANNELS = (*COST_CHANNELS, "horizontal_gr_z", "candidate_typewell_gr_
 
 
 @dataclass
-class EmissionSequence:
+class EmissionInput:
     cut_id: str
     well_id: str
     fold: int
@@ -25,10 +25,14 @@ class EmissionSequence:
     md: np.ndarray
     costs: np.ndarray
     row_features: np.ndarray
+    surface_y_pred: np.ndarray
+
+
+@dataclass
+class EmissionSequence(EmissionInput):
     target_state: np.ndarray
     valid: np.ndarray
     true_offset: np.ndarray
-    surface_y_pred: np.ndarray
     y_true: np.ndarray
 
 
@@ -38,7 +42,7 @@ def _evenly_spaced(length: int, maximum: int) -> np.ndarray:
     return np.unique(np.linspace(0, length - 1, maximum).round().astype(np.int64))
 
 
-def build_emission_sequence(
+def build_emission_input(
     record: pd.Series | Any,
     horizontal: pd.DataFrame,
     typewell: pd.DataFrame,
@@ -46,7 +50,7 @@ def build_emission_sequence(
     *,
     weight: float,
     correction_cap_ft: float,
-) -> EmissionSequence:
+) -> EmissionInput:
     positions, surface, offsets, cost_map = alignment_costs(
         record,
         horizontal,
@@ -67,14 +71,6 @@ def build_emission_sequence(
     suffix = horizontal.iloc[positions]
     md = pd.to_numeric(suffix["MD"], errors="coerce").to_numpy(dtype=float)
     gr = pd.to_numeric(suffix["GR"], errors="coerce").to_numpy(dtype=float)
-    truth = pd.to_numeric(suffix["TVT"], errors="coerce").to_numpy(dtype=float)
-    true_offset = truth - surface
-    target = np.argmin(np.abs(offsets[None, :] - true_offset[:, None]), axis=1)
-    in_grid = np.isfinite(true_offset) & (true_offset >= offsets[0]) & (true_offset <= offsets[-1])
-    row = np.arange(len(target))
-    true_costs = ncc_costs[row, :, target]
-    valid = in_grid & np.any(true_costs < 2.999, axis=1)
-
     horizon = np.maximum(md - float(record.anchor_md), 0.0)
     horizon_scale = max(float(np.nanmax(horizon)), 1.0)
     finite_gr = gr[np.isfinite(gr)]
@@ -104,7 +100,7 @@ def build_emission_sequence(
             gr_z,
         ]
     ).astype(np.float32)
-    return EmissionSequence(
+    return EmissionInput(
         cut_id=str(record.cut_id),
         well_id=str(record.well_id),
         fold=int(record.fold),
@@ -115,10 +111,36 @@ def build_emission_sequence(
         md=md.astype(np.float32),
         costs=costs.astype(np.float16),
         row_features=row_features,
+        surface_y_pred=surface,
+    )
+
+
+def build_emission_sequence(
+    record: pd.Series | Any,
+    horizontal: pd.DataFrame,
+    typewell: pd.DataFrame,
+    config: dict[str, Any],
+    *,
+    weight: float,
+    correction_cap_ft: float,
+) -> EmissionSequence:
+    item = build_emission_input(
+        record, horizontal, typewell, config,
+        weight=weight, correction_cap_ft=correction_cap_ft,
+    )
+    suffix = horizontal.set_index("row_index").loc[item.row_index]
+    truth = pd.to_numeric(suffix["TVT"], errors="coerce").to_numpy(dtype=float)
+    offsets = offset_grid(config)
+    true_offset = truth - item.surface_y_pred
+    target = np.argmin(np.abs(offsets[None, :] - true_offset[:, None]), axis=1)
+    in_grid = np.isfinite(true_offset) & (true_offset >= offsets[0]) & (true_offset <= offsets[-1])
+    true_costs = item.costs[np.arange(len(target)), :len(COST_CHANNELS), target]
+    valid = in_grid & np.any(true_costs < 2.999, axis=1)
+    return EmissionSequence(
+        **item.__dict__,
         target_state=target.astype(np.int16),
         valid=valid,
         true_offset=true_offset.astype(np.float32),
-        surface_y_pred=surface,
         y_true=truth.astype(np.float32),
     )
 

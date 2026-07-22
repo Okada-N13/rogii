@@ -8,7 +8,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader, Dataset
 
-from rogii.models.emission_features import EmissionSequence
+from rogii.models.emission_features import EmissionInput, EmissionSequence
 from rogii.models.sequence_tcn import ResidualBlock
 
 
@@ -92,7 +92,7 @@ def _loss(
 
 def predict_emissions(
     model: CandidateEmissionTCN,
-    sequences: list[EmissionSequence],
+    sequences: list[EmissionInput],
     device: torch.device,
 ) -> list[np.ndarray]:
     model.eval()

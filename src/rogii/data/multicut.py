@@ -98,7 +98,39 @@ def build_cut_record(
     prefix_window_ft: float = 800.0,
     target_ridge: float = 1e-3,
 ) -> dict[str, float | int | str]:
-    required = {"well_id", "row_index", "MD", "X", "Y", "Z", "GR", "TVT"}
+    record = _build_feature_record(
+        horizontal,
+        typewell,
+        cut_index,
+        tvt_column="TVT",
+        prefix_window_ft=prefix_window_ft,
+    )
+    suffix = horizontal.iloc[int(cut_index):]
+    horizon_kft = (suffix["MD"].to_numpy(dtype=float) - float(record["anchor_md"])) / 1000.0
+    true_u_delta = (
+        suffix["TVT"].to_numpy(dtype=float)
+        + suffix["Z"].to_numpy(dtype=float)
+        - float(record["anchor_u"])
+    )
+    target_residual = true_u_delta - float(record["prefix_u_slope_per_kft"]) * horizon_kft
+    design = np.column_stack([horizon_kft, np.square(horizon_kft)])
+    penalty = np.eye(2, dtype=float) * float(target_ridge)
+    coefficients = np.linalg.solve(design.T @ design + penalty, design.T @ target_residual)
+    record["target_slope_correction"] = float(coefficients[0])
+    record["target_curvature"] = float(coefficients[1])
+    return record
+
+
+def _build_feature_record(
+    horizontal: pd.DataFrame,
+    typewell: pd.DataFrame,
+    cut_index: int,
+    *,
+    tvt_column: str,
+    prefix_window_ft: float,
+) -> dict[str, float | int | str]:
+    """Build target-free cut features from a contiguous known TVT prefix."""
+    required = {"well_id", "row_index", "MD", "X", "Y", "Z", "GR", tvt_column}
     missing = sorted(required - set(horizontal.columns))
     if missing:
         raise ValueError(f"horizontal frame is missing columns {missing}")
@@ -111,24 +143,15 @@ def build_cut_record(
     anchor = prefix.iloc[-1]
     md_prefix = prefix["MD"].to_numpy(dtype=float)
     z_prefix = prefix["Z"].to_numpy(dtype=float)
-    tvt_prefix = prefix["TVT"].to_numpy(dtype=float)
+    tvt_prefix = pd.to_numeric(prefix[tvt_column], errors="coerce").to_numpy(dtype=float)
+    if not np.isfinite(tvt_prefix).all():
+        raise ValueError(f"{tvt_column} must be finite throughout the known prefix")
     u_prefix = tvt_prefix + z_prefix
     anchor_md = float(anchor["MD"])
-    anchor_u = float(anchor["TVT"] + anchor["Z"])
+    anchor_tvt = float(anchor[tvt_column])
+    anchor_u = float(anchor_tvt + anchor["Z"])
     prefix_u_slope = _robust_slope(md_prefix, u_prefix, prefix_window_ft) * 1000.0
     prefix_tvt_slope = _robust_slope(md_prefix, tvt_prefix, prefix_window_ft) * 1000.0
-
-    suffix_md = suffix["MD"].to_numpy(dtype=float)
-    horizon_kft = (suffix_md - anchor_md) / 1000.0
-    true_u_delta = (
-        suffix["TVT"].to_numpy(dtype=float)
-        + suffix["Z"].to_numpy(dtype=float)
-        - anchor_u
-    )
-    target_residual = true_u_delta - prefix_u_slope * horizon_kft
-    design = np.column_stack([horizon_kft, np.square(horizon_kft)])
-    penalty = np.eye(2, dtype=float) * float(target_ridge)
-    coefficients = np.linalg.solve(design.T @ design + penalty, design.T @ target_residual)
 
     end = horizontal.iloc[-1]
     dx = float(end["X"] - anchor["X"])
@@ -150,7 +173,7 @@ def build_cut_record(
         "anchor_y": float(anchor["Y"]),
         "anchor_z": float(anchor["Z"]),
         "anchor_u": anchor_u,
-        "anchor_tvt": float(anchor["TVT"]),
+        "anchor_tvt": anchor_tvt,
         "prefix_u_slope_per_kft": prefix_u_slope,
         "prefix_tvt_slope_per_kft": prefix_tvt_slope,
         "horizon_md_ft": horizon_md,
@@ -164,14 +187,36 @@ def build_cut_record(
         "trajectory_dz_per_md": dz / max(horizon_md, 1.0),
         "gr_missing_fraction": float(np.mean(~np.isfinite(full_gr))),
         "gr_prefix_suffix_mean_delta": float(np.nanmean(suffix_gr) - np.nanmean(prefix_gr)),
-        "target_slope_correction": float(coefficients[0]),
-        "target_curvature": float(coefficients[1]),
     }
     record.update(_summary("prefix_gr", prefix_gr))
     record.update(_summary("suffix_gr", suffix_gr))
     record.update(_summary("full_gr", full_gr))
     record.update(typewell_signature(typewell))
     return record
+
+
+def build_inference_record(
+    horizontal: pd.DataFrame,
+    typewell: pd.DataFrame,
+    *,
+    prefix_window_ft: float = 800.0,
+) -> dict[str, float | int | str]:
+    """Build Stage 11 features from test ``TVT_input`` without hidden targets."""
+    if "TVT_input" not in horizontal:
+        raise ValueError("inference horizontal frame is missing TVT_input")
+    known = pd.to_numeric(horizontal["TVT_input"], errors="coerce").notna().to_numpy()
+    if not known.any() or known.all():
+        raise ValueError("TVT_input must contain a non-empty known prefix and hidden suffix")
+    cut_index = int(np.flatnonzero(~known)[0])
+    if not known[:cut_index].all() or known[cut_index:].any():
+        raise ValueError("TVT_input observations must form one contiguous prefix")
+    return _build_feature_record(
+        horizontal,
+        typewell,
+        cut_index,
+        tvt_column="TVT_input",
+        prefix_window_ft=prefix_window_ft,
+    )
 
 
 def build_multicut_records(
