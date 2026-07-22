@@ -525,15 +525,17 @@ Stage 18A全体gateは棄却した。standard primaryは`18.565 → 16.356`（`-
 
 Stage 18Bは全gateを通過した。Stage 18Aと重複0の独立150 cutsでbranch-group primaryは`12.010 → 10.399`（`-1.611`）、5/5 folds、cut P90 `-2.223`、bootstrap 95% `[-1.317, -0.339]`だった。
 
-現在のactive taskは **Stage 18C: all-primary-cut branch-group retrieval** である。詳細は`docs/strategy/stage18_branch_retrieval.md`を参照する。
+Stage 18Cも全gateを通過した。全3,865 primary cuts・18.84M rowsで`14.524 → 12.784`（`-1.740`）、coverage 100%、5/5 folds、5/5 prefix fractions、P90 `-1.229`、bootstrap 95% `[-1.125, -0.680]`だった。固定top-4 branch retrievalを新controlとして凍結する。
+
+現在のactive taskは **Stage 18D: cross-fitted learned donor ranking** である。詳細は`docs/strategy/stage18_branch_retrieval.md`を参照する。
 
 実装開始時の具体的順序:
 
-1. 全primary cutsへbranch-group除外 + prefix calibration + GR + 20%を適用する。
-2. 5 foldsと5 prefix fractionsの一貫性を確認する。
-3. coverage、cut P90、well bootstrapを確認する。
-4. 全gate通過時はall-cut controlを凍結する。
-5. 次にlearned donor rankingを固定control比で検証する。
+1. branch-group外の最大12 donorsへtarget-free特徴を作る。
+2. 評価foldをtarget/donor両roleから除外した5-fold rankerを学習する。
+3. OOF上位4 donorsで固定20% retrievalを再構築する。
+4. Stage 18C固定top-4 control比でfold、fraction、P90、bootstrapを評価する。
+5. 全gate通過時だけ全data rankerとtest inferenceへ進む。
 
 Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入しない。
 
@@ -555,3 +557,4 @@ Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入
 - 2026-07-22: Stage 17D通過。medium/highはbaseline比`-19.971/-11.356`、screen比`-0.834/-2.577`、双方5/5 fold。Stage 17完了、active taskをStage 18A retrievalへ更新。
 - 2026-07-22: Stage 18A全体gate棄却。standardは`-2.209`だが4/5 folds・P90・bootstrapで不合格。spatialはeligible 32/150で別問題化。一方branch-groupは`-2.715`、5/5 folds、P90非悪化のため、非重複150 cutsのStage 18B確認へ移行。
 - 2026-07-22: Stage 18B全gate通過。非重複150 cutsで`-1.611`、5/5 folds、P90 `-2.223`、bootstrap上限`-0.339`。固定20% branch retrievalをStage 18C全primary cutsへ昇格。
+- 2026-07-22: Stage 18C全gate通過。全3,865 cutsで`-1.740`、5/5 folds、5/5 fractions、coverage 100%、P90・max・bootstrapすべて改善。固定top-4 retrievalを凍結しStage 18D learned donor rankingへ移行。

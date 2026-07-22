@@ -82,3 +82,46 @@ Stage 18A branch-group結果と方向が一致し、別sampleでもtailを含め
 - 通過後はこの全cut結果をcontrolとして凍結し、learned donor rankingを評価する。
 
 実行Notebookは`notebooks/430_run_stage18c_all_cut_branch_retrieval.ipynb`。CPU Colabで実行し、まだKaggle提出は行わない。
+
+## Stage 18C実測と判断
+
+全3,865 primary cuts、18,841,328 suffix rowsで全gateを通過した。
+
+- RMSE: `14.524 → 12.784`（`-1.740`）
+- coverage: 100%
+- fold: 5/5改善（`-1.080`から`-2.861`）
+- prefix fraction: 5/5改善
+  - 0.18: `-3.565`
+  - 0.22: `-1.532`
+  - 0.26: `-0.909`
+  - 0.30: `-0.593`
+  - 0.34: `-0.578`
+- cut P90: `-1.229`
+- cut max: `-68.614`
+- well bootstrap 95%: `[-1.125, -0.680]`
+- sample SHA-256: `f05e478d8c152f0b1f99179028c44569ebbac918756f52d7af3fe7c5c4b55632`
+
+固定top-4 branch retrievalを次のcontrolとして凍結する。短prefixだけでなく全fractionで改善しているため、retrieval信号自体は再現性がある。
+
+## Stage 18D: cross-fitted learned donor ranking
+
+Stage 18Cはbranch-group外候補を元のgeometry順位から上位4本選んでいる。Stage 18Dでは最大12候補から、target-free特徴だけで4本を選ぶ。
+
+特徴:
+
+- donor graphのXYZ距離、prefix matched points、GR差、typewell GR差
+- visible prefix上のcalibrated U誤差・相関・offset
+- 公開される全trajectory上のXYZ距離とGR差
+- donor Uのsuffix形状とStage 17 strong baseとの差
+- cut fraction、prefix/suffix長
+
+fold安全性:
+
+- 評価branch-group foldをtarget roleだけでなくdonor roleからも学習除外する。
+- suffix TVTはdonor品質labelにだけ使用し、推論特徴には入れない。
+- 5-fold OOF scoreでdonorを選び、Stage 18C固定top-4と直接比較する。
+- model/hyperparameters、候補12本、選択4本、blend 20%を事前固定する。
+
+合格条件は固定control比`-0.05`以上、4/5 folds、4/5 fractions、P90非悪化、well bootstrap上限`< 0`、coverage 99%以上。通過時だけ全data rankerとindependent test inferenceへ進む。
+
+実行Notebookは`notebooks/440_run_stage18d_learned_donor_ranker.ipynb`。CPU Colabで実行し、Kaggle提出は行わない。

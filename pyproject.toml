@@ -52,6 +52,7 @@ rogii-selector-replay = "rogii.cli.selector_replay:main"
 rogii-selector-gate = "rogii.cli.selector_gate:main"
 rogii-selector-resolution = "rogii.cli.selector_resolution:main"
 rogii-branch-retrieval = "rogii.cli.branch_retrieval:main"
+rogii-donor-ranker = "rogii.cli.donor_ranker:main"
 
 [build-system]
 requires = ["hatchling"]

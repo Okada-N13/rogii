@@ -1,0 +1,30 @@
+experiment_name: stage18d_crossfitted_learned_donor_ranker
+seed: 42
+bootstrap_resamples: 3000
+
+provenance:
+  stage16b_manifest_sha256: af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c
+  stage18c_sample_sha256: f05e478d8c152f0b1f99179028c44569ebbac918756f52d7af3fe7c5c4b55632
+
+retrieval:
+  maximum_candidates: 12
+  selected_donors: 4
+  prefix_calibration_rows: 256
+  distance_scale_ft: 300.0
+  gr_scale: 30.0
+  minimum_weight: 1.0e-5
+  blend_weight: 0.20
+
+ranker:
+  learning_rate: 0.05
+  max_iter: 180
+  max_leaf_nodes: 15
+  max_depth: 4
+  min_samples_leaf: 40
+  l2_regularization: 2.0
+
+gates:
+  minimum_cut_coverage: 0.99
+  minimum_learned_gain: 0.05
+  minimum_improved_folds: 4
+  minimum_improved_fractions: 4
