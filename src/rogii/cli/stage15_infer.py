@@ -161,7 +161,19 @@ def main(argv: list[str] | None = None) -> None:
     import torch
     if args.device == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA requested but unavailable")
-    device = torch.device("cuda" if args.device == "auto" and torch.cuda.is_available() else ("cpu" if args.device == "auto" else args.device))
+    if args.device == "auto" and torch.cuda.is_available():
+        capability = torch.cuda.get_device_capability()
+        if capability[0] >= 7:
+            device = torch.device("cuda")
+        else:
+            print(
+                f"GPU {torch.cuda.get_device_name(0)} has compute capability {capability}; "
+                "falling back to CPU because the Kaggle PyTorch build may not support it.",
+                flush=True,
+            )
+            device = torch.device("cpu")
+    else:
+        device = torch.device("cpu" if args.device == "auto" else args.device)
     parts, audits = [], []
     for path in discover_horizontal_wells(data, "test"):
         well_id = well_id_from_path(path)

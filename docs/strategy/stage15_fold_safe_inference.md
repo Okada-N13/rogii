@@ -31,7 +31,7 @@ Kaggle Datasetには`package`フォルダの内容を登録するのが基本だ
 1. 新しいKaggle Notebookを作る。
 2. Competition dataと上記Stage 15 package DatasetをAdd Inputする。
 3. InternetをOFFにする。
-4. AcceleratorはGPUを選ぶ。P100でもT4でもよく、単一GPUしか使用しない。
+4. Acceleratorは **T4 x2** を選ぶ。単一GPUしか使用しないが、現在のKaggle PyTorchビルドではP100が`no kernel image`になるため使用しない。T4を選べない場合はCPU推論へ切り替える。
 5. [340_kaggle_stage15_internet_off_inference.ipynb](../../notebooks/340_kaggle_stage15_internet_off_inference.ipynb) のセルをコピーし、上から実行する。
 6. 最後のauditで次を確認する。
 
