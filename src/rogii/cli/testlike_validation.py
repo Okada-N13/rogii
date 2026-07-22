@@ -122,7 +122,8 @@ def _donor_graph(
     summaries: pd.DataFrame,
     config: dict[str, Any],
 ) -> pd.DataFrame:
-    coordinates = point_table[["X", "Y", "Z"]].to_numpy(np.float32)
+    point_table = point_table.sort_values(["well_id", "row_index"], kind="stable").reset_index(drop=True)
+    coordinates = point_table[["X", "Y", "Z"]].to_numpy(np.float64)
     point_wells = point_table["well_id"].astype(str).to_numpy()
     point_gr = pd.to_numeric(point_table["GR"], errors="coerce").to_numpy(float)
     neighbors = min(int(config.get("point_neighbors", 64)), len(point_table))
@@ -133,7 +134,12 @@ def _donor_graph(
         horizontal = horizontal_by_well[str(cut.well_id)]
         take = _sample_indices(len(horizontal), int(config.get("query_prefix_samples", 24)), int(cut.cut_index))
         query = horizontal.iloc[take]
-        distance, neighbor_index = index.kneighbors(query[["X", "Y", "Z"]].to_numpy(np.float32))
+        query_coordinates = query[["X", "Y", "Z"]].to_numpy(np.float64)
+        _, neighbor_index = index.kneighbors(query_coordinates)
+        # The tree chooses candidates; canonical arithmetic and explicit tie breakers rank donors.
+        distance = np.sqrt(
+            np.sum((coordinates[neighbor_index] - query_coordinates[:, None, :]) ** 2, axis=2)
+        )
         query_gr = pd.to_numeric(query["GR"], errors="coerce").to_numpy(float)
         candidates: dict[str, dict[str, list[float]]] = {}
         for qpos in range(len(query)):
@@ -147,7 +153,14 @@ def _donor_graph(
                 entry["distance"].append(float(dist))
                 if np.isfinite(query_gr[qpos]) and np.isfinite(point_gr[pidx]):
                     entry["gr_delta"].append(abs(float(query_gr[qpos] - point_gr[pidx])))
-        ranked = sorted(candidates.items(), key=lambda item: (min(item[1]["distance"]), -len(item[1]["distance"])))
+        ranked = sorted(
+            candidates.items(),
+            key=lambda item: (
+                round(min(item[1]["distance"]), 8),
+                -len(item[1]["distance"]),
+                item[0],
+            ),
+        )
         for rank, (donor, values) in enumerate(ranked[: int(config.get("donor_neighbors", 16))], 1):
             left, right = signature.loc[str(cut.well_id)], signature.loc[donor]
             output.append({
@@ -193,10 +206,13 @@ def _branch_groups(wells: list[str], graph: pd.DataFrame, config: dict[str, Any]
 
 
 def _balanced_group_folds(groups: pd.DataFrame, n_folds: int) -> pd.Series:
-    sizes = groups.groupby("branch_group").size().sort_values(ascending=False)
+    sizes = (
+        groups.groupby("branch_group", sort=True).size().rename("size").reset_index()
+        .sort_values(["size", "branch_group"], ascending=[False, True], kind="stable")
+    )
     loads = [0] * n_folds
     assignment: dict[int, int] = {}
-    for group, size in sizes.items():
+    for group, size in sizes[["branch_group", "size"]].itertuples(index=False, name=None):
         fold = int(np.argmin(loads))
         assignment[int(group)] = fold
         loads[fold] += int(size)
@@ -216,9 +232,13 @@ def _stable_standard_folds(wells: pd.Series, n_folds: int, seed: int) -> pd.Seri
 
 def _stable_spatial_folds(wells: pd.DataFrame, n_folds: int) -> pd.Series:
     """Deterministic recursive median spatial partition without KMeans."""
+    wells = wells.sort_values("well_id", kind="stable").reset_index(drop=True)
     groups = [wells.index.to_numpy(np.int64)]
     while len(groups) < int(n_folds):
-        split_at = max(range(len(groups)), key=lambda index: (len(groups[index]), -int(groups[index].min())))
+        split_at = max(
+            range(len(groups)),
+            key=lambda index: (len(groups[index]), str(wells.loc[groups[index], "well_id"].min())),
+        )
         selected = groups.pop(split_at)
         values = wells.loc[selected, ["x", "y"]]
         spans = values.max() - values.min()
@@ -226,26 +246,25 @@ def _stable_spatial_folds(wells: pd.DataFrame, n_folds: int) -> pd.Series:
         ordered = wells.loc[selected].sort_values([dimension, "well_id"], kind="stable").index.to_numpy(np.int64)
         middle = len(ordered) // 2
         groups.extend([ordered[:middle], ordered[middle:]])
-    centroids = [
-        (float(wells.loc[group, "x"].mean()), float(wells.loc[group, "y"].mean()), group)
-        for group in groups
-    ]
+    canonical_groups = sorted(groups, key=lambda group: str(wells.loc[group, "well_id"].min()))
     output = pd.Series(np.full(len(wells), -1, np.int16), index=wells.index, name="spatial_fold")
-    for fold, (_, _, group) in enumerate(sorted(centroids, key=lambda value: (value[0], value[1]))):
+    for fold, group in enumerate(canonical_groups):
         output.loc[group] = fold
     if (output < 0).any():
         raise RuntimeError("Stable spatial fold assignment is incomplete")
+    output.index = wells["well_id"].astype(str)
     return output
 
 
 def _assignments(summaries: pd.DataFrame, groups: pd.DataFrame, config: dict[str, Any], seed: int) -> pd.DataFrame:
-    result = summaries.merge(groups, on="well_id", validate="one_to_one")
+    result = summaries.merge(groups, on="well_id", validate="one_to_one").sort_values(
+        "well_id", kind="stable"
+    ).reset_index(drop=True)
     result["fold"] = _stable_standard_folds(
         result["well_id"], min(int(config.get("n_standard_folds", 5)), len(result)), seed
     )
-    result["spatial_fold"] = _stable_spatial_folds(
-        result, min(int(config.get("n_spatial_folds", 6)), len(result))
-    )
+    spatial = _stable_spatial_folds(result, min(int(config.get("n_spatial_folds", 6)), len(result)))
+    result["spatial_fold"] = result["well_id"].astype(str).map(spatial).astype(np.int16)
     result["branch_group_fold"] = _balanced_group_folds(
         result[["well_id", "branch_group"]], min(int(config.get("n_branch_group_folds", 5)), len(result))
     )

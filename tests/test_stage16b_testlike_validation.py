@@ -45,3 +45,6 @@ def test_fold_assignments_are_deterministic_and_balanced() -> None:
     assert standard_a.value_counts().nunique() == 1
     assert spatial_a.equals(spatial_b)
     assert set(spatial_a.unique()) == set(range(6))
+    shuffled = wells.sample(frac=1.0, random_state=7).reset_index(drop=True)
+    shuffled_spatial = _stable_spatial_folds(shuffled, 6)
+    assert spatial_a.sort_index().equals(shuffled_spatial.sort_index())

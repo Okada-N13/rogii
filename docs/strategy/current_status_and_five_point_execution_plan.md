@@ -509,7 +509,7 @@ workspace: C:\Users\owner\kaggle\ROGII
 
 Stage 16Aは完了した。230/240の上流codeとdependencyは同一で、唯一の予測差は最終midpoint hedgeだった。詳細は`docs/strategy/stage16a_frontier_diff_report.md`を参照する。
 
-Stage 16Bもローカルfullで完了した。773 wells、6,184 cuts、26,225,067 suffix rowsを固定した。環境非依存v002のmanifest hashは`af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c`で、fold、donor構造、branch groupにも独立hashを持たせた。詳細は`docs/strategy/stage16b_testlike_validation_report.md`を参照する。
+Stage 16Bもローカルfullで完了した。773 wells、6,184 cuts、26,225,067 suffix rowsを固定した。環境非依存v003のmanifest hashは`af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c`で、fold、donor構造、branch groupにも独立hashを持たせた。詳細は`docs/strategy/stage16b_testlike_validation_report.md`を参照する。
 
 現在のactive taskは **Stage 17: V599/public strong-baseのtrain replay** である。
 
@@ -533,3 +533,4 @@ Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入
 - 2026-07-22: Stage 16A完了。230/240は上流同一で、6.693版に新しいbranch-overlap modelがないことを確認。active taskをStage 16Bへ更新。
 - 2026-07-22: Stage 16Bローカルfull完了。短prefix primaryでlast-known TVT RMSE 23.096、constant-U 103.911、linear-U 59.808。旧delta-U検証の分布不一致を確認し、active taskをStage 17へ更新。
 - 2026-07-22: Stage 16B初版hashのpandas/scikit-learn環境依存を検出。決定論的foldとcanonical byte hashへ置換し、Colab再照合用v002を作成。指標とcut構成は不変。
+- 2026-07-22: v002でfold/donorのtie break差を検出。同サイズgroup、空間fold番号、同距離donorをwell IDで固定したv003へ更新。
