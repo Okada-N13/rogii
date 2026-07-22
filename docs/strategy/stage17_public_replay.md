@@ -124,3 +124,14 @@ gate不通過はalways-selector自体を棄却する理由ではない。Stage 1
 - baseline gain、5 fold consistency、screenとの差を評価
 
 解像度を上げてもbaselineに対する改善が維持されればStage 17を完了し、Stage 18 retrievalへ進む。
+
+### Stage 17D Colab結果
+
+全gateを通過した。
+
+- medium 200 cuts: baseline `33.597`、screen `14.460`、medium `13.626`
+- medium: baseline比`-19.971`、screen比`-0.834`、5/5 fold改善
+- high 50 cuts: baseline `24.240`、screen `15.460`、high `12.883`
+- high: baseline比`-11.356`、screen比`-2.577`、5/5 fold改善
+
+解像度を上げると全体では改善が強くなった。fold 1 mediumとfold 3 highではscreenより悪化したが、baselineには全foldで明確に勝っている。Stage 17B always-selectorをvalidation controlとして凍結し、Stage 17を完了する。

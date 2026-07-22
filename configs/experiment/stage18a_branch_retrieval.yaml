@@ -1,0 +1,38 @@
+experiment_name: stage18a_fold_safe_branch_retrieval
+seed: 42
+cuts_per_stratum: 6
+primary_profile: prefix_gr_w020
+bootstrap_resamples: 1000
+
+provenance:
+  stage16b_manifest_sha256: af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c
+
+retrieval:
+  maximum_donors: 4
+  minimum_donors: 2
+  prefix_calibration_rows: 256
+  distance_scale_ft: 300.0
+  gr_scale: 30.0
+  minimum_weight: 1.0e-5
+
+profiles:
+  geometry_w020:
+    prefix_calibration: false
+    use_gr: false
+    blend_weight: 0.20
+  prefix_geometry_w020:
+    prefix_calibration: true
+    use_gr: false
+    blend_weight: 0.20
+  prefix_gr_w020:
+    prefix_calibration: true
+    use_gr: true
+    blend_weight: 0.20
+  prefix_gr_w035:
+    prefix_calibration: true
+    use_gr: true
+    blend_weight: 0.35
+
+gates:
+  minimum_standard_gain: 0.30
+  minimum_improved_folds: 4
