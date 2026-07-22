@@ -23,3 +23,5 @@ def test_stage18_sample_is_order_independent() -> None:
     first = stable_sample(frame, 2)
     second = stable_sample(frame.sample(frac=1.0, random_state=4), 2)
     assert sorted(first["cut_id"]) == sorted(second["cut_id"])
+    holdout = stable_sample(frame, 2, offset=2)
+    assert set(first["cut_id"]).isdisjoint(holdout["cut_id"])

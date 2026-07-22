@@ -27,14 +27,15 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def stable_sample(frame: pd.DataFrame, per_stratum: int) -> pd.DataFrame:
+def stable_sample(frame: pd.DataFrame, per_stratum: int, offset: int = 0) -> pd.DataFrame:
     parts: list[pd.DataFrame] = []
     for _, group in frame.groupby(["stage16_fold", "requested_fraction"], sort=True):
         ranked = group.copy()
         ranked["sample_hash"] = ranked["cut_id"].astype(str).map(
             lambda value: hashlib.sha256(("stage18:" + value).encode("utf-8")).hexdigest()
         )
-        parts.append(ranked.sort_values(["sample_hash", "cut_id"], kind="stable").head(per_stratum))
+        ordered = ranked.sort_values(["sample_hash", "cut_id"], kind="stable")
+        parts.append(ordered.iloc[int(offset): int(offset) + int(per_stratum)])
     return pd.concat(parts, ignore_index=True).drop(columns="sample_hash")
 
 
@@ -103,8 +104,18 @@ def main(argv: list[str] | None = None) -> None:
     output.mkdir(parents=True, exist_ok=True)
 
     cuts = pd.read_parquet(stage17b / "cut_report.parquet")
-    selected = stable_sample(cuts[cuts["evaluation_role"] == "primary"], int(config.get("cuts_per_stratum", 6)))
+    primary_cuts = cuts[cuts["evaluation_role"] == "primary"]
+    cuts_per_stratum = int(config.get("cuts_per_stratum", 6))
+    sample_offset = int(config.get("sample_offset_per_stratum", 0))
+    selected = stable_sample(primary_cuts, cuts_per_stratum, sample_offset)
     cut_ids = selected["cut_id"].astype(str).tolist()
+    reference_overlap_cuts = 0
+    if sample_offset:
+        reference = stable_sample(primary_cuts, cuts_per_stratum, 0)
+        reference_overlap_cuts = len(set(cut_ids) & set(reference["cut_id"].astype(str)))
+        if reference_overlap_cuts:
+            raise AssertionError("Independent confirmation overlaps the Stage 18A reference sample")
+    sample_sha256 = hashlib.sha256("\n".join(sorted(cut_ids)).encode("utf-8")).hexdigest()
     eligible_ids = selected.loc[selected["replay_eligible"], "cut_id"].astype(str).tolist()
     uncovered_ids = selected.loc[~selected["replay_eligible"], "cut_id"].astype(str).tolist()
     frames = []
@@ -129,7 +140,12 @@ def main(argv: list[str] | None = None) -> None:
         return pd.read_csv(data_train / f"{well_id}__horizontal_well.csv", usecols=["X", "Y", "Z", "GR", "TVT"])
 
     result_rows: list[dict[str, Any]] = []
-    families = {"standard": "fold", "spatial": "spatial_fold", "branch": "branch_group_fold"}
+    all_families = {"standard": "fold", "spatial": "spatial_fold", "branch": "branch_group_fold"}
+    requested_families = [str(value) for value in config.get("families", list(all_families))]
+    unknown_families = sorted(set(requested_families) - set(all_families))
+    if unknown_families:
+        raise ValueError(f"Unknown retrieval families: {unknown_families}")
+    families = {name: all_families[name] for name in requested_families}
     for position, cut_id in enumerate(cut_ids, 1):
         cut = selected[selected["cut_id"].astype(str) == cut_id].iloc[0]
         well_id, cut_index = str(cut["well_id"]), int(cut["cut_index"])
@@ -199,27 +215,51 @@ def main(argv: list[str] | None = None) -> None:
     for (family, profile), frame in results.groupby(["family", "profile"], sort=True):
         reports[f"{family}__{profile}"] = _metrics(frame)
     primary_profile = str(config.get("primary_profile", "prefix_gr_w020"))
-    standard_key, spatial_key, branch_key = (
-        f"standard__{primary_profile}", f"spatial__{primary_profile}", f"branch__{primary_profile}"
-    )
-    primary_rows = results[(results["family"] == "standard") & (results["profile"] == primary_profile)]
+    validation_mode = str(config.get("validation_mode", "exploratory"))
+    primary_family = "branch" if validation_mode == "branch_confirmation" else "standard"
+    primary_key = f"{primary_family}__{primary_profile}"
+    primary_rows = results[(results["family"] == primary_family) & (results["profile"] == primary_profile)]
     ci = _bootstrap(primary_rows, int(config.get("bootstrap_resamples", 1000)), int(config.get("seed", 42)))
     gates_config = dict(config.get("gates", {}))
-    gates = {
-        "hidden_target_invariance": True, "same_fold_donor_excluded": True,
-        "standard_gain": reports[standard_key]["rmse_delta"] <= -float(gates_config.get("minimum_standard_gain", 0.30)),
-        "standard_fold_consistency": reports[standard_key]["improved_folds"] >= int(gates_config.get("minimum_improved_folds", 4)),
-        "spatial_gain": reports[spatial_key]["rmse_delta"] < 0,
-        "branch_group_gain": reports[branch_key]["rmse_delta"] < 0,
-        "p90_nonworse": reports[standard_key]["cut_rmse_p90_delta"] <= 0,
-        "bootstrap_upper_below_zero": ci[1] < 0,
-    }
+    if validation_mode == "branch_confirmation":
+        gates = {
+            "hidden_target_invariance": True, "same_branch_group_fold_donor_excluded": True,
+            "independent_from_stage18a": reference_overlap_cuts == 0,
+            "branch_group_gain": reports[primary_key]["rmse_delta"] <= -float(gates_config.get("minimum_branch_gain", 0.30)),
+            "fold_consistency": reports[primary_key]["improved_folds"] >= int(gates_config.get("minimum_improved_folds", 4)),
+            "p90_nonworse": reports[primary_key]["cut_rmse_p90_delta"] <= 0,
+            "bootstrap_upper_below_zero": ci[1] < 0,
+        }
+    else:
+        standard_key, spatial_key, branch_key = (
+            f"standard__{primary_profile}", f"spatial__{primary_profile}", f"branch__{primary_profile}"
+        )
+        gates = {
+            "hidden_target_invariance": True, "same_fold_donor_excluded": True,
+            "standard_gain": reports[standard_key]["rmse_delta"] <= -float(gates_config.get("minimum_standard_gain", 0.30)),
+            "standard_fold_consistency": reports[standard_key]["improved_folds"] >= int(gates_config.get("minimum_improved_folds", 4)),
+            "spatial_gain": reports[spatial_key]["rmse_delta"] < 0,
+            "branch_group_gain": reports[branch_key]["rmse_delta"] < 0,
+            "p90_nonworse": reports[standard_key]["cut_rmse_p90_delta"] <= 0,
+            "bootstrap_upper_below_zero": ci[1] < 0,
+        }
+    promoted = bool(all(gates.values()))
     summary = {
-        "stage18a_complete": True, "promoted_to_all_cut_retrieval": bool(all(gates.values())),
+        "stage18a_complete": validation_mode != "branch_confirmation",
+        "stage18b_complete": validation_mode == "branch_confirmation",
+        "promoted_to_all_cut_retrieval": promoted,
         "stage16b_manifest_sha256": expected_hash, "sample_cuts": len(cut_ids),
-        "primary_profile": primary_profile, "reports": reports,
+        "validation_mode": validation_mode, "sample_offset_per_stratum": sample_offset,
+        "sample_sha256": sample_sha256, "reference_overlap_cuts": reference_overlap_cuts,
+        "primary_family": primary_family, "primary_profile": primary_profile, "reports": reports,
         "bootstrap_95pct": ci, "gates": gates,
-        "next_step": "Run all-cut retrieval and learned donor ranking if the fixed subset promotes.",
+        "next_step": (
+            "Run all-cut branch-group-safe retrieval, then learned donor ranking."
+            if promoted and validation_mode == "branch_confirmation"
+            else "Do not promote fixed retrieval; redesign donor ranking before all-cut validation."
+            if validation_mode == "branch_confirmation"
+            else "Run independent branch-group confirmation before all-cut retrieval."
+        ),
     }
     write_json(output / "summary.json", summary)
     write_json(output / "environment.json", environment_report())
