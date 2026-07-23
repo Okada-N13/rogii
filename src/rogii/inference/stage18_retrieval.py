@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import time
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -150,6 +151,7 @@ def _weighted_path(
 
 
 def apply_ranked_retrieval(package_dir: str | Path, data_dir: str | Path, submission_path: str | Path) -> dict[str, Any]:
+    started = time.perf_counter()
     package, data, submission_path = Path(package_dir), Path(data_dir), Path(submission_path)
     manifest = json.loads((package / "manifest.json").read_text(encoding="utf-8"))
     config = dict(manifest["inference"])
@@ -166,28 +168,46 @@ def apply_ranked_retrieval(package_dir: str | Path, data_dir: str | Path, submis
     split = submission["id"].astype(str).str.rsplit("_", n=1, expand=True)
     submission["well_id"], submission["row_index"] = split[0], split[1].astype(int)
 
-    train_files = sorted((data / "train").glob("*__horizontal_well.csv"))
-    train_wells = [path.name.split("__", 1)[0] for path in train_files]
-    train_frames: dict[str, pd.DataFrame] = {}
-    points, typewell_mean = [], {}
+    train_frames: dict[str, dict[str, np.ndarray]] = {}
+    point_xyz_parts, point_well_parts, point_gr_parts, typewell_mean = [], [], [], {}
     trajectory_samples = int(config.get("trajectory_samples", 48))
-    for position, (well_id, path) in enumerate(zip(train_wells, train_files, strict=True), 1):
-        frame = pd.read_csv(path, usecols=["X", "Y", "Z", "GR", "TVT"])
-        train_frames[well_id] = frame
-        take = _sample_indices(len(frame), trajectory_samples)
-        sampled = frame.iloc[take][["X", "Y", "Z", "GR"]].copy()
-        sampled["well_id"] = well_id
-        points.append(sampled)
-        tw = pd.read_csv(data / "train" / f"{well_id}__typewell.csv", usecols=["GR"])
-        typewell_mean[well_id] = float(pd.to_numeric(tw["GR"], errors="coerce").mean())
-        if position % 100 == 0:
-            print(f"Stage18 loaded {position}/{len(train_files)} donor wells", flush=True)
-    point_table = pd.concat(points, ignore_index=True)
-    point_xyz = point_table[["X", "Y", "Z"]].to_numpy(float)
-    point_wells = point_table["well_id"].astype(str).to_numpy()
-    point_gr = pd.to_numeric(point_table["GR"], errors="coerce").to_numpy(float)
+    cache_path = package / "donor_trajectories.npz"
+    donor_source = "packed_npz" if cache_path.is_file() else "competition_csv"
+    if cache_path.is_file():
+        with np.load(cache_path, allow_pickle=False) as cache:
+            well_ids = cache["well_ids"].astype(str)
+            offsets = cache["offsets"].astype(np.int64)
+            typewell_values = cache["typewell_gr_mean"].astype(float)
+            packed = {name: cache[name].astype(np.float64) for name in ("x", "y", "z", "gr", "tvt")}
+        for position, well_id in enumerate(well_ids):
+            start, stop = int(offsets[position]), int(offsets[position + 1])
+            frame = {name.upper(): values[start:stop] for name, values in packed.items()}
+            train_frames[well_id] = frame
+            typewell_mean[well_id] = float(typewell_values[position])
+    else:
+        train_files = sorted((data / "train").glob("*__horizontal_well.csv"))
+        for position, path in enumerate(train_files, 1):
+            well_id = path.name.split("__", 1)[0]
+            source = pd.read_csv(path, usecols=["X", "Y", "Z", "GR", "TVT"])
+            frame = {
+                name: pd.to_numeric(source[name], errors="coerce").to_numpy(np.float64)
+                for name in ("X", "Y", "Z", "GR", "TVT")
+            }
+            train_frames[well_id] = frame
+            tw = pd.read_csv(data / "train" / f"{well_id}__typewell.csv", usecols=["GR"])
+            typewell_mean[well_id] = float(pd.to_numeric(tw["GR"], errors="coerce").mean())
+            if position % 100 == 0:
+                print(f"Stage18 loaded {position}/{len(train_files)} donor wells", flush=True)
+    for well_id, frame in train_frames.items():
+        take = _sample_indices(len(frame["X"]), trajectory_samples)
+        point_xyz_parts.append(np.column_stack([frame["X"][take], frame["Y"][take], frame["Z"][take]]))
+        point_well_parts.append(np.full(len(take), well_id, dtype="U16"))
+        point_gr_parts.append(frame["GR"][take])
+    point_xyz = np.concatenate(point_xyz_parts).astype(float, copy=False)
+    point_wells = np.concatenate(point_well_parts)
+    point_gr = np.concatenate(point_gr_parts).astype(float, copy=False)
     global_index = NearestNeighbors(
-        n_neighbors=min(int(config.get("point_neighbors", 64)), len(point_table)), algorithm="kd_tree"
+        n_neighbors=min(int(config.get("point_neighbors", 64)), len(point_xyz)), algorithm="kd_tree"
     ).fit(point_xyz)
 
     audit_rows, output = [], submission.copy()
@@ -247,11 +267,13 @@ def apply_ranked_retrieval(package_dir: str | Path, data_dir: str | Path, submis
         for edge in edges.itertuples(index=False):
             donor_id = str(edge.donor_well_id)
             donor = train_frames[donor_id]
-            donor_index = NearestNeighbors(n_neighbors=1, algorithm="kd_tree").fit(donor[["X", "Y", "Z"]].to_numpy(float))
+            donor_index = NearestNeighbors(n_neighbors=1, algorithm="kd_tree").fit(
+                np.column_stack([donor["X"], donor["Y"], donor["Z"]])
+            )
             distance, nearest = donor_index.kneighbors(target_xyz)
             nearest = nearest[:, 0]
-            donor_u = donor["TVT"].to_numpy(float)[nearest] + donor["Z"].to_numpy(float)[nearest]
-            donor_gr = pd.to_numeric(donor["GR"], errors="coerce").interpolate(limit_direction="both").to_numpy(float)[nearest]
+            donor_u = donor["TVT"][nearest].astype(float) + donor["Z"][nearest].astype(float)
+            donor_gr = pd.Series(donor["GR"][nearest].astype(float)).interpolate(limit_direction="both").to_numpy(float)
             gr_delta = np.abs(target_gr - donor_gr)
             feature, donor_prediction, offset = _feature_record(
                 pd.Series(edge._asdict()), cut_index / len(horizontal), cut_index, target_u, donor_u,
@@ -296,6 +318,7 @@ def apply_ranked_retrieval(package_dir: str | Path, data_dir: str | Path, submis
     audit = {
         "stage18_retrieval_applied": True, "rows": len(final), "wells": len(audit_rows),
         "submission_sha256": hashlib.sha256(submission_path.read_bytes()).hexdigest(), "well_report": audit_rows,
+        "donor_source": donor_source, "elapsed_seconds": float(time.perf_counter() - started),
     }
     (submission_path.parent / "stage18_retrieval_audit.json").write_text(json.dumps(audit, indent=2), encoding="utf-8")
     print("STAGE18_RETRIEVAL_AUDIT =", audit, flush=True)

@@ -33,9 +33,8 @@ def test_stage18e_is_inserted_after_frozen_branch_and_before_final_audit() -> No
     assert metadata["selected_donors"] == 4
     assert metadata["same_well_target_transfer_removed"] is True
     assert metadata["internet"] is False
-    assert metadata["package_manifest_sha256"] == (
-        "7bddc1914f3d046b678dbb8f5d1cc17427b03bc85c1a06d1f2088cbe68d3935d"
-    )
+    assert metadata["required_package_version"] == "v002"
+    assert metadata["required_donor_cache"] is True
 
 
 def test_stage18e_preserves_parent_and_enforces_submission_audits() -> None:
@@ -44,6 +43,7 @@ def test_stage18e_preserves_parent_and_enforces_submission_audits() -> None:
     text = "\n".join(_source(cell) for cell in payload["cells"])
     assert "len(_s18_statuses) != 3" in text
     assert "any(status != 'applied'" in text
+    assert "donor_trajectories.npz" in text
     assert "same_well_target_transfer_removed" in json.dumps(payload["metadata"])
     assert "v599_a130_branch_conservative_stage18_ranked_retrieval" in text
     assert all(cell.get("outputs", []) == [] for cell in payload["cells"] if cell.get("cell_type") == "code")

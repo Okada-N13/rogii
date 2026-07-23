@@ -50,6 +50,8 @@ if not _s18_manifests:
 if len(_s18_manifests) != 1:
     raise AssertionError(f'Expected one Stage 18E manifest, found {_s18_manifests}')
 _s18_package = _s18_manifests[0].parent
+if not (_s18_package / 'donor_trajectories.npz').is_file():
+    raise AssertionError('Stage 18E v002 packed donor cache is required; replace the v001 Kaggle Dataset')
 
 _s18_samples = [
     p for p in _S18_INPUT.rglob('sample_submission.csv')
@@ -112,7 +114,7 @@ def build() -> None:
         "base_public_lb": 6.685, "blend_weight": 0.20, "selected_donors": 4,
         "same_well_target_transfer_removed": True, "internet": False,
         "required_dataset": "rogii-stage18e-ranked-retrieval-package",
-        "package_manifest_sha256": "7bddc1914f3d046b678dbb8f5d1cc17427b03bc85c1a06d1f2088cbe68d3935d",
+        "required_package_version": "v002", "required_donor_cache": True,
     }
     OUTPUT.write_text(json.dumps(notebook, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 

@@ -19,6 +19,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Build Stage 18 fold-safe test inference package")
     parser.add_argument("--stage16b-run", type=Path, required=True)
     parser.add_argument("--stage18d-run", type=Path, required=True)
+    parser.add_argument("--data-dir", type=Path, required=True)
     parser.add_argument("--artifact-dir", type=Path, required=True)
     parser.add_argument("--run-id", required=True)
     return parser
@@ -32,9 +33,38 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _build_donor_cache(data_dir: Path, output: Path) -> dict[str, int]:
+    """Pack many small train CSVs into one sequential-read inference artifact."""
+    train_dir = data_dir / "train"
+    horizontal_files = sorted(train_dir.glob("*__horizontal_well.csv"))
+    if not horizontal_files:
+        raise FileNotFoundError(f"No training wells found in {train_dir}")
+    well_ids, offsets, columns, typewell_means = [], [0], {name: [] for name in ("X", "Y", "Z", "GR", "TVT")}, []
+    for position, path in enumerate(horizontal_files, 1):
+        well_id = path.name.split("__", 1)[0]
+        frame = pd.read_csv(path, usecols=list(columns))
+        for name in columns:
+            values = pd.to_numeric(frame[name], errors="coerce").to_numpy(np.float64)
+            columns[name].append(values)
+        typewell = pd.read_csv(train_dir / f"{well_id}__typewell.csv", usecols=["GR"])
+        typewell_means.append(float(pd.to_numeric(typewell["GR"], errors="coerce").mean()))
+        well_ids.append(well_id)
+        offsets.append(offsets[-1] + len(frame))
+        if position % 100 == 0:
+            print(f"packed {position}/{len(horizontal_files)} donor wells", flush=True)
+    cache_path = output / "donor_trajectories.npz"
+    np.savez_compressed(
+        cache_path,
+        well_ids=np.asarray(well_ids, dtype="U16"), offsets=np.asarray(offsets, dtype=np.int64),
+        typewell_gr_mean=np.asarray(typewell_means, dtype=np.float64),
+        **{name.lower(): np.concatenate(parts).astype(np.float64, copy=False) for name, parts in columns.items()},
+    )
+    return {"wells": len(well_ids), "rows": int(offsets[-1]), "bytes": cache_path.stat().st_size}
+
+
 def main(argv: list[str] | None = None) -> None:
     args = build_parser().parse_args(argv)
-    stage16, stage18d = args.stage16b_run.resolve(), args.stage18d_run.resolve()
+    stage16, stage18d, data_dir = args.stage16b_run.resolve(), args.stage18d_run.resolve(), args.data_dir.resolve()
     stage18d_summary = json.loads((stage18d / "summary.json").read_text(encoding="utf-8"))
     if not stage18d_summary.get("promoted_to_full_ranker_training"):
         raise AssertionError("Stage 18D ranker was not promoted")
@@ -67,12 +97,13 @@ def main(argv: list[str] | None = None) -> None:
     assignments.to_parquet(output / "well_assignments.parquet", index=False)
     inference_source = Path(__file__).resolve().parents[1] / "inference" / "stage18_retrieval.py"
     shutil.copy2(inference_source, output / "stage18_retrieval.py")
+    donor_cache = _build_donor_cache(data_dir, output)
     manifest = {
         "stage18e_package": True, "stage18d_promoted": True,
         "stage16b_manifest_sha256": stage18d_summary["stage16b_manifest_sha256"],
         "stage18c_sample_sha256": stage18d_summary["stage18c_sample_sha256"],
         "feature_columns": FEATURE_COLUMNS, "model_report": model_report,
-        "same_well_target_transfer_removed": True,
+        "same_well_target_transfer_removed": True, "donor_cache": donor_cache,
         "inference": {
             "n_folds": 5, "trajectory_samples": 48, "query_prefix_samples": 24, "point_neighbors": 64,
             "donor_neighbors": 16, "maximum_candidates": 12, "minimum_donors": 2, "selected_donors": 4,
@@ -95,6 +126,7 @@ def main(argv: list[str] | None = None) -> None:
     summary = {
         "stage18e_package_complete": True, "fold_models": len(model_report),
         "training_candidate_rows": len(rows), "same_well_target_leakage_guard": True,
+        "donor_cache": donor_cache,
         "package_manifest_sha256": _sha256(output / "manifest.json"), "zip": str(archive),
         "next_step": "Upload the zip as a Kaggle Dataset and run the V599 Stage 18 postprocess notebook.",
     }

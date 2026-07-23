@@ -8,6 +8,7 @@ from rogii.inference.stage18_retrieval import (
     FEATURE_COLUMNS, PortableRanker, _assigned_fold, _feature_record, export_hist_gradient_boosting,
 )
 from rogii.cli.donor_ranker import _feature_record as _training_feature_record
+from rogii.cli.stage18_package import _build_donor_cache
 
 
 def test_existing_test_well_uses_frozen_fold_assignment() -> None:
@@ -47,3 +48,26 @@ def test_portable_ranker_matches_sklearn_with_missing_values() -> None:
     model = HistGradientBoostingRegressor(max_iter=8, max_leaf_nodes=7, min_samples_leaf=5, random_state=9).fit(frame, target)
     portable = PortableRanker(export_hist_gradient_boosting(model))
     assert np.allclose(portable.predict(frame), model.predict(frame), atol=1e-10)
+
+
+def test_donor_cache_packs_all_trajectory_rows(tmp_path) -> None:
+    train = tmp_path / "data" / "train"
+    train.mkdir(parents=True)
+    for well, shift in (("00000001", 0.0), ("00000002", 10.0)):
+        pd.DataFrame({
+            "X": [1.0 + shift, 2.0 + shift], "Y": [3.0, 4.0], "Z": [5.0, 6.0],
+            "GR": [7.0, 8.0], "TVT": [9.0, 10.0],
+        }).to_csv(train / f"{well}__horizontal_well.csv", index=False)
+        pd.DataFrame({"GR": [2.0 + shift, 4.0 + shift]}).to_csv(
+            train / f"{well}__typewell.csv", index=False
+        )
+    output = tmp_path / "package"
+    output.mkdir()
+    report = _build_donor_cache(tmp_path / "data", output)
+    assert report["wells"] == 2
+    assert report["rows"] == 4
+    with np.load(output / "donor_trajectories.npz", allow_pickle=False) as cache:
+        assert cache["well_ids"].astype(str).tolist() == ["00000001", "00000002"]
+        assert cache["offsets"].tolist() == [0, 2, 4]
+        assert np.allclose(cache["x"], [1.0, 2.0, 11.0, 12.0])
+        assert np.allclose(cache["typewell_gr_mean"], [3.0, 13.0])
