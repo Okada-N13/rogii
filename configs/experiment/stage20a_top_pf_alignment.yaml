@@ -1,0 +1,55 @@
+experiment_name: stage20a_top_pf_aligned_residual_screen
+seed: 42
+
+provenance:
+  stage16b_manifest_sha256: af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c
+
+sample:
+  cuts_per_stratum: 8
+
+selector:
+  particles: 128
+  seeds: 12
+  seed_base: 0
+  maximum_tracking_steps: 768
+  typewell_grid_step: 0.2
+  gr_sigma_multiplier: 1.30
+
+top_pf_proxy:
+  ridge_weight: 0.30
+  selector_weight: 0.70
+  projection_degree: 3
+  projection_blend_weight: 0.75
+  final_sp45_weight: 0.60
+
+features:
+  prefix_window_ft: 800.0
+  typewell_shift_grid_ft: [-40, -30, -20, -10, 0, 10, 20, 30, 40]
+
+target:
+  ramp_rows: 96.0
+  ridge: 1.0
+
+model:
+  learning_rate: 0.04
+  max_iter: 160
+  max_leaf_nodes: 11
+  max_depth: 3
+  min_samples_leaf: 12
+  l2_regularization: 6.0
+
+# Fixed before the Stage 20A screen. This is deliberately much weaker than
+# the failed Stage 19C weight=0.50/cap=16 submission.
+profile:
+  weight: 0.10
+  cap_ft: 8.0
+  ramp_rows: 96.0
+
+diagnostics:
+  weights: [0.05, 0.10, 0.20, 0.35, 0.50]
+
+validation:
+  n_typewell_folds: 5
+  bootstrap_resamples: 2000
+  minimum_standard_gain: 0.05
+  minimum_improved_fold_fraction: 0.80

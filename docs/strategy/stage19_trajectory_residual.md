@@ -112,3 +112,13 @@ Internet OFFでinteractive実行する。まず`STAGE19C_TEST_AUDIT`を共有し
 
 Stage 19Cは6.589 top-PF baseへ追加する独自学習補正である。代理OOF baseとのずれがあるためLB改善は保証しないが、
 Stage 18のdonor探索と異なりhidden 200 wellsでも追加約2.6分の設計であり、時間超過リスクは大幅に低い。
+
+## Stage 19C実測と判断
+
+interactive監査は14,151 rows、3/3 wells applied、hidden target不使用、4.46秒で正常だった。
+しかしPublic LBは`6.958`で、6.589 controlから`+0.369`悪化した。Stage 19Cを棄却し、
+weight縮小だけの盲目的な再提出は行わない。
+
+主因はStage 17 proxyと実際の470 top-PF baseのalignment不足と判断する。次は
+`docs/strategy/stage20_top_pf_alignment.md`のStage 20Aで、well-isolated public OOFと
+A130/SP45/projection/final blendを組み合わせた、より近いtarget-safe proxy上で再検証する。

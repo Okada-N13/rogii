@@ -549,16 +549,19 @@ Stage 19Aは全gateを通過した。固定weight `0.50`・cap `16 ft`でstandar
 
 Stage 19Bは全gateを通過した。3,865 cuts、773 wells、66特徴、15 HGB modelsで、特徴parity最大差`0.0`。773 wellsは611.915秒、hidden 200 wells推定158.32秒だった。manifest SHA-256は`5bf1c84b...e47d632`。
 
-現在のactive taskは **Stage 19C: portable Internet-OFF inferenceと6.589 baseへの統合監査** である。具体的順序:
+Stage 19CはKaggle interactive監査を正常通過したが、Public LBは`6.958`で6.589 controlから
+`+0.369`悪化した。Stage 19Cを棄却し、weightだけを下げた再提出は行わない。
 
-1. Colab CPUで`notebooks/500_build_stage19c_inference_package.ipynb`を単独実行する。
-2. `package_ready=True`、portable prediction差`0.0`を確認する。
-3. zipをKaggle Dataset `rogii-stage19c-trajectory-inference-package`へアップロードする。
-4. `notebooks/510_kaggle_top_pf_stage19_trajectory.ipynb`へ公開base用inputsとStage 19C Datasetを付け、Internet OFFでinteractive実行する。
-5. `STAGE19C_TEST_AUDIT`を共有し、全well適用・target不使用・追加時間を確認する。
-6. 監査正常時だけsubmission rerunする。
+現在のactive taskは **Stage 20A: top-PF-aligned target-safe residual screen** である。
 
-Stage 19CのLB結果が出るまで、profile weight/capや別補正を同時変更しない。
+1. Colab CPUで`notebooks/520_run_stage20a_top_pf_alignment.ipynb`を単独実行する。
+2. well-isolated public OOFとA130 PFから固定200-cut top-PF proxyを作る。
+3. weight 0.10、cap 8 ftの弱い3係数補正を4 fold familyでcross-fitする。
+4. 最後の辞書とweight表を共有する。
+5. 全gate通過時だけ全eligible/short-prefixのStage 20Bへ進む。
+
+完全な470 OOFではない。公開learned packageのfold modelが存在しないため、public OOFで代用している。
+この制約を隠さず、Stage 20Aから直接提出しない。
 
 ## 15. 決定ログ
 
@@ -592,3 +595,4 @@ Stage 19CのLB結果が出るまで、profile weight/capや別補正を同時変
 - 2026-07-23: Stage 19A全gate通過。固定profileでstandard `-0.7278`、spatial `-0.5587`、typewell `-0.4627`、branch-group `-0.7443`。active taskをStage 19B all-data bundle/runtimeへ更新。
 - 2026-07-23: Stage 19B全gate通過。66特徴parity差`0.0`、hidden 200 wells推定158.32秒。active taskをStage 19C portable inferenceへ更新。
 - 2026-07-23: Stage 19Cを実装。HGBをNumPy NPZへlossless変換し、実test `TVT_input`だけのstandalone特徴生成、Colab package Notebook、470統合Kaggle Notebookを追加。
+- 2026-07-24: Stage 19C実測`6.958`。6.589から`+0.369`悪化のため棄却。代理base alignment仮説を棄却し、A130/SP45/projection/final blendを含むStage 20A固定200-cut screenへ移行。

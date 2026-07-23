@@ -157,6 +157,10 @@ def likelihood_selector(
     prefix_gr = pd.to_numeric(prefix["GR"], errors="coerce").interpolate(limit_direction="both").fillna(float(np.nanmean(tw_gr))).to_numpy(float)
     reference_gr = np.interp(prefix_tvt, tw_tvt, tw_gr)
     gr_sigma = float(np.clip(np.nanstd(prefix_gr - reference_gr), 10.0, 60.0))
+    # The top-PF A130 branch scales the visible-prefix GR likelihood width by 1.30.
+    # Keep 1.0 as the historical Stage 17 default and expose the multiplier for
+    # target-safe replay of the actual 6.589 submission family.
+    gr_sigma *= float(config.get("gr_sigma_multiplier", 1.0))
     tail = prefix.tail(30)
     md_delta = np.diff(tail["MD"].to_numpy(float))
     level_delta = np.diff(tail["TVT"].to_numpy(float) + tail["Z"].to_numpy(float))
