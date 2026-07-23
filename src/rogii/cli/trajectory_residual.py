@@ -16,7 +16,7 @@ from sklearn.preprocessing import StandardScaler
 from rogii.artifacts import environment_report, write_json, write_yaml
 from rogii.cli.branch_retrieval import _bootstrap, _metrics
 from rogii.config import load_config
-from rogii.data.multicut import build_cut_record, feature_columns, feature_schema_hash
+from rogii.data.multicut import build_inference_record, feature_columns, feature_schema_hash
 from rogii.models.trajectory_residual import (
     COEFFICIENT_COLUMNS,
     apply_residual_coefficients,
@@ -90,13 +90,12 @@ def _cut_feature_record(
     config: dict[str, Any],
 ) -> dict[str, float | int | str]:
     """Build inference-available features; suffix TVT is never read here."""
-    record = build_cut_record(
-        horizontal, typewell, int(cut_index),
-        prefix_window_ft=float(config.get("prefix_window_ft", 800.0)),
-        target_ridge=float(config.get("target_ridge", 1.0)),
+    masked = horizontal.copy()
+    masked["TVT_input"] = np.nan
+    masked.loc[masked.index[: int(cut_index)], "TVT_input"] = horizontal["TVT"].iloc[: int(cut_index)].to_numpy(float)
+    record = build_inference_record(
+        masked, typewell, prefix_window_ft=float(config.get("prefix_window_ft", 800.0))
     )
-    for column in ("target_slope_correction", "target_curvature"):
-        record.pop(column, None)
     base = np.asarray(base_prediction, float)
     suffix = horizontal.iloc[int(cut_index):]
     if len(base) != len(suffix) or not np.isfinite(base).all():

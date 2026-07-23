@@ -545,7 +545,9 @@ v002 public placeholder実行でStage 18は26.30秒だった。Kaggle hidden rer
 
 Stage 18F v003は再度Kaggle時間制限を超過し、スコアが付かなかった。Stage 18を現在のV599へ追加する構成は停止する。470安全版は`6.589`で、旧safe best `6.685`を`0.096`改善した。申告6.49/6.478との差は安全に再現できていない。
 
-現在のactive taskは **Stage 19A: cross-fitted low-dimensional trajectory residual** である。Stage 17 strong-base replayを代理baseにし、各cutの滑らかな補正3係数だけを学習する。donor探索をKaggle推論から外し、将来の追加推論を10分以内に収める。詳細は`docs/strategy/stage19_trajectory_residual.md`を参照する。
+Stage 19Aは全gateを通過した。固定weight `0.50`・cap `16 ft`でstandard `-0.7278`、spatial `-0.5587`、typewell `-0.4627`、branch-group `-0.7443`。standard/typewell/branchは5/5 folds、spatialは5/6 folds、全5 prefix fractions、P90、worst-tail、bootstrapを改善した。
+
+現在のactive taskは **Stage 19B: all-data trajectory model bundle and hidden-style runtime benchmark** である。全dataで5 seeds × 3係数を学習し、773 wellsでfeature parity、hidden約200 wellsの追加推論10分以内を確認する。詳細は`docs/strategy/stage19_trajectory_residual.md`を参照する。
 
 Stage 19Aの具体的順序:
 
@@ -586,3 +588,4 @@ Stage 19B packageが完成するまで新しい補正をKaggleへ投入しない
 - 2026-07-23: Stage 18F v003は2回目もKaggle時間超過でスコアなし。V599へrowwise donor retrievalを追加する提出経路を停止。
 - 2026-07-23: 申告6.478 Notebookは6.49版とsource完全一致で、独立手法ではなく実行揺らぎと判定。申告6.390 Notebookは特定public well `00e12e8b`へLB-derived `+0.522 ft`を加えるため安全版へ不採用。
 - 2026-07-23: active taskをStage 19Aへ更新。3係数trajectory residual、4 fold family、hidden-target invariance、軽量推論契約で独自学習路線を開始。
+- 2026-07-23: Stage 19A全gate通過。固定profileでstandard `-0.7278`、spatial `-0.5587`、typewell `-0.4627`、branch-group `-0.7443`。active taskをStage 19B all-data bundle/runtimeへ更新。

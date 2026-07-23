@@ -8,6 +8,7 @@ import pandas as pd
 import yaml
 
 from rogii.cli.trajectory_residual import _cut_feature_record, _hidden_target_invariance, main
+from rogii.cli.trajectory_package import main as package_main
 from rogii.models.trajectory_residual import (
     COEFFICIENT_COLUMNS,
     apply_residual_coefficients,
@@ -150,3 +151,32 @@ def test_stage19a_cli_writes_crossfitted_artifacts(tmp_path: Path) -> None:
         "profile_report.parquet", "well_assignments.parquet", "config.yaml", "environment.json",
     ]:
         assert (run / name).is_file(), name
+
+    summary["promoted_to_stage19b"] = True
+    (run / "summary.json").write_text(json.dumps(summary), encoding="utf-8")
+    package_config = {
+        "ensemble_seeds": [42, 52],
+        "features": {"typewell_shift_grid_ft": [-10, 0, 10]},
+        "model": {"max_iter": 15, "min_samples_leaf": 2, "max_leaf_nodes": 7, "max_depth": 3},
+        "benchmark": {
+            "requested_fraction": 0.4, "estimated_hidden_wells": 200,
+            "maximum_estimated_seconds": 1_000_000.0,
+        },
+    }
+    package_config_path = tmp_path / "stage19b.yaml"
+    package_config_path.write_text(yaml.safe_dump(package_config), encoding="utf-8")
+    package_main([
+        "--config", str(package_config_path), "--stage19a-run", str(run),
+        "--stage17a-run", str(stage17a), "--stage17b-run", str(stage17b),
+        "--data-dir", str(data_dir), "--artifact-dir", str(artifacts), "--run-id", "stage19b-test",
+    ])
+    package_run = artifacts / "stage19b-test"
+    package_summary = json.loads((package_run / "summary.json").read_text(encoding="utf-8"))
+    assert package_summary["stage19b_complete"] is True
+    assert package_summary["promoted_to_stage19c"] is True
+    assert package_summary["model_count"] == 6
+    assert package_summary["benchmark"]["wells"] == 12
+    assert package_summary["benchmark"]["maximum_feature_difference"] <= 1e-10
+    assert all(package_summary["gates"].values())
+    assert (package_run / "stage19b_trajectory_bundle.zip").is_file()
+    assert (package_run / "stage19b_trajectory_bundle" / "manifest.json").is_file()

@@ -1,0 +1,19 @@
+experiment_name: stage19b_all_data_trajectory_bundle
+ensemble_seeds: [42, 52, 62, 72, 82]
+
+features:
+  prefix_window_ft: 800.0
+  typewell_shift_grid_ft: [-40, -30, -20, -10, 0, 10, 20, 30, 40]
+
+model:
+  learning_rate: 0.04
+  max_iter: 220
+  max_leaf_nodes: 15
+  max_depth: 4
+  min_samples_leaf: 30
+  l2_regularization: 4.0
+
+benchmark:
+  requested_fraction: 0.26
+  estimated_hidden_wells: 200
+  maximum_estimated_seconds: 600.0
