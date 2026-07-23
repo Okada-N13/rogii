@@ -96,6 +96,32 @@ def _cut_feature_record(
     record = build_inference_record(
         masked, typewell, prefix_window_ft=float(config.get("prefix_window_ft", 800.0))
     )
+    return _augment_base_features(masked, typewell, int(cut_index), base_prediction, record, config)
+
+
+def _test_feature_record(
+    horizontal: pd.DataFrame,
+    typewell: pd.DataFrame,
+    base_prediction: np.ndarray,
+    config: dict[str, Any],
+) -> dict[str, float | int | str]:
+    """Build the identical feature schema from actual test ``TVT_input``."""
+    record = build_inference_record(
+        horizontal, typewell, prefix_window_ft=float(config.get("prefix_window_ft", 800.0))
+    )
+    return _augment_base_features(
+        horizontal, typewell, int(record["cut_index"]), base_prediction, record, config
+    )
+
+
+def _augment_base_features(
+    horizontal: pd.DataFrame,
+    typewell: pd.DataFrame,
+    cut_index: int,
+    base_prediction: np.ndarray,
+    record: dict[str, float | int | str],
+    config: dict[str, Any],
+) -> dict[str, float | int | str]:
     base = np.asarray(base_prediction, float)
     suffix = horizontal.iloc[int(cut_index):]
     if len(base) != len(suffix) or not np.isfinite(base).all():
@@ -110,9 +136,8 @@ def _cut_feature_record(
     else:
         base_slope, base_curve = 0.0, 0.0
     prefix = horizontal.iloc[: int(cut_index)]
-    prefix_rmse, prefix_corr = _typewell_match(
-        prefix["TVT"].to_numpy(float), prefix["GR"].to_numpy(float), typewell
-    )
+    prefix_tvt = pd.to_numeric(prefix["TVT_input"], errors="coerce").to_numpy(float)
+    prefix_rmse, prefix_corr = _typewell_match(prefix_tvt, prefix["GR"].to_numpy(float), typewell)
     shifts = [float(value) for value in config.get("typewell_shift_grid_ft", [-30, -20, -10, 0, 10, 20, 30])]
     suffix_gr = suffix["GR"].to_numpy(float)
     matches = [(shift, *_typewell_match(base + shift, suffix_gr, typewell)) for shift in shifts]
@@ -124,7 +149,7 @@ def _cut_feature_record(
         "base_tvt_change": float(base[-1] - base[0]), "base_tvt_std": float(np.std(base)),
         "base_u_start": float(base_u[0]), "base_u_end": float(base_u[-1]),
         "base_u_change": float(base_u[-1] - base_u[0]), "base_u_std": float(np.std(base_u)),
-        "base_boundary_jump": float(base[0] - prefix["TVT"].iloc[-1]),
+        "base_boundary_jump": float(base[0] - prefix_tvt[-1]),
         "base_u_slope_per_kft": base_slope, "base_u_curve": base_curve,
         "prefix_typewell_gr_rmse": prefix_rmse,
         "prefix_typewell_gr_correlation": prefix_corr,

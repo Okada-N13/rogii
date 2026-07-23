@@ -7,8 +7,10 @@ import numpy as np
 import pandas as pd
 import yaml
 
-from rogii.cli.trajectory_residual import _cut_feature_record, _hidden_target_invariance, main
+from rogii.cli.trajectory_residual import _cut_feature_record, _hidden_target_invariance, _test_feature_record, main
 from rogii.cli.trajectory_package import main as package_main
+from rogii.cli.trajectory_inference_package import main as inference_package_main
+from rogii.inference.stage19_trajectory import build_feature_record as build_standalone_feature_record
 from rogii.models.trajectory_residual import (
     COEFFICIENT_COLUMNS,
     apply_residual_coefficients,
@@ -63,6 +65,25 @@ def test_stage19_features_ignore_hidden_suffix_tvt() -> None:
     second = _cut_feature_record(changed, typewell, cut, base, {"typewell_shift_grid_ft": [-10, 0, 10]})
     assert first == second
     assert _hidden_target_invariance(horizontal, typewell, cut, base, {}) is True
+
+
+def test_actual_test_feature_builder_matches_pseudotest_and_standalone() -> None:
+    horizontal, typewell = _frames()
+    cut = 100
+    base = horizontal["TVT"].to_numpy(float)[cut:] - 4.0
+    config = {"typewell_shift_grid_ft": [-10, 0, 10]}
+    expected = _cut_feature_record(horizontal, typewell, cut, base, config)
+    test = horizontal.copy()
+    test["TVT_input"] = np.where(np.arange(len(test)) < cut, test["TVT"], np.nan)
+    test.loc[test.index[cut:], "TVT"] = 1e9
+    actual = _test_feature_record(test, typewell, base, config)
+    standalone = build_standalone_feature_record(test.drop(columns="TVT"), typewell, base, config)
+    for key in expected:
+        if key in {"well_id", "cut_id"}:
+            assert actual[key] == expected[key] == standalone[key]
+        else:
+            assert np.isclose(float(actual[key]), float(expected[key]), equal_nan=True)
+            assert np.isclose(float(standalone[key]), float(expected[key]), equal_nan=True)
 
 
 def test_stage19a_cli_writes_crossfitted_artifacts(tmp_path: Path) -> None:
@@ -180,3 +201,12 @@ def test_stage19a_cli_writes_crossfitted_artifacts(tmp_path: Path) -> None:
     assert all(package_summary["gates"].values())
     assert (package_run / "stage19b_trajectory_bundle.zip").is_file()
     assert (package_run / "stage19b_trajectory_bundle" / "manifest.json").is_file()
+    inference_package_main([
+        "--stage19b-run", str(package_run), "--artifact-dir", str(artifacts),
+        "--run-id", "stage19c-test",
+    ])
+    inference_run = artifacts / "stage19c-test"
+    inference_summary = json.loads((inference_run / "summary.json").read_text(encoding="utf-8"))
+    assert inference_summary["package_ready"] is True
+    assert inference_summary["portable_prediction_max_abs_difference"] == 0.0
+    assert (inference_run / "stage19c_trajectory_inference_package.zip").is_file()

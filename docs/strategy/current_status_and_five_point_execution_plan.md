@@ -547,17 +547,18 @@ Stage 18F v003は再度Kaggle時間制限を超過し、スコアが付かなか
 
 Stage 19Aは全gateを通過した。固定weight `0.50`・cap `16 ft`でstandard `-0.7278`、spatial `-0.5587`、typewell `-0.4627`、branch-group `-0.7443`。standard/typewell/branchは5/5 folds、spatialは5/6 folds、全5 prefix fractions、P90、worst-tail、bootstrapを改善した。
 
-現在のactive taskは **Stage 19B: all-data trajectory model bundle and hidden-style runtime benchmark** である。全dataで5 seeds × 3係数を学習し、773 wellsでfeature parity、hidden約200 wellsの追加推論10分以内を確認する。詳細は`docs/strategy/stage19_trajectory_residual.md`を参照する。
+Stage 19Bは全gateを通過した。3,865 cuts、773 wells、66特徴、15 HGB modelsで、特徴parity最大差`0.0`。773 wellsは611.915秒、hidden 200 wells推定158.32秒だった。manifest SHA-256は`5bf1c84b...e47d632`。
 
-Stage 19Aの具体的順序:
+現在のactive taskは **Stage 19C: portable Internet-OFF inferenceと6.589 baseへの統合監査** である。具体的順序:
 
-1. Colabで`notebooks/480_run_stage19a_trajectory_residual.ipynb`を単独実行する。
-2. Stage 16B v003、Stage 17A/17B artifactsをDriveから読む。
-3. 3,865 primary cutsの3係数target-free residualを4 fold familyでcross-fitする。
-4. 最後の辞書とprofile診断表を共有する。
-5. 全gate通過時だけStage 19B all-data packageへ進み、hidden追加推論10分以内を実測する。
+1. Colab CPUで`notebooks/500_build_stage19c_inference_package.ipynb`を単独実行する。
+2. `package_ready=True`、portable prediction差`0.0`を確認する。
+3. zipをKaggle Dataset `rogii-stage19c-trajectory-inference-package`へアップロードする。
+4. `notebooks/510_kaggle_top_pf_stage19_trajectory.ipynb`へ公開base用inputsとStage 19C Datasetを付け、Internet OFFでinteractive実行する。
+5. `STAGE19C_TEST_AUDIT`を共有し、全well適用・target不使用・追加時間を確認する。
+6. 監査正常時だけsubmission rerunする。
 
-Stage 19B packageが完成するまで新しい補正をKaggleへ投入しない。
+Stage 19CのLB結果が出るまで、profile weight/capや別補正を同時変更しない。
 
 ## 15. 決定ログ
 
@@ -589,3 +590,5 @@ Stage 19B packageが完成するまで新しい補正をKaggleへ投入しない
 - 2026-07-23: 申告6.478 Notebookは6.49版とsource完全一致で、独立手法ではなく実行揺らぎと判定。申告6.390 Notebookは特定public well `00e12e8b`へLB-derived `+0.522 ft`を加えるため安全版へ不採用。
 - 2026-07-23: active taskをStage 19Aへ更新。3係数trajectory residual、4 fold family、hidden-target invariance、軽量推論契約で独自学習路線を開始。
 - 2026-07-23: Stage 19A全gate通過。固定profileでstandard `-0.7278`、spatial `-0.5587`、typewell `-0.4627`、branch-group `-0.7443`。active taskをStage 19B all-data bundle/runtimeへ更新。
+- 2026-07-23: Stage 19B全gate通過。66特徴parity差`0.0`、hidden 200 wells推定158.32秒。active taskをStage 19C portable inferenceへ更新。
+- 2026-07-23: Stage 19Cを実装。HGBをNumPy NPZへlossless変換し、実test `TVT_input`だけのstandalone特徴生成、Colab package Notebook、470統合Kaggle Notebookを追加。
