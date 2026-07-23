@@ -33,7 +33,7 @@ def test_stage18e_is_inserted_after_frozen_branch_and_before_final_audit() -> No
     assert metadata["selected_donors"] == 4
     assert metadata["same_well_target_transfer_removed"] is True
     assert metadata["internet"] is False
-    assert metadata["required_package_version"] == "v002"
+    assert metadata["required_package_version"] == "v003"
     assert metadata["required_donor_cache"] is True
 
 
@@ -41,8 +41,9 @@ def test_stage18e_preserves_parent_and_enforces_submission_audits() -> None:
     payload, parent = _load(NOTEBOOK), _load(PARENT)
     assert len(payload["cells"]) == len(parent["cells"]) + 1
     text = "\n".join(_source(cell) for cell in payload["cells"])
-    assert "len(_s18_statuses) != 3" in text
-    assert "any(status != 'applied'" in text
+    assert "_s18_expected_wells" in text
+    assert "kept_base_insufficient_donors" in text
+    assert "len(_s18_statuses) != _s18_expected_wells" in text
     assert "donor_trajectories.npz" in text
     assert "same_well_target_transfer_removed" in json.dumps(payload["metadata"])
     assert "v599_a130_branch_conservative_stage18_ranked_retrieval" in text

@@ -99,7 +99,7 @@ def main(argv: list[str] | None = None) -> None:
     shutil.copy2(inference_source, output / "stage18_retrieval.py")
     donor_cache = _build_donor_cache(data_dir, output)
     manifest = {
-        "stage18e_package": True, "stage18d_promoted": True,
+        "stage18e_package": True, "package_version": 3, "stage18d_promoted": True,
         "stage16b_manifest_sha256": stage18d_summary["stage16b_manifest_sha256"],
         "stage18c_sample_sha256": stage18d_summary["stage18c_sample_sha256"],
         "feature_columns": FEATURE_COLUMNS, "model_report": model_report,

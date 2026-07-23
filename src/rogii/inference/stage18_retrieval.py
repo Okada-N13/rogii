@@ -211,6 +211,9 @@ def apply_ranked_retrieval(package_dir: str | Path, data_dir: str | Path, submis
     ).fit(point_xyz)
 
     audit_rows, output = [], submission.copy()
+    # Hidden scoring expands the three public placeholder wells to roughly 200 wells.
+    # Reuse donor trees across targets instead of fitting the same trajectory repeatedly.
+    donor_indexes: dict[str, NearestNeighbors] = {}
     for well_id, group in submission.groupby("well_id", sort=True):
         horizontal = pd.read_csv(data / "test" / f"{well_id}__horizontal_well.csv")
         known = pd.to_numeric(horizontal["TVT_input"], errors="coerce").notna().to_numpy()
@@ -267,9 +270,12 @@ def apply_ranked_retrieval(package_dir: str | Path, data_dir: str | Path, submis
         for edge in edges.itertuples(index=False):
             donor_id = str(edge.donor_well_id)
             donor = train_frames[donor_id]
-            donor_index = NearestNeighbors(n_neighbors=1, algorithm="kd_tree").fit(
-                np.column_stack([donor["X"], donor["Y"], donor["Z"]])
-            )
+            donor_index = donor_indexes.get(donor_id)
+            if donor_index is None:
+                donor_index = NearestNeighbors(n_neighbors=1, algorithm="kd_tree").fit(
+                    np.column_stack([donor["X"], donor["Y"], donor["Z"]])
+                )
+                donor_indexes[donor_id] = donor_index
             distance, nearest = donor_index.kneighbors(target_xyz)
             nearest = nearest[:, 0]
             donor_u = donor["TVT"][nearest].astype(float) + donor["Z"][nearest].astype(float)
@@ -318,7 +324,8 @@ def apply_ranked_retrieval(package_dir: str | Path, data_dir: str | Path, submis
     audit = {
         "stage18_retrieval_applied": True, "rows": len(final), "wells": len(audit_rows),
         "submission_sha256": hashlib.sha256(submission_path.read_bytes()).hexdigest(), "well_report": audit_rows,
-        "donor_source": donor_source, "elapsed_seconds": float(time.perf_counter() - started),
+        "donor_source": donor_source, "cached_donor_indexes": len(donor_indexes),
+        "elapsed_seconds": float(time.perf_counter() - started),
     }
     (submission_path.parent / "stage18_retrieval_audit.json").write_text(json.dumps(audit, indent=2), encoding="utf-8")
     print("STAGE18_RETRIEVAL_AUDIT =", audit, flush=True)

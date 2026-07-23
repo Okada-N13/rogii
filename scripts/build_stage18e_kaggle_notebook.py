@@ -25,6 +25,7 @@ import hashlib as _s18_hashlib
 import importlib.util as _s18_importlib
 import json as _s18_json
 import zipfile as _s18_zipfile
+import pandas as _s18_pd
 from pathlib import Path as _S18Path
 
 _S18_INPUT = _S18Path('/kaggle/input')
@@ -50,8 +51,9 @@ if not _s18_manifests:
 if len(_s18_manifests) != 1:
     raise AssertionError(f'Expected one Stage 18E manifest, found {_s18_manifests}')
 _s18_package = _s18_manifests[0].parent
-if not (_s18_package / 'donor_trajectories.npz').is_file():
-    raise AssertionError('Stage 18E v002 packed donor cache is required; replace the v001 Kaggle Dataset')
+_s18_manifest = _s18_json.loads(_s18_manifests[0].read_text(encoding='utf-8'))
+if int(_s18_manifest.get('package_version', 0)) < 3 or not (_s18_package / 'donor_trajectories.npz').is_file():
+    raise AssertionError('Stage 18E v003 packed donor cache is required; replace the older Kaggle Dataset')
 
 _s18_samples = [
     p for p in _S18_INPUT.rglob('sample_submission.csv')
@@ -71,8 +73,17 @@ _s18_module = _s18_importlib.module_from_spec(_s18_spec)
 _s18_spec.loader.exec_module(_s18_module)
 STAGE18E_TEST_AUDIT = _s18_module.apply_ranked_retrieval(_s18_package, _s18_data, _S18_SUBMISSION)
 _s18_statuses = [row.get('status') for row in STAGE18E_TEST_AUDIT.get('well_report', [])]
-if len(_s18_statuses) != 3 or any(status != 'applied' for status in _s18_statuses):
-    raise AssertionError(f'Stage 18E was not applied to all 3 test wells: {_s18_statuses}')
+_s18_expected_wells = int(
+    _s18_pd.read_csv(_s18_samples[0])['id'].astype(str).str.rsplit('_', n=1).str[0].nunique()
+)
+_s18_allowed_statuses = {'applied', 'kept_base_insufficient_donors'}
+if len(_s18_statuses) != _s18_expected_wells or any(status not in _s18_allowed_statuses for status in _s18_statuses):
+    raise AssertionError(
+        f'Stage 18E well audit failed: expected={_s18_expected_wells}, '
+        f'actual={len(_s18_statuses)}, statuses={_s18_statuses}'
+    )
+STAGE18E_TEST_AUDIT['applied_wells'] = int(sum(status == 'applied' for status in _s18_statuses))
+STAGE18E_TEST_AUDIT['fallback_wells'] = int(sum(status != 'applied' for status in _s18_statuses))
 STAGE18E_TEST_AUDIT['base_submission_sha256'] = _s18_base_sha256
 (_S18_WORK / 'stage18_retrieval_audit.json').write_text(
     _s18_json.dumps(STAGE18E_TEST_AUDIT, indent=2), encoding='utf-8'
@@ -114,7 +125,7 @@ def build() -> None:
         "base_public_lb": 6.685, "blend_weight": 0.20, "selected_donors": 4,
         "same_well_target_transfer_removed": True, "internet": False,
         "required_dataset": "rogii-stage18e-ranked-retrieval-package",
-        "required_package_version": "v002", "required_donor_cache": True,
+        "required_package_version": "v003", "required_donor_cache": True,
     }
     OUTPUT.write_text(json.dumps(notebook, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 

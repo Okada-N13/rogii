@@ -190,3 +190,18 @@ v001はinteractive auditを正常完了したが、Kaggle submission rerunが時
 - 同じKaggle Datasetを新versionで置換する
 - Kaggle Notebookはv002 cacheがなければhard failする
 - `STAGE18E_TEST_AUDIT`の`donor_source=packed_npz`と`elapsed_seconds`を確認する
+
+## Stage 18F hidden-test監査修正（v003）
+
+v002のpublic placeholder 3 wellsではStage 18が`26.30秒`で完了し、packed cacheが正常に使われた。したがってpublic実行時間が大きく変わらないのは正常で、V599本体が支配的である。
+
+一方、このコンペのsubmission rerunでは3 fake wellsが約200 real wellsへ置換される。v002 Notebookに残っていた`len(statuses) == 3`監査はhidden rerunで必ず失敗するため修正した。
+
+v003では:
+
+- sample submissionから実際のwell数を求め、3/200の両方を監査する
+- donor不足だけは安全なbase fallbackとして許可する
+- 同一donorのKD-treeをtest wells間で再利用する
+- package manifestに`package_version: 3`を記録し、古いpackageを拒否する
+
+3-well所要時間からStage 18単体の200-well単純推定は約29分。KD-tree再利用により実際はこれ以下を狙う。V599本体はpublic表示時間ではなく200-well hidden scalingで管理する。
