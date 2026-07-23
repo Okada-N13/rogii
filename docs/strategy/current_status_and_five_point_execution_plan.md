@@ -1,20 +1,20 @@
 # ROGII 現状・5点台到達実行計画（引き継ぎ正本）
 
-最終更新: 2026-07-22  
+最終更新: 2026-07-23
 目標: Kaggle Leaderboard RMSE `< 6.000` を、再実行可能なInternet-OFF Notebookで達成する。  
 位置付け: 以後のセッションは、まずこの文書を読み、ここから再開する。過去の戦略文書より本書の実測値と判断を優先する。
 
 ## 1. 結論
 
-現時点で再現できた最良スコアは `6.685` である。Notebook上で「6.594」と表示されたbranch-overlap版の手元実測は `6.693` であり、最良を更新しなかった。独自Stage 15は `35.110` で失敗した。
+現時点で再現できた安全な最良スコアは `6.589` である。これは470 top-PF安全版で、旧best `6.685`を`0.096`改善した。Stage 18 ranked retrievalはKaggle時間制限を2回超過してスコアが付かず、独自Stage 15は `35.110` で失敗した。
 
 5点台へ最短で到達するため、次の順序へ切り替える。
 
-1. `6.685` のV599 A130 branch-conservative版を提出controlとして凍結する。
-2. `6.685` と `6.693` のコード・model artifact・中間予測を分解し、実際に効いているbranch-overlap処理を特定する。
-3. trainから「実testと同じ短いprefix・branch overlap」を再現する疑似testを作り、Leaderboardと相関しない旧CVを置き換える。
-4. 凍結したpublic baseに、OOFで検証できたbranch retrieval、alignment、residualだけを追加する。
-5. LB `6.4 -> 6.15 -> 5.999未満` の順で到達する。係数だけを変えた大量提出は行わない。
+1. `6.589` の470 top-PF安全版を提出controlとして凍結する。
+2. Stage 16B v003の短prefix pseudo-testと4種類のgroup holdoutを検証基盤にする。
+3. Kaggle上の重いdonor探索をやめ、独自補正を学習済み低次元モデルへ圧縮する。
+4. OOFでstandard/spatial/typewell/branch-groupとtailをすべて改善したモデルだけをInternet-OFF packageへ進める。
+5. LB `6.3 -> 6.15 -> 5.999未満` の順で到達する。公開LB由来の特定well補正や係数だけを変えた大量提出は行わない。
 
 Stage 15のpackage・Internet-OFF・manifest・提出監査の仕組みは再利用するが、Stage 15の予測モデルとCV値は採用しない。
 
@@ -30,26 +30,30 @@ Stage 15のpackage・Internet-OFF・manifest・提出監査の仕組みは再利
 | Stage 10C alignment版 | 6.994 | MHA controlと同程度 |
 | public frontier MHA250SEP2 sanitized | 6.874 | 改善したが凍結base未満 |
 | V599 A130 branch-conservative系 | 6.768 | 中間到達点 |
-| V599 A130 branch-conservative sanitized frontier | **6.685** | 現在の凍結best |
+| V599 A130 branch-conservative sanitized frontier | 6.685 | 旧safe best |
 | 「6.594」branch-overlap frontier sanitized | 6.693 | 表示値を再現せず、不採用 |
+| top-PF A130 branch-conservative target-safe 470 | **6.589** | 現在の凍結best |
+| V599 + Stage 18 ranked retrieval | スコアなし | Kaggle時間超過2回、提出経路停止 |
 | Stage 15 fold-safe independent | 35.110 | 重大失敗、追加提出禁止 |
 
 重要な差分:
 
 ```text
-6.693 - 6.685 = +0.008（悪化）
-6.685 - 5.999 =  0.686（5点台までの必要改善）
+6.589 - 6.685 = -0.096（safe improvement）
+6.589 - 5.999 =  0.590（5点台までの必要改善）
 ```
 
-`0.008`は非決定性や小さな条件差でも動き得るため、6.685/6.693間の係数探索には提出枠を使わない。5点台には別の信号またはcatastrophic branch errorの削減が必要である。
+470でPF GR likelihood scale `×1.3`のsafe improvementは確認できた。一方、申告6.478は6.49 sourceと完全一致で実行揺らぎ、申告6.390は特定public wellへのLB-derived補正だった。5点台には独自の一般化可能な学習信号が必要である。
 
 ## 3. 主要Notebookと役割
 
 ### 提出control
 
+- `notebooks/470_kaggle_top_pf_a130_branch_safe.ipynb`
+  - 現best `6.589` に対応する凍結control。
+  - PF GR likelihood scale `×1.3`と保守branchを持ち、same-well target transferを除外。
 - `notebooks/230_kaggle_v599_a130_frontier_safe.ipynb`
-  - 現best `6.685` に対応するcontrol候補。
-  - 次の作業開始時に、実際に提出したNotebook versionと一致するかセル・入力Dataset・出力hashを再確認する。
+  - 旧best `6.685` に対応する比較control。
 - `notebooks/240_kaggle_branch_overlap_6594_safe.ipynb`
   - 表示上6.594だったbranch-overlap版。手元実測は`6.693`。
   - 230との差分解析対象。提出baseにはしない。
@@ -489,7 +493,7 @@ workspace: C:\Users\owner\kaggle\ROGII
 1. 本書を最後まで読む。
 2. `git status --short`でユーザー変更を確認し、勝手に破棄しない。
 3. `git log -10 --oneline`で本書以降の変更を確認する。
-4. 実測bestが`6.685`から更新されていないかユーザーへ確認する。
+4. 実測bestが`6.589`から更新されていないかユーザーへ確認する。
 5. `notebooks/230...`と`240...`、参照Dataset情報を確認する。
 6. Stage 15を再提出しない。`35.110`は失敗として固定する。
 7. 未完ならStage 16Aから開始する。
@@ -531,33 +535,27 @@ Stage 18Dも全gateを通過した。固定retrieval比`12.784 → 12.645`（`-0
 
 Stage 18E packageは完成した。5 fold-safe rankers、43,758 candidate rows、same-well target leakage guardを含み、manifest SHA-256は`7bddc1914f3d046b678dbb8f5d1cc17427b03bc85c1a06d1f2088cbe68d3935d`である。
 
-現在のactive taskは **Stage 18F: frozen 6.685 V599 + ranked retrievalのInternet-OFF Kaggle実行と1回提出** である。Kaggle用Notebookは`notebooks/460_kaggle_v599_stage18_ranked_retrieval.ipynb`、推奨Dataset名は`rogii-stage18e-ranked-retrieval-package`。詳細は`docs/strategy/stage18_branch_retrieval.md`を参照する。
+Stage 18Fは終了した。Kaggle用Notebook`notebooks/460_kaggle_v599_stage18_ranked_retrieval.ipynb`はhidden rerunで2回時間超過し、LBスコアを取得できなかった。予測品質とは別に提出可能性を満たさないため、この経路を停止する。
 
 Stage 18F v001はinteractive auditを通過したがsubmission rerunが時間超過し、LBスコアは付かなかった。v002では予測を変えず、1,546個のdonor CSV再読込を単一NPZ cacheへ置換した。
 
-v002 public placeholder実行でStage 18は26.30秒だった。Kaggle hidden rerunは約200 wellsへ拡大するため、3-well固定監査を除去し、donor KD-treeをwell間で再利用するv003へ更新した。v003 public placeholder監査は3/3 wells applied、fallback 0、26.51秒で通過し、hidden rerunを実行中である。
+v002 public placeholder実行でStage 18は26.30秒だった。Kaggle hidden rerunは約200 wellsへ拡大するため、3-well固定監査を除去し、donor KD-treeをwell間で再利用するv003へ更新した。v003 public placeholder監査は3/3 wells applied、fallback 0、26.51秒で通過したが、hidden rerunは時間超過した。
 
 並行して、申告スコア6.49の公開`top-pf-config-branch-conservative(1).ipynb`を監査した。6.685 controlに対するhidden-test-activeな主要差分はlearned PFのGR likelihood scale `×1.3`で、branch hedgeはstrength `0.60`、cap `2.0`、既存routeをskipしない設定だった。公開3 fake wellsだけに効くsame-well train TVT/contact transferは採用しない。安全再現版を`notebooks/470_kaggle_top_pf_a130_branch_safe.ipynb`として用意し、Stage 18を混ぜない独立候補とする。詳細は`docs/top_pf_649_safe.md`を参照する。
 
-現在のactive taskは、まず実行中のStage 18F v003のLBを確定し、その後470を1回単独提出して6.685 controlと比較することである。470自身の6.49は未実測のため、申告値と実測値を混同しない。
+Stage 18F v003は再度Kaggle時間制限を超過し、スコアが付かなかった。Stage 18を現在のV599へ追加する構成は停止する。470安全版は`6.589`で、旧safe best `6.685`を`0.096`改善した。申告6.49/6.478との差は安全に再現できていない。
 
-実装開始時の具体的順序:
+現在のactive taskは **Stage 19A: cross-fitted low-dimensional trajectory residual** である。Stage 17 strong-base replayを代理baseにし、各cutの滑らかな補正3係数だけを学習する。donor探索をKaggle推論から外し、将来の追加推論を10分以内に収める。詳細は`docs/strategy/stage19_trajectory_residual.md`を参照する。
 
-1. `stage18e_ranked_retrieval_package.zip`をKaggle Datasetへアップロードする。
-2. `460_kaggle_v599_stage18_ranked_retrieval.ipynb`へ既存V599 inputsとStage 18E Datasetを追加する。
-3. Internet OFF、T4 x2でRun All / Save Versionする。
-4. `STAGE18E_TEST_AUDIT`で3 wellsすべて`applied`、最終auditで14,151 rows・finite・sample順一致を確認する。
-5. 生成された単一`submission.csv`を1回だけ提出し、6.685 controlと比較する。
+Stage 19Aの具体的順序:
 
-Stage 18F v003の結果確定後の順序:
+1. Colabで`notebooks/480_run_stage19a_trajectory_residual.ipynb`を単独実行する。
+2. Stage 16B v003、Stage 17A/17B artifactsをDriveから読む。
+3. 3,865 primary cutsの3係数target-free residualを4 fold familyでcross-fitする。
+4. 最後の辞書とprofile診断表を共有する。
+5. 全gate通過時だけStage 19B all-data packageへ進み、hidden追加推論10分以内を実測する。
 
-1. `470_kaggle_top_pf_a130_branch_safe.ipynb`をKaggleへImportする。
-2. 230と同じInputs、Internet OFF、P100でRun All / Save Versionする。
-3. 最終auditのprofile、14,151 rows、ID順一致、finite TVTを確認する。
-4. Stage 18なしの単独submissionを1回提出する。
-5. 6.685を更新した場合だけ、このtop-PF baseへStage 18を再統合する。
-
-Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入しない。
+Stage 19B packageが完成するまで新しい補正をKaggleへ投入しない。
 
 ## 15. 決定ログ
 
@@ -584,3 +582,7 @@ Stage 17のstrong-base OOFが完成するまで新しい補正をKaggleへ投入
 - 2026-07-23: v002 Stage 18は3 fake wellsを26.30秒で完了。hiddenは約200 wellsであることと、3-well固定監査がhidden失敗を起こすことを確認。任意well数監査とdonor KD-tree cacheを含むv003へ更新。
 - 2026-07-23: Stage 18F v003 public監査は3/3 applied、fallback 0、26.51秒で通過。hidden rerunを開始。
 - 2026-07-23: 申告6.49 top-PF公開Notebookを監査。same-well TVT/contact経路を除外し、PF GR scale `×1.3`と検証済み保守branch設定だけを230へ移植した470安全再現版を作成。Stage 18結果確定後に単独提出する。
+- 2026-07-23: 470安全版の実測は`6.589`。旧best `6.685`を更新し、PF GR scale `×1.3`をsafe improvementとして確定。
+- 2026-07-23: Stage 18F v003は2回目もKaggle時間超過でスコアなし。V599へrowwise donor retrievalを追加する提出経路を停止。
+- 2026-07-23: 申告6.478 Notebookは6.49版とsource完全一致で、独立手法ではなく実行揺らぎと判定。申告6.390 Notebookは特定public well `00e12e8b`へLB-derived `+0.522 ft`を加えるため安全版へ不採用。
+- 2026-07-23: active taskをStage 19Aへ更新。3係数trajectory residual、4 fold family、hidden-target invariance、軽量推論契約で独自学習路線を開始。
