@@ -61,6 +61,7 @@ rogii-trajectory-base-alignment = "rogii.cli.trajectory_base_alignment:main"
 rogii-prefix-router = "rogii.cli.prefix_router:main"
 rogii-prefix-confidence = "rogii.cli.prefix_confidence:main"
 rogii-prefix-residual-field = "rogii.cli.prefix_residual_field:main"
+rogii-strong-base-ncc = "rogii.cli.strong_base_ncc:main"
 
 [build-system]
 requires = ["hatchling"]

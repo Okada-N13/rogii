@@ -572,17 +572,22 @@ primaryは`+0.00945`、weight 0.05も`+0.00205`だった。bootstrap上限は正
 standard 3/5、spatial 3/6、typewell 1/5、branch 3/5。候補別楽観バイアス補正でも
 改善方向にならないため、Stage 21Cは実施せずvisible-prefix candidate routingを終了する。
 
-現在のactive taskは **Stage 22A: disjoint candidate-disagreement residual field** である。
+Stage 22Aも棄却した。Stage 21Aの63 wellsで学習し、完全非重複のStage 21B 58 wellsで
+評価したが、base `8.90381`に対しprimary weight 0.25は`+0.18158`、weight 0.10も
+`+0.05757`だった。standard 1/5、spatial 1/6、typewell 2/5、branch 0/5で、
+well P90も`+0.7580`悪化した。Stage 22Bやweight縮小は実施しない。
 
-1. Colab CPUで`notebooks/560_run_stage22a_residual_field.ipynb`を単独実行する。
-2. Stage 21Aの63 wellsだけを学習、Stage 21Bの58 wellsだけを固定検証に使う。
-3. A130に対するA100/A160・selector・public OOFのrowwise差とtarget-free軌跡特徴を作る。
-4. HistGradientBoostingでclipped residual fieldを学習する。
-5. primary weight `0.25`・cap `8 ft`・ramp `96 rows`を結果を見る前に固定する。
-6. hidden-target invariance、bootstrap、全fold family、fraction、P90を判定する。
-7. 全gate通過時だけ別wellのStage 22Bへ進む。不通過なら物理alignment stateを再設計する。
+現在のactive taskは **Stage 23A: strong-base aligned physical offset-state audit** である。
 
-Stage 22AからKaggle submissionを作らない。
+1. Colab CPUで`notebooks/570_run_stage23a_strong_base_ncc.ipynb`を単独実行する。
+2. Stage 21Bの62 cuts・58 wellsを固定validationとして使う。
+3. A130 baseの周囲に`-30..+30 ft`、1 ft刻みの61 offset statesを作る。
+4. horizontal GRとtypewell GRだけからmulti-scale NCC emissionを計算する。
+5. oracle headroom、offset coverage、top5/top10、median rankを測る。
+6. standard/spatial/typewell/branch/fractionごとにrandom以上のrank信号があるか確認する。
+7. raw rank信号が全gateを通過した場合だけStage 23B learned emissionへ進む。
+
+Stage 23Aは学習もKaggle submissionも行わない。
 
 ## 15. 決定ログ
 
@@ -621,3 +626,4 @@ Stage 22AからKaggle submissionを作らない。
 - 2026-07-24: Stage 20Bはdiscovery overlapゼロでstandard `-0.02956`だがbootstrap/spatial/typewell不合格。3係数残差を終了し、visible-prefix実測backtestで候補を選ぶStage 21Aへ移行。
 - 2026-07-24: Stage 21Aは`+0.6621`悪化、bootstrap下限も正、standard 1/5で棄却。oracle余地はあるがtop-1一致率`5.19%`。多項式を廃止し、候補別楽観バイアスを別wellへ転送するStage 21B disjoint confidence gateへ移行。
 - 2026-07-24: Stage 21Bは完全非重複wellでprimary `+0.00945`、weight 0.05も`+0.00205`、typewell 1/5。prefix routingを終了し、候補間rowwise disagreementから非線形residualを学ぶStage 22Aへ移行。
+- 2026-07-24: Stage 22Aは完全非重複wellでprimary `+0.18158`、最小weightも悪化、branch 0/5、P90 `+0.7580`。rowwise residual fieldを終了し、strong-base周囲のGR offset-state信号を先に監査するStage 23Aへ移行。
