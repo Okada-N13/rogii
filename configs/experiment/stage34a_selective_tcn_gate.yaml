@@ -1,0 +1,12 @@
+experiment_name: stage34a_selective_tcn_gate
+seed: 42
+
+selection:
+  score_quantiles: [0.50, 0.60, 0.70, 0.80, 0.90, 0.95]
+  bootstrap_resamples: 4000
+  minimum_oof_gain: 0.05
+  minimum_active_fraction: 0.10
+
+validation:
+  bootstrap_resamples: 4000
+  minimum_gain: 0.10

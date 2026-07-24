@@ -73,6 +73,7 @@ rogii-expanded-residual-field = "rogii.cli.expanded_residual_field:main"
 rogii-expanded-residual-manifest = "rogii.cli.expanded_residual_manifest:main"
 rogii-residual-profile-lock = "rogii.cli.residual_profile_lock:main"
 rogii-residual-cut-gate = "rogii.cli.residual_cut_benefit_gate:main"
+rogii-residual-selective-gate = "rogii.cli.residual_selective_gate:main"
 
 [build-system]
 requires = ["hatchling"]
