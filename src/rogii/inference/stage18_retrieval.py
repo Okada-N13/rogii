@@ -3,8 +3,10 @@ from __future__ import annotations
 import hashlib
 import json
 import time
+from concurrent.futures import ThreadPoolExecutor
 from functools import lru_cache
 from pathlib import Path
+from threading import Lock
 from typing import Any
 
 import numpy as np
@@ -150,7 +152,12 @@ def _weighted_path(
     return path, total
 
 
-def apply_ranked_retrieval(package_dir: str | Path, data_dir: str | Path, submission_path: str | Path) -> dict[str, Any]:
+def apply_ranked_retrieval(
+    package_dir: str | Path,
+    data_dir: str | Path,
+    submission_path: str | Path,
+    well_workers: int | None = None,
+) -> dict[str, Any]:
     started = time.perf_counter()
     package, data, submission_path = Path(package_dir), Path(data_dir), Path(submission_path)
     manifest = json.loads((package / "manifest.json").read_text(encoding="utf-8"))
@@ -214,7 +221,14 @@ def apply_ranked_retrieval(package_dir: str | Path, data_dir: str | Path, submis
     # Hidden scoring expands the three public placeholder wells to roughly 200 wells.
     # Reuse donor trees across targets instead of fitting the same trajectory repeatedly.
     donor_indexes: dict[str, NearestNeighbors] = {}
-    for well_id, group in submission.groupby("well_id", sort=True):
+    donor_index_lock = Lock()
+    grouped_wells = [(str(well_id), group.copy()) for well_id, group in submission.groupby("well_id", sort=True)]
+    configured_workers = int(config.get("well_workers", 1) if well_workers is None else well_workers)
+    configured_workers = max(1, configured_workers)
+    active_workers = min(configured_workers, max(1, len(grouped_wells)))
+
+    def process_well(item: tuple[str, pd.DataFrame]) -> tuple[str, np.ndarray, np.ndarray | None, dict[str, Any]]:
+        well_id, group = item
         horizontal = pd.read_csv(data / "test" / f"{well_id}__horizontal_well.csv")
         known = pd.to_numeric(horizontal["TVT_input"], errors="coerce").notna().to_numpy()
         cut_index = int(known.sum())
@@ -272,10 +286,11 @@ def apply_ranked_retrieval(package_dir: str | Path, data_dir: str | Path, submis
             donor = train_frames[donor_id]
             donor_index = donor_indexes.get(donor_id)
             if donor_index is None:
-                donor_index = NearestNeighbors(n_neighbors=1, algorithm="kd_tree").fit(
+                built_index = NearestNeighbors(n_neighbors=1, algorithm="kd_tree").fit(
                     np.column_stack([donor["X"], donor["Y"], donor["Z"]])
                 )
-                donor_indexes[donor_id] = donor_index
+                with donor_index_lock:
+                    donor_index = donor_indexes.setdefault(donor_id, built_index)
             distance, nearest = donor_index.kneighbors(target_xyz)
             nearest = nearest[:, 0]
             donor_u = donor["TVT"][nearest].astype(float) + donor["Z"][nearest].astype(float)
@@ -290,8 +305,8 @@ def apply_ranked_retrieval(package_dir: str | Path, data_dir: str | Path, submis
             aligned[donor_id] = (donor_prediction, distance[:, 0][cut_index:], gr_delta[cut_index:], offset)
         feature_frame = pd.DataFrame.from_records(records)
         if len(feature_frame) < int(config.get("minimum_donors", 2)):
-            audit_rows.append({"well_id": well_id, "status": "kept_base_insufficient_donors", "assigned_fold": fold})
-            continue
+            report = {"well_id": well_id, "status": "kept_base_insufficient_donors", "assigned_fold": fold}
+            return well_id, expected_rows, None, report
         feature_frame["score"] = models[fold].predict(feature_frame[FEATURE_COLUMNS])
         chosen = feature_frame.sort_values(["score", "donor_well_id"], kind="stable").head(
             int(config.get("selected_donors", 4))
@@ -307,15 +322,29 @@ def apply_ranked_retrieval(package_dir: str | Path, data_dir: str | Path, submis
         corrected = base_full[cut_index:].copy()
         blend = float(config.get("blend_weight", 0.20))
         corrected[active] += blend * (retrieved[active] - corrected[active])
-        for row, value in zip(expected_rows, corrected, strict=True):
-            output.loc[(output["well_id"] == well_id) & (output["row_index"] == int(row)), "tvt"] = float(value)
-        audit_rows.append({
+        report = {
             "well_id": well_id, "status": "applied", "assigned_fold": fold, "fold_source": fold_source,
             "candidate_donors": int(len(feature_frame)), "selected_donors": chosen,
             "active_fraction": float(active.mean()),
             "mean_abs_move": float(np.mean(np.abs(corrected - base_full[cut_index:]))),
             "max_abs_move": float(np.max(np.abs(corrected - base_full[cut_index:]))),
-        })
+        }
+        return well_id, expected_rows, corrected, report
+
+    if active_workers == 1:
+        results = list(map(process_well, grouped_wells))
+    else:
+        with ThreadPoolExecutor(max_workers=active_workers, thread_name_prefix="stage18-well") as executor:
+            results = list(executor.map(process_well, grouped_wells))
+    for well_id, expected_rows, corrected, report in results:
+        if corrected is not None:
+            mask = output["well_id"] == well_id
+            positions = output.loc[mask, "row_index"].to_numpy(int)
+            correction = pd.Series(corrected, index=expected_rows)
+            if not np.isin(positions, expected_rows).all():
+                raise AssertionError(f"{well_id}: output rows changed during parallel processing")
+            output.loc[mask, "tvt"] = correction.loc[positions].to_numpy(float)
+        audit_rows.append(report)
 
     final = output[["id", "tvt"]].copy()
     if not final["id"].astype(str).equals(sample["id"].astype(str)) or not np.isfinite(final["tvt"]).all():
@@ -325,6 +354,7 @@ def apply_ranked_retrieval(package_dir: str | Path, data_dir: str | Path, submis
         "stage18_retrieval_applied": True, "rows": len(final), "wells": len(audit_rows),
         "submission_sha256": hashlib.sha256(submission_path.read_bytes()).hexdigest(), "well_report": audit_rows,
         "donor_source": donor_source, "cached_donor_indexes": len(donor_indexes),
+        "configured_well_workers": configured_workers, "active_well_workers": active_workers,
         "elapsed_seconds": float(time.perf_counter() - started),
     }
     (submission_path.parent / "stage18_retrieval_audit.json").write_text(json.dumps(audit, indent=2), encoding="utf-8")

@@ -33,7 +33,7 @@ def test_stage18e_is_inserted_after_frozen_branch_and_before_final_audit() -> No
     assert metadata["selected_donors"] == 4
     assert metadata["same_well_target_transfer_removed"] is True
     assert metadata["internet"] is False
-    assert metadata["required_package_version"] == "v003"
+    assert metadata["required_package_version"] == "v004"
     assert metadata["required_donor_cache"] is True
 
 

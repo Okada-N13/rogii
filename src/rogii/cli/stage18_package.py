@@ -99,7 +99,7 @@ def main(argv: list[str] | None = None) -> None:
     shutil.copy2(inference_source, output / "stage18_retrieval.py")
     donor_cache = _build_donor_cache(data_dir, output)
     manifest = {
-        "stage18e_package": True, "package_version": 3, "stage18d_promoted": True,
+        "stage18e_package": True, "package_version": 4, "stage18d_promoted": True,
         "stage16b_manifest_sha256": stage18d_summary["stage16b_manifest_sha256"],
         "stage18c_sample_sha256": stage18d_summary["stage18c_sample_sha256"],
         "feature_columns": FEATURE_COLUMNS, "model_report": model_report,
@@ -109,7 +109,7 @@ def main(argv: list[str] | None = None) -> None:
             "donor_neighbors": 16, "maximum_candidates": 12, "minimum_donors": 2, "selected_donors": 4,
             "branch_distance_ft": 150.0, "minimum_matched_points": 3,
             "prefix_calibration_rows": 256, "distance_scale_ft": 300.0, "gr_scale": 30.0,
-            "minimum_weight": 1.0e-5, "blend_weight": 0.20,
+            "minimum_weight": 1.0e-5, "blend_weight": 0.20, "well_workers": 4,
         },
         "files": {},
     }
@@ -127,8 +127,9 @@ def main(argv: list[str] | None = None) -> None:
         "stage18e_package_complete": True, "fold_models": len(model_report),
         "training_candidate_rows": len(rows), "same_well_target_leakage_guard": True,
         "donor_cache": donor_cache,
+        "parallel_well_workers": 4,
         "package_manifest_sha256": _sha256(output / "manifest.json"), "zip": str(archive),
-        "next_step": "Upload the zip as a Kaggle Dataset and run the V599 Stage 18 postprocess notebook.",
+        "next_step": "Run Stage 36 serial/parallel parity benchmark before uploading this package.",
     }
     write_json(output / "summary.json", summary)
     print(summary, flush=True)
