@@ -1,0 +1,16 @@
+experiment_name: stage37a_frozen_pseudo_private_manifest
+seed: 42
+
+provenance:
+  stage16b_manifest_sha256: af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c
+
+primary_fractions: [0.18, 0.22, 0.26, 0.30, 0.34]
+
+validation:
+  n_typewell_folds: 5
+
+expected:
+  training_wells: 500
+  design_wells: 58
+  design_cuts: 62
+  confirmation_wells: 120
