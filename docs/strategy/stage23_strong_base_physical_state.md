@@ -166,4 +166,31 @@ Stage 24A（A100/L4推奨、T4可）:
 
 `notebooks/610_run_stage24a_scaled_ordinal_emission.ipynb`
 
+## Stage 24A実測結果
+
+500 training wells・500 cuts、58-well design validation、5-model ensembleで完了した。
+rankerはraw top10 `30.70%`から`65.23%`、top5 `18.60%`から`46.13%`へ改善し、
+standard 5/5、spatial 6/6、typewell 5/5、branch 5/5、fraction 4/4の全groupで
+rank改善した。
+
+しかし固定weight 0.75のRMSEは`8.6132→8.6353`（`+0.0220`）、well P90
+`+0.5138`、bootstrap上限`+0.1749`で不合格。診断weight 0.25も`-0.0111`に過ぎず、
+後付け採用しない。予約120 wellsは未使用のまま維持する。標本数の拡大とsoft ordinal lossで
+rank信号は再現したが、rowwise expected offset decoderは改善しなかった。
+
+## Stage 25A
+
+Stage 24Aの5 checkpointsを固定し、62 design-validation cutsだけのcost volumeを再生成する。
+posterior meanのcentered smoothing、posterior median、transition/zero-anchor強度を固定した
+3 Viterbi profileを比較する。offsetをrow独立値ではなく連続pathとして復号する診断である。
+
+Stage 25Aはすでに観測済みのdesign validationを使うexploratory screenであり、最良profileを
+そのまま採用しない。RMSE `-0.10`、bootstrap、P90、全fold-family/fraction gateを通るprofileが
+ある場合だけ、500 training cutsのheld-out checkpoint logitsを再生成するStage 25B nested
+OOF auditへ進む。予約120 wellsはStage 25Aでは使用しない。
+
+Stage 25A（T4/L4、TCN再学習なし）:
+
+`notebooks/620_run_stage25a_temporal_path_decoder.ipynb`
+
 Kaggle submissionは生成しない。
