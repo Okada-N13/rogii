@@ -71,15 +71,42 @@ def _loss(
     costs: torch.Tensor,
     target: torch.Tensor,
     config: dict[str, Any],
+    offsets: torch.Tensor | None = None,
 ) -> torch.Tensor:
-    ce = nn.functional.cross_entropy(
-        logits.reshape(-1, logits.shape[-1]),
-        target.reshape(-1),
-        ignore_index=-100,
-        label_smoothing=float(config.get("label_smoothing", 0.02)),
-    )
     valid = target >= 0
-    if not valid.any() or float(config.get("hard_negative_weight", 0.20)) <= 0:
+    if not valid.any():
+        return logits.sum() * 0.0
+    ordinal_sigma = float(config.get("ordinal_sigma_ft", 0.0))
+    if (ordinal_sigma > 0 or float(config.get("expected_offset_weight", 0.0)) > 0) and offsets is None:
+        raise ValueError("Offset-aware emission loss requires offsets")
+    if ordinal_sigma > 0:
+        assert offsets is not None
+        target_offset = offsets[target.clamp_min(0)]
+        distance = (offsets[None, None, :] - target_offset[:, :, None]) / ordinal_sigma
+        soft_target = torch.softmax(-0.5 * distance.square(), dim=-1)
+        log_probability = torch.log_softmax(logits, dim=-1)
+        ce = -(soft_target * log_probability).sum(dim=-1)[valid].mean()
+    else:
+        ce = nn.functional.cross_entropy(
+            logits.reshape(-1, logits.shape[-1]),
+            target.reshape(-1),
+            ignore_index=-100,
+            label_smoothing=float(config.get("label_smoothing", 0.02)),
+        )
+    regression_weight = float(config.get("expected_offset_weight", 0.0))
+    if regression_weight > 0:
+        assert offsets is not None
+        probability = torch.softmax(logits, dim=-1)
+        scale = offsets.abs().max().clamp_min(1.0)
+        expected = (probability * offsets[None, None, :]).sum(dim=-1) / scale
+        target_value = offsets[target.clamp_min(0)] / scale
+        regression = nn.functional.smooth_l1_loss(
+            expected[valid],
+            target_value[valid],
+            beta=float(config.get("expected_offset_huber_beta", 0.1)),
+        )
+        ce = ce + regression_weight * regression
+    if float(config.get("hard_negative_weight", 0.20)) <= 0:
         return ce
     raw = costs[:, :, 0, :].clone()
     raw.scatter_(-1, target.clamp_min(0).unsqueeze(-1), float("inf"))
@@ -127,6 +154,7 @@ def train_emission_fold(
         generator=generator,
     )
     model = CandidateEmissionTCN(train[0].costs.shape[1], train[0].row_features.shape[1], offsets, config).to(device)
+    offset_tensor = torch.as_tensor(offsets, dtype=torch.float32, device=device)
     optimizer = torch.optim.AdamW(
         model.parameters(),
         lr=float(config.get("learning_rate", 8e-4)),
@@ -145,7 +173,7 @@ def train_emission_fold(
             costs, rows, target = costs.to(device), rows.to(device), target.to(device)
             optimizer.zero_grad(set_to_none=True)
             with torch.autocast(device_type=device.type, dtype=torch.float16, enabled=use_amp):
-                loss = _loss(model(costs, rows), costs, target, config)
+                loss = _loss(model(costs, rows), costs, target, config, offset_tensor)
             scaler.scale(loss).backward()
             scaler.unscale_(optimizer)
             torch.nn.utils.clip_grad_norm_(model.parameters(), float(config.get("gradient_clip", 1.0)))
@@ -156,6 +184,7 @@ def train_emission_fold(
         predictions = predict_emissions(model, valid, device)
         nll_values = []
         top10_values = []
+        offset_errors = []
         for item, logits in zip(valid, predictions, strict=True):
             mask = item.valid
             if not mask.any():
@@ -165,13 +194,24 @@ def train_emission_fold(
             nll_values.extend(logsumexp - shifted[np.arange(mask.sum()), item.target_state[mask]])
             order = np.argsort(-logits[mask], axis=1)
             top10_values.extend(np.any(order[:, :10] == item.target_state[mask, None], axis=1))
+            probability = np.exp(shifted) / np.exp(shifted).sum(axis=1, keepdims=True)
+            expected = probability @ np.asarray(offsets, float)
+            target_offset = np.asarray(offsets, float)[item.target_state[mask]]
+            offset_errors.extend(np.square(expected - target_offset))
         valid_nll = float(np.mean(nll_values))
+        valid_offset_rmse = float(np.sqrt(np.mean(offset_errors)))
         history.append(
             {"epoch": float(epoch + 1), "train_loss": running / max(batches, 1),
-             "valid_nll": valid_nll, "valid_top10": float(np.mean(top10_values))}
+             "valid_nll": valid_nll, "valid_top10": float(np.mean(top10_values)),
+             "valid_offset_rmse": valid_offset_rmse}
         )
-        if np.isfinite(valid_nll) and valid_nll < best_nll - 1e-5:
-            best_nll = valid_nll
+        selection_metric = (
+            valid_offset_rmse
+            if str(config.get("selection_metric", "nll")) == "offset_rmse"
+            else valid_nll
+        )
+        if np.isfinite(selection_metric) and selection_metric < best_nll - 1e-5:
+            best_nll = selection_metric
             best_state = deepcopy({name: value.detach().cpu() for name, value in model.state_dict().items()})
             stale = 0
         else:

@@ -592,17 +592,22 @@ Stage 23Cは棄却した。training OOF最良の`summary_a1000`はRMSE `-0.1408`
 0件だった。Stage 21Bへ補正を適用しなかったためvalidation deltaは`0.0`。TCN rankerは
 維持するが、連続offsetを直接回帰するdecoder familyは終了する。
 
-現在のactive taskは **Stage 23D: hierarchical emission decoder** である。
+Stage 23Dも棄却した。最良profileはtraining OOFでRMSE `-0.1071`、P90 `-0.6347`、
+4/5 folds改善したが、worst fold `+0.0817`、bootstrap上限`+0.0461`だった。
+強正則化profileはworst fold `+0.0498`だがbootstrap上限`+0.0482`。全profile不合格のため
+design validationへ適用していない。decoder hyperparameter調整は終了する。
 
-1. CPUで`notebooks/600_run_stage23d_hierarchical_decoder.ipynb`を実行する。
-2. Stage 23Cのtraining OOF/validation parquetを再利用し、NCC/TCNを再実行しない。
-3. offsetを移動有無、方向、絶対量へ分解して強く正則化する。
-4. 4 profileをStage 21A training OOF内だけでnested選択する。
-5. eligible profileだけをStage 21B design validationへ適用する。
-6. 通過しても提出せず、Stage 23Eの新しいdisjoint well確認へ進む。
+現在のactive taskは **Stage 24A: scaled soft-ordinal emission** である。
 
-Stage 21BはStage 23B/Cで結果を観測済みなので、今後「 untouched validation」とは扱わない。
-Stage 23DからKaggle submissionを作らない。
+1. A100/L4 GPU（T4可）で`notebooks/610_run_stage24a_scaled_ordinal_emission.ipynb`を実行する。
+2. Stage 21B 58 wellsをdesign validationとして学習から完全除外する。
+3. standard foldごと100 wells、合計500 wells・500 cutsを学習に固定する。
+4. 別の120 wellsをStage 24B confirmation用に予約し、Stage 24Aでは一切使わない。
+5. soft ordinal target、expected-offset Huber、offset-RMSE early stoppingで5-fold学習する。
+6. primary correction weight `0.75`の事前gateだけを判定する。
+7. 通過しても提出せず、予約120 wellsでStage 24Bを実施する。
+
+Stage 24AからKaggle submissionを作らない。
 
 ## 15. 決定ログ
 
@@ -645,3 +650,4 @@ Stage 23DからKaggle submissionを作らない。
 - 2026-07-24: Stage 23Aはoracle `-6.3401`、top10はrandomの1.90倍、全standard/spatial/typewell/branch/fraction groupsでrank信号を確認。raw decoderは未改善のため採用せず、完全非重複validationのStage 23B learned emissionへ昇格。
 - 2026-07-24: Stage 23Bはrankerとしてtop10 `+0.3962`、top5 `+0.3138`、全group改善。ただしdirect posterior decoderは`-0.0889`、bootstrap/P90不合格。TCNを固定しtraining OOFだけでdecoderをnested校正するStage 23Cへ移行。
 - 2026-07-24: Stage 23Cはtraining OOF最良`-0.1408`だがworst fold `+0.2387`、bootstrap上限`+0.1968`で全profile不合格。連続decoderを棄却し、移動・方向・量を分けるCPU Stage 23Dへ移行。
+- 2026-07-24: Stage 23Dは最良`-0.1071`、P90改善、4/5 foldsだがbootstrap上限`+0.0461`で不合格。77-cut decoder調整を終了し、500 training wells＋120 reserved wells、soft ordinal/expected-offset lossのStage 24Aへ移行。

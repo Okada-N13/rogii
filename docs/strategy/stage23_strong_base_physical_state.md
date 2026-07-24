@@ -105,6 +105,33 @@ cross-fitでのみ選ぶ。Stage 21BはStage 23B/Cの結果をすでに観測し
 完全未使用holdoutとは呼ばずdesign validationとして扱う。Stage 23Dが通っても提出せず、
 新しいdisjoint well確認を必須とする。
 
+## Stage 23D実測結果
+
+階層化によってStage 23Cよりfold安定性は改善した。最良`h_c003_a1000_w075`はtraining
+OOFでRMSE `-0.1071`、P90 `-0.6347`、4/5 folds改善だった。しかしworst foldは
+`+0.0817`、bootstrap上限は`+0.0461`で不合格。より強く正則化した
+`h_c001_a1000_w075`はworst fold `+0.0498`まで満たしたがbootstrap上限`+0.0482`で、
+eligible profileは0件だった。したがってdesign validationへ補正を適用していない。
+
+この結果から、decoderのweight/C/alpha調整を続けない。主要な制約は77 training cutsという
+標本数と、one-hot state分類がexpected offsetのRMSE校正を直接最適化しない点である。
+
+## Stage 24A
+
+Stage 21B design-validation 58 wellsを除外し、stage16 standard foldごと100 wells、
+合計500 wellsから1 cutずつを決定論的hashで選ぶ。さらにfoldごと24 wells、合計120 wellsを
+Stage 24B確認用として予約し、Stage 24Aでは特徴生成・学習・評価のいずれにも使わない。
+
+lossはone-hot cross entropyから次へ変更する。
+
+- true offset近傍にも確率を与えるGaussian soft ordinal target（sigma 2 ft）
+- posterior expected offsetとtrue grid offsetのHuber loss
+- hard-negative marginは補助lossとしてweightを半減
+- early stoppingはNLLでなくinternal-fold expected-offset RMSE
+
+primary correction weightは実行前固定`0.75`。Stage 21Bはdesign validationであり、
+通過してもKaggle packageを作らず、予約120 wellsのStage 24Bへ進む。
+
 ## 実行
 
 Colab CPU:
@@ -122,5 +149,9 @@ Stage 23C（T4/L4 GPU、TCN再学習なし）:
 Stage 23D（CPU、Stage 23C artifacts再利用）:
 
 `notebooks/600_run_stage23d_hierarchical_decoder.ipynb`
+
+Stage 24A（A100/L4推奨、T4可）:
+
+`notebooks/610_run_stage24a_scaled_ordinal_emission.ipynb`
 
 Kaggle submissionは生成しない。

@@ -28,8 +28,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--stage17a-run", type=Path, required=True)
     parser.add_argument("--public-oof-run", type=Path, required=True)
     parser.add_argument("--stage23a-run", type=Path, required=True)
-    parser.add_argument("--training-run", type=Path, required=True)
-    parser.add_argument("--validation-run", type=Path, required=True)
+    parser.add_argument("--training-run", type=Path)
+    parser.add_argument("--validation-run", type=Path)
+    parser.add_argument("--training-cut-file", type=Path)
+    parser.add_argument("--validation-cut-file", type=Path)
     parser.add_argument("--data-dir", type=Path, required=True)
     parser.add_argument("--artifact-dir", type=Path, required=True)
     parser.add_argument("--run-id", required=True)
@@ -222,8 +224,14 @@ def main(argv: list[str] | None = None) -> None:
     stage17 = args.stage17a_run.resolve()
     public_run = args.public_oof_run.resolve()
     stage23a = args.stage23a_run.resolve()
-    training_run = args.training_run.resolve()
-    validation_run = args.validation_run.resolve()
+    training_run = args.training_run.resolve() if args.training_run else None
+    validation_run = args.validation_run.resolve() if args.validation_run else None
+    training_cut_file = args.training_cut_file.resolve() if args.training_cut_file else None
+    validation_cut_file = args.validation_cut_file.resolve() if args.validation_cut_file else None
+    if (training_run is None) == (training_cut_file is None):
+        raise ValueError("Provide exactly one of --training-run or --training-cut-file")
+    if (validation_run is None) == (validation_cut_file is None):
+        raise ValueError("Provide exactly one of --validation-run or --validation-cut-file")
     summary23a = json.loads((stage23a / "summary.json").read_text(encoding="utf-8"))
     if summary23a.get("stage16b_manifest_sha256") != expected_hash:
         raise AssertionError("Stage 23A manifest provenance mismatch")
@@ -235,8 +243,12 @@ def main(argv: list[str] | None = None) -> None:
     output.mkdir(parents=True, exist_ok=True)
 
     cuts = pd.read_parquet(stage17 / "cut_report.parquet")
-    training_ids = pd.read_parquet(training_run / "router_cut_report.parquet", columns=["cut_id"])
-    validation_ids = pd.read_parquet(validation_run / "confidence_cut_report.parquet", columns=["cut_id"])
+    training_ids = pd.read_parquet(
+        training_cut_file or training_run / "router_cut_report.parquet", columns=["cut_id"]
+    )
+    validation_ids = pd.read_parquet(
+        validation_cut_file or validation_run / "confidence_cut_report.parquet", columns=["cut_id"]
+    )
     training = cuts[cuts["cut_id"].isin(training_ids["cut_id"])].copy().sort_values("cut_id")
     validation = cuts[cuts["cut_id"].isin(validation_ids["cut_id"])].copy().sort_values("cut_id")
     if args.limit_training_cuts is not None:
@@ -460,9 +472,11 @@ def main(argv: list[str] | None = None) -> None:
     promoted = bool(all(gates.values()))
     rows.to_parquet(output / "validation_emission_rows.parquet", index=False)
     cut_report.to_parquet(output / "validation_cut_report.parquet", index=False)
+    stage_name = str(config.get("stage_name", "stage23b"))
+    promotion_key = str(config.get("promotion_key", "promoted_to_stage23c"))
     summary = {
-        "stage23b_complete": True,
-        "promoted_to_stage23c": promoted,
+        f"{stage_name}_complete": True,
+        promotion_key: promoted,
         "stage16b_manifest_sha256": expected_hash,
         "device": str(device),
         "training_cuts": len(train_sequences),
@@ -500,8 +514,10 @@ def main(argv: list[str] | None = None) -> None:
         "stage17a_run": str(stage17),
         "public_oof_run": str(public_run),
         "stage23a_run": str(stage23a),
-        "training_run": str(training_run),
-        "validation_run": str(validation_run),
+        "training_run": str(training_run) if training_run else None,
+        "validation_run": str(validation_run) if validation_run else None,
+        "training_cut_file": str(training_cut_file) if training_cut_file else None,
+        "validation_cut_file": str(validation_cut_file) if validation_cut_file else None,
         "data_dir": str(args.data_dir.resolve()),
         "run_id": args.run_id,
     }
