@@ -63,6 +63,7 @@ rogii-prefix-confidence = "rogii.cli.prefix_confidence:main"
 rogii-prefix-residual-field = "rogii.cli.prefix_residual_field:main"
 rogii-strong-base-ncc = "rogii.cli.strong_base_ncc:main"
 rogii-strong-base-emission = "rogii.cli.strong_base_emission:main"
+rogii-emission-decoder = "rogii.cli.emission_decoder:main"
 
 [build-system]
 requires = ["hatchling"]

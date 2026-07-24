@@ -63,6 +63,22 @@ primary correctionはposterior expected offsetのweight `0.50`、cap `12 ft`、r
 rank改善だけでなく、固定primaryのRMSE gain、bootstrap上限、well P90、全fold familyと
 fractionでのrank consistencyをすべて通過した場合だけStage 23Cへ進む。
 
+## Stage 23B実測結果
+
+rankerは外部validationで明確に成功した。top10 `30.70%→70.33%`、top5
+`18.60%→49.98%`、median rank `20→6`、NLL `-1.2057`。standard 5/5、
+spatial 6/6、typewell 5/5、branch 5/5、fraction 4/4の全groupでtop10が改善した。
+
+一方、posterior expected offsetを固定weight 0.50で直接使うdecoderはRMSE
+`8.6132→8.5244`（`-0.0889`）に留まり、事前閾値`-0.10`未達、bootstrap上限
+`+0.0345`、well P90 `+0.2636`で不合格だった。weight 0.25/0.75/1.00も診断上は
+すべて平均改善したが、validation結果から後付け採用しない。
+
+Stage 23CではTCNを変更せず、Stage 21A training OOF logitsだけでdecoderをnested
+cross-fitする。direct posterior、affine ridge、posterior summary ridgeを事前固定比較し、
+training OOF上でgain、bootstrap、fold、P90をすべて通過したprofileだけを全training OOFで
+refitする。そのprofileを固定してからStage 21B validationへ適用する。
+
 ## 実行
 
 Colab CPU:
@@ -72,5 +88,9 @@ Colab CPU:
 Stage 23B（T4 GPU）:
 
 `notebooks/580_run_stage23b_learned_emission.ipynb`
+
+Stage 23C（T4/L4 GPU、TCN再学習なし）:
+
+`notebooks/590_run_stage23c_oof_decoder.ipynb`
 
 Kaggle submissionは生成しない。

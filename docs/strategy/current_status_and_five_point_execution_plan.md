@@ -582,17 +582,22 @@ Stage 23Aは全gateを通過した。62 cuts・58 wellsでoffset coverage `99.31
 standard 5/5、spatial 6/6、typewell 5/5、branch 5/5、fraction 4/4でrank信号が安定した。
 raw smooth decoder自体は最良でも`+0.0234`のため採用せず、学習emissionへ進む。
 
-現在のactive taskは **Stage 23B: disjoint learned strong-base emission** である。
+Stage 23Bはrankerとして成功した。外部validationでtop10 `30.70%→70.33%`、top5
+`18.60%→49.98%`、median rank `20→6`、NLL `-1.2057`、全groupで改善した。
+ただし固定posterior mean decoderはRMSE `-0.0889`、bootstrap上限`+0.0345`、
+P90 `+0.2636`でprimary gate不通過。TCNを棄却せずdecoderだけを修正する。
 
-1. Colab T4 GPUで`notebooks/580_run_stage23b_learned_emission.ipynb`を単独実行する。
-2. Stage 21Aの77 cuts・63 wellsだけをtrainingに使う。
-3. training内5 foldsでTCNを学習し、5 model logit ensembleを作る。
-4. Stage 21Bの62 cuts・58 wellsは固定外部validationにだけ使う。
-5. validation targetをearly stoppingやmodel選択に使わない。
-6. raw比top5/top10/NLLと、固定weight 0.50のRMSE/bootstrap/P90を評価する。
-7. rankと絶対予測の全gate通過時だけStage 23Cへ進む。
+現在のactive taskは **Stage 23C: nested OOF emission decoder** である。
 
-Stage 23BからKaggle submissionを作らない。
+1. Colab T4/L4 GPUで`notebooks/590_run_stage23c_oof_decoder.ipynb`を実行する。
+2. Stage 23Bの5 checkpointsを再利用しTCNを再学習しない。
+3. Stage 21A training OOF logitsを各held-out modelから生成する。
+4. direct/affine/summary decoderをtraining OOF内でnested cross-fitする。
+5. gain、bootstrap、fold、P90を通るprofileだけを全training OOFでrefitする。
+6. profile固定後にStage 21B validationへ一度だけ適用する。
+7. validationの全gate通過時だけ別well確認へ進む。
+
+Stage 23CからKaggle submissionを作らない。
 
 ## 15. 決定ログ
 
@@ -633,3 +638,4 @@ Stage 23BからKaggle submissionを作らない。
 - 2026-07-24: Stage 21Bは完全非重複wellでprimary `+0.00945`、weight 0.05も`+0.00205`、typewell 1/5。prefix routingを終了し、候補間rowwise disagreementから非線形residualを学ぶStage 22Aへ移行。
 - 2026-07-24: Stage 22Aは完全非重複wellでprimary `+0.18158`、最小weightも悪化、branch 0/5、P90 `+0.7580`。rowwise residual fieldを終了し、strong-base周囲のGR offset-state信号を先に監査するStage 23Aへ移行。
 - 2026-07-24: Stage 23Aはoracle `-6.3401`、top10はrandomの1.90倍、全standard/spatial/typewell/branch/fraction groupsでrank信号を確認。raw decoderは未改善のため採用せず、完全非重複validationのStage 23B learned emissionへ昇格。
+- 2026-07-24: Stage 23Bはrankerとしてtop10 `+0.3962`、top5 `+0.3138`、全group改善。ただしdirect posterior decoderは`-0.0889`、bootstrap/P90不合格。TCNを固定しtraining OOFだけでdecoderをnested校正するStage 23Cへ移行。
