@@ -69,6 +69,7 @@ rogii-scaled-emission-manifest = "rogii.cli.scaled_emission_manifest:main"
 rogii-emission-path-decoder = "rogii.cli.emission_path_decoder:main"
 rogii-affine-path-state = "rogii.cli.affine_path_state:main"
 rogii-spatial-surface-state = "rogii.cli.spatial_surface_state:main"
+rogii-expanded-residual-field = "rogii.cli.expanded_residual_field:main"
 
 [build-system]
 requires = ["hatchling"]
