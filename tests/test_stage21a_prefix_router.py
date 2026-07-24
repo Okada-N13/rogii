@@ -45,6 +45,12 @@ def test_candidate_library_and_internal_cuts_are_target_safe() -> None:
         np.testing.assert_array_equal(first[name],second[name])
     assert len(internal_cut_indices(20,120,{"inner_gap_fractions":[.45,.72],"minimum_holdout_rows":10,
                                                    "minimum_calibration_gap_rows":90}))==2
+    # Regression: the second raw fraction lies inside the required 32-row
+    # holdout and must be clamped, not discarded.
+    assert internal_cut_indices(
+        100,196,{"inner_gap_fractions":[.45,.72],"minimum_holdout_rows":32,
+                 "minimum_calibration_gap_rows":96}
+    )==[143,164]
 
 
 def test_stage21a_notebook_is_clean_and_compiles() -> None:

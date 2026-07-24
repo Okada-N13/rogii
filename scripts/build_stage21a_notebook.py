@@ -67,6 +67,11 @@ def build()->None:
         ),
         code(
             "RUN_ID='stage21a_prefix_router_full_v001'; run_dir=artifact_dir/RUN_ID\n"
+            "if run_dir.exists() and not (run_dir/'summary.json').is_file():\n"
+            "    resolved=run_dir.resolve(); expected=(artifact_dir/RUN_ID).resolve()\n"
+            "    assert resolved==expected and resolved.parent==artifact_dir.resolve(),resolved\n"
+            "    print('Removing incomplete prior run:',resolved)\n"
+            "    shutil.rmtree(resolved)\n"
             "if not (run_dir/'summary.json').is_file():\n"
             "    run_checked(['uv','run','rogii-prefix-router','--config','configs/experiment/stage21a_prefix_router.yaml',"
             "'--stage16b-run',str(stage16b_run),'--stage17a-run',str(stage17a_run),"

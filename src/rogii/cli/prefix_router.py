@@ -90,15 +90,21 @@ def internal_cut_indices(original_cut: int, outer_cut: int, config: dict[str,Any
     gap = int(outer_cut)-int(original_cut)
     if gap < int(config.get("minimum_calibration_gap_rows",96)):
         return []
+    # Clamp first, then de-duplicate. At the minimum allowed gap the later
+    # fraction can fall inside the required outer holdout before clamping;
+    # filtering it first incorrectly leaves only one calibration cut.
+    maximum_inner = int(outer_cut)-minimum_holdout
     output = {
-        int(round(int(original_cut)+float(fraction)*gap))
+        max(
+            int(original_cut),
+            min(
+                int(round(int(original_cut)+float(fraction)*gap)),
+                maximum_inner,
+            ),
+        )
         for fraction in config.get("inner_gap_fractions",[.45,.72])
     }
-    return sorted(
-        max(int(original_cut),min(value,int(outer_cut)-minimum_holdout))
-        for value in output
-        if int(original_cut) <= value < int(outer_cut)-minimum_holdout
-    )
+    return sorted(value for value in output if int(original_cut) <= value < int(outer_cut))
 
 
 def _guarded_route(base: np.ndarray, selected: np.ndarray, config: dict[str,Any]) -> np.ndarray:
