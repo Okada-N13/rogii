@@ -1,0 +1,56 @@
+experiment_name: stage30a_multicut_residual_tcn
+seed: 42
+
+provenance:
+  stage16b_manifest_sha256: af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c
+
+candidates:
+  gr_sigma_multipliers: [1.0, 1.3, 1.6]
+  polynomial_degrees: []
+  selector:
+    particles: 64
+    seeds: 4
+    seed_base: 0
+    maximum_tracking_steps: 384
+    typewell_grid_step: 0.2
+  top_pf_proxy:
+    ridge_weight: 0.30
+    selector_weight: 0.70
+    projection_degree: 3
+    projection_blend_weight: 0.75
+    final_sp45_weight: 0.60
+
+features:
+  plane_window_ft: 1200.0
+  plane_ridge: 0.05
+
+model:
+  base_candidate: top_pf_a130
+  training_stride: 8
+  target_smoothing_rows: 101
+  target_cap_ft: 24.0
+  target_scale_ft: 10.0
+  chunk_rows: 256
+  chunk_overlap_rows: 64
+  channels: 48
+  blocks: 5
+  kernel_size: 5
+  dropout: 0.10
+  batch_size: 16
+  epochs: 10
+  patience: 2
+  learning_rate: 0.0008
+  weight_decay: 0.0001
+  gradient_clip: 1.0
+  huber_beta: 0.5
+
+correction:
+  primary_weight: 0.20
+  diagnostic_weights: [0.10, 0.20, 0.30]
+  cap_ft: 8.0
+  ramp_rows: 96.0
+
+validation:
+  bootstrap_resamples: 4000
+  minimum_gain: 0.10
+
