@@ -1,0 +1,26 @@
+experiment_name: stage37b_top_pf_pseudo_private_materialization
+seed: 42
+
+provenance:
+  stage37a_manifest_sha256: a51c2776a63515e27aa1177ede37abebfd021dabea5fb93436d2635a97a4d166
+
+selector:
+  particles: 128
+  seeds: 12
+  seed_base: 0
+  maximum_tracking_steps: 768
+  typewell_grid_step: 0.2
+  gr_sigma_multiplier: 1.30
+
+top_pf_proxy:
+  ridge_weight: 0.30
+  selector_weight: 0.70
+  projection_degree: 3
+  projection_blend_weight: 0.75
+  final_sp45_weight: 0.60
+
+storage:
+  cuts_per_chunk: 20
+
+audit:
+  invariance_cuts: 12

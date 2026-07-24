@@ -77,6 +77,7 @@ rogii-residual-selective-gate = "rogii.cli.residual_selective_gate:main"
 rogii-functional-residual = "rogii.cli.functional_residual_curve:main"
 rogii-stage36-retrieval-benchmark = "rogii.cli.stage36_retrieval_benchmark:main"
 rogii-pseudo-private-manifest = "rogii.cli.pseudo_private_manifest:main"
+rogii-pseudo-private-top-pf = "rogii.cli.pseudo_private_top_pf:main"
 
 [build-system]
 requires = ["hatchling"]
