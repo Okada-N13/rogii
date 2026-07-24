@@ -132,6 +132,12 @@ lossはone-hot cross entropyから次へ変更する。
 primary correction weightは実行前固定`0.75`。Stage 21Bはdesign validationであり、
 通過してもKaggle packageを作らず、予約120 wellsのStage 24Bへ進む。
 
+初回manifest v001は`replay_eligible=False` cutを含み、public OOF開始位置より前のcutで
+prediction length mismatchとなった。モデル計算前に停止しており結果は生成されていない。
+v002では`evaluation_role=primary`かつ`replay_eligible=True`を必須にし、loaderでも
+public OOFがwell末尾まで連続すること、cutがOOF開始以降であること、suffix長が一致することを
+再検査する。
+
 ## 実行
 
 Colab CPU:

@@ -63,7 +63,7 @@ def build() -> None:
             "public_oof_run/'base_oof.parquet',stage21b_run/'confidence_cut_report.parquet',"
             "stage23a_run/'summary.json']\n"
             "for path in required: assert path.is_file(),path\n"
-            "MANIFEST_ID='stage24a_scaled_emission_manifest_v001'; manifest_dir=artifact_dir/MANIFEST_ID\n"
+            "MANIFEST_ID='stage24a_scaled_emission_manifest_v002'; manifest_dir=artifact_dir/MANIFEST_ID\n"
             "if manifest_dir.exists() and not (manifest_dir/'summary.json').is_file():\n"
             "    resolved=manifest_dir.resolve(); expected=(artifact_dir/MANIFEST_ID).resolve()\n"
             "    assert resolved==expected and resolved.parent==artifact_dir.resolve(); shutil.rmtree(resolved)\n"
@@ -72,6 +72,9 @@ def build() -> None:
             "'--stage17a-run',str(stage17a_run),'--design-validation-run',str(stage21b_run),"
             "'--artifact-dir',str(artifact_dir),'--run-id',MANIFEST_ID],cwd=repo_dir,check=True)\n"
             "manifest=json.loads((manifest_dir/'summary.json').read_text())\n"
+            "assert manifest['public_replay_eligible_only'] is True,manifest\n"
+            "assert manifest['training_wells']==500 and manifest['confirmation_wells']==120,manifest\n"
+            "assert all(not values for values in manifest['overlaps'].values()),manifest['overlaps']\n"
             "manifest\n"
         ),
         markdown(

@@ -42,7 +42,13 @@ def main(argv: list[str] | None = None) -> None:
     )
     validation = cuts[cuts["cut_id"].isin(validation_ids["cut_id"])].copy()
     validation_wells = set(validation["well_id"].astype(str))
-    primary = cuts[cuts["evaluation_role"] == "primary"].copy()
+    required_columns = {"evaluation_role", "replay_eligible", "original_public_cut_index"}
+    missing = sorted(required_columns.difference(cuts.columns))
+    if missing:
+        raise KeyError(f"Stage 17 cut report missing columns: {missing}")
+    primary = cuts[
+        (cuts["evaluation_role"] == "primary") & cuts["replay_eligible"].astype(bool)
+    ].copy()
     primary["well_id"] = primary["well_id"].astype(str)
     primary = primary[~primary["well_id"].isin(validation_wells)].copy()
     primary["_fraction_distance"] = (
@@ -100,6 +106,7 @@ def main(argv: list[str] | None = None) -> None:
     confirmation[keep].to_parquet(output / "confirmation_cut_ids.parquet", index=False)
     summary = {
         "stage24a_manifest_complete": True,
+        "public_replay_eligible_only": True,
         "training_cuts": len(training),
         "training_wells": len(training_wells),
         "confirmation_cuts": len(confirmation),

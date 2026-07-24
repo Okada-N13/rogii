@@ -298,12 +298,27 @@ def main(argv: list[str] | None = None) -> None:
             well_id, outer = str(record.well_id), int(record.cut_index)
             source = public_by_well[well_id]
             original = int(source["row_index"].min())
+            source_index = source["row_index"].to_numpy(dtype=np.int64)
+            expected_index = np.arange(original, len(load_well(well_id)), dtype=np.int64)
+            if not np.array_equal(source_index, expected_index):
+                raise AssertionError(f"{well_id}: public OOF is not a contiguous suffix")
+            if outer < original:
+                raise AssertionError(
+                    f"{record.cut_id}: cut {outer} precedes public OOF start {original}"
+                )
+            public_prediction = source["y_pred"].to_numpy(float)[outer - original :]
+            expected_length = len(load_well(well_id)) - outer
+            if len(public_prediction) != expected_length:
+                raise AssertionError(
+                    f"{record.cut_id}: public prediction has {len(public_prediction)} rows; "
+                    f"expected {expected_length}"
+                )
             result.append(
                 build_strong_base_sequence(
                     record,
                     load_well(well_id),
                     load_typewell(well_id),
-                    source["y_pred"].to_numpy(float)[outer - original :],
+                    public_prediction,
                     candidate_config,
                     state_config,
                 )

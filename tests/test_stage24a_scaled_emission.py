@@ -30,6 +30,8 @@ def test_scaled_manifest_reserves_disjoint_wells(tmp_path: Path) -> None:
                     "stage16_fold": fold,
                     "requested_fraction": 0.30,
                     "evaluation_role": "primary",
+                    "replay_eligible": True,
+                    "original_public_cut_index": 80,
                     "cut_index": 100,
                 }
             )
@@ -44,6 +46,8 @@ def test_scaled_manifest_reserves_disjoint_wells(tmp_path: Path) -> None:
                 "stage16_fold": fold,
                 "requested_fraction": 0.30,
                 "evaluation_role": "primary",
+                "replay_eligible": True,
+                "original_public_cut_index": 80,
                 "cut_index": 100,
             }
         )
@@ -93,6 +97,7 @@ def test_stage24a_notebook_is_clean_and_uses_reserved_split() -> None:
     text = "\n".join("".join(cell.get("source", [])) for cell in payload["cells"])
     assert "rogii-scaled-emission-manifest" in text
     assert "stage24a_scaled_ordinal_emission.yaml" in text
+    assert "stage24a_scaled_emission_manifest_v002" in text
     assert "training_cut_ids.parquet" in text
     assert payload["metadata"]["stage24a"]["submission"] is False
     assert payload["metadata"]["stage24a"]["reserved_confirmation_wells"] == 120
