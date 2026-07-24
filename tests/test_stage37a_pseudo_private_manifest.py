@@ -122,7 +122,10 @@ def test_stage37_notebook_is_clean_and_standalone() -> None:
     payload = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
     text = "\n".join(_source(cell) for cell in payload["cells"])
     assert "rogii-pseudo-private-manifest" in text
-    assert "stage24a_scaled_emission_manifest_v003" in text
+    assert "stage37a_locked_split_manifest_v001" in text
+    assert "rogii-scaled-emission-manifest" in text
+    assert "'--training-wells-per-fold','100'" in text
+    assert "'--confirmation-wells-per-fold','24'" in text
     assert "stage21b_prefix_confidence_full_v001" in text
     assert payload["metadata"]["accelerator"] == "CPU"
     assert payload["metadata"]["stage37a"]["confirmation_target_unread"] is True

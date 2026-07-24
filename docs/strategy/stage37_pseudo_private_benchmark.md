@@ -7,7 +7,9 @@ Stage 37はモデル探索より先に、今後の全モデルが共通利用す
 
 ## Stage 37A: split manifest
 
-既存の安全な分割を再利用し、新しい乱数抽選は行わない。
+既存の安全な分割規則を再利用し、新しい乱数抽選は行わない。Stage 24の分割artifactが
+Driveに残っていない場合は、同じStage 17/21入力、seed 42、foldごとの
+training 100 / confirmation 24という固定条件から決定論的に再構築する。
 
 - training: Stage 24で固定した500 wellsに属する全primary replay-eligible cuts
 - design validation: Stage 21Bで使用済みの62 cuts / 58 wells
