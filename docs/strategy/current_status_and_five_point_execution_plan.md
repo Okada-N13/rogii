@@ -577,17 +577,22 @@ Stage 22Aも棄却した。Stage 21Aの63 wellsで学習し、完全非重複の
 `+0.05757`だった。standard 1/5、spatial 1/6、typewell 2/5、branch 0/5で、
 well P90も`+0.7580`悪化した。Stage 22Bやweight縮小は実施しない。
 
-現在のactive taskは **Stage 23A: strong-base aligned physical offset-state audit** である。
+Stage 23Aは全gateを通過した。62 cuts・58 wellsでoffset coverage `99.31%`、oracle
+`8.6132 → 2.2731`（`-6.3401`）、raw top10 `31.14%`対random `16.39%`、median rank 20。
+standard 5/5、spatial 6/6、typewell 5/5、branch 5/5、fraction 4/4でrank信号が安定した。
+raw smooth decoder自体は最良でも`+0.0234`のため採用せず、学習emissionへ進む。
 
-1. Colab CPUで`notebooks/570_run_stage23a_strong_base_ncc.ipynb`を単独実行する。
-2. Stage 21Bの62 cuts・58 wellsを固定validationとして使う。
-3. A130 baseの周囲に`-30..+30 ft`、1 ft刻みの61 offset statesを作る。
-4. horizontal GRとtypewell GRだけからmulti-scale NCC emissionを計算する。
-5. oracle headroom、offset coverage、top5/top10、median rankを測る。
-6. standard/spatial/typewell/branch/fractionごとにrandom以上のrank信号があるか確認する。
-7. raw rank信号が全gateを通過した場合だけStage 23B learned emissionへ進む。
+現在のactive taskは **Stage 23B: disjoint learned strong-base emission** である。
 
-Stage 23Aは学習もKaggle submissionも行わない。
+1. Colab T4 GPUで`notebooks/580_run_stage23b_learned_emission.ipynb`を単独実行する。
+2. Stage 21Aの77 cuts・63 wellsだけをtrainingに使う。
+3. training内5 foldsでTCNを学習し、5 model logit ensembleを作る。
+4. Stage 21Bの62 cuts・58 wellsは固定外部validationにだけ使う。
+5. validation targetをearly stoppingやmodel選択に使わない。
+6. raw比top5/top10/NLLと、固定weight 0.50のRMSE/bootstrap/P90を評価する。
+7. rankと絶対予測の全gate通過時だけStage 23Cへ進む。
+
+Stage 23BからKaggle submissionを作らない。
 
 ## 15. 決定ログ
 
@@ -627,3 +632,4 @@ Stage 23Aは学習もKaggle submissionも行わない。
 - 2026-07-24: Stage 21Aは`+0.6621`悪化、bootstrap下限も正、standard 1/5で棄却。oracle余地はあるがtop-1一致率`5.19%`。多項式を廃止し、候補別楽観バイアスを別wellへ転送するStage 21B disjoint confidence gateへ移行。
 - 2026-07-24: Stage 21Bは完全非重複wellでprimary `+0.00945`、weight 0.05も`+0.00205`、typewell 1/5。prefix routingを終了し、候補間rowwise disagreementから非線形residualを学ぶStage 22Aへ移行。
 - 2026-07-24: Stage 22Aは完全非重複wellでprimary `+0.18158`、最小weightも悪化、branch 0/5、P90 `+0.7580`。rowwise residual fieldを終了し、strong-base周囲のGR offset-state信号を先に監査するStage 23Aへ移行。
+- 2026-07-24: Stage 23Aはoracle `-6.3401`、top10はrandomの1.90倍、全standard/spatial/typewell/branch/fraction groupsでrank信号を確認。raw decoderは未改善のため採用せず、完全非重複validationのStage 23B learned emissionへ昇格。

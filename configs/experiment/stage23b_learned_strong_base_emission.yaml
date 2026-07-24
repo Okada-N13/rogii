@@ -1,0 +1,65 @@
+experiment_name: stage23b_disjoint_learned_strong_base_emission
+seed: 42
+
+provenance:
+  stage16b_manifest_sha256: af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c
+
+candidates:
+  gr_sigma_multipliers: [1.3]
+  polynomial_degrees: []
+  selector:
+    particles: 64
+    seeds: 4
+    seed_base: 0
+    maximum_tracking_steps: 384
+    typewell_grid_step: 0.2
+  top_pf_proxy:
+    ridge_weight: 0.30
+    selector_weight: 0.70
+    projection_degree: 3
+    projection_blend_weight: 0.75
+    final_sp45_weight: 0.60
+
+state:
+  base_candidate: top_pf_a130
+  offset_min_ft: -30.0
+  offset_max_ft: 30.0
+  offset_step_ft: 1.0
+  alignment_stride: 4
+  max_eval_rows_per_cut: 512
+  windows: [5, 13, 25]
+  mix_windows: [13, 25]
+  mix_weights: [0.4, 0.6]
+
+model:
+  channels: 32
+  blocks: 4
+  kernel_size: 5
+  dropout: 0.10
+  batch_size: 2
+  epochs: 10
+  patience: 2
+  learning_rate: 0.0008
+  weight_decay: 0.0001
+  gradient_clip: 1.0
+  label_smoothing: 0.02
+  hard_negative_weight: 0.20
+  hard_negative_margin: 0.50
+
+correction:
+  primary_weight: 0.50
+  diagnostic_weights: [0.25, 0.50, 0.75, 1.00]
+  cap_ft: 12.0
+  ramp_rows: 64.0
+
+validation:
+  raw_temperature: 0.25
+  bootstrap_resamples: 3000
+  minimum_top10_gain: 0.10
+  minimum_top5_gain: 0.10
+  minimum_rmse_gain: 0.10
+  minimum_standard_rank_folds: 4
+  minimum_spatial_rank_folds: 4
+  minimum_typewell_rank_folds: 4
+  minimum_branch_rank_folds: 4
+  minimum_fraction_rank_groups: 3

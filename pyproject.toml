@@ -62,6 +62,7 @@ rogii-prefix-router = "rogii.cli.prefix_router:main"
 rogii-prefix-confidence = "rogii.cli.prefix_confidence:main"
 rogii-prefix-residual-field = "rogii.cli.prefix_residual_field:main"
 rogii-strong-base-ncc = "rogii.cli.strong_base_ncc:main"
+rogii-strong-base-emission = "rogii.cli.strong_base_emission:main"
 
 [build-system]
 requires = ["hatchling"]
