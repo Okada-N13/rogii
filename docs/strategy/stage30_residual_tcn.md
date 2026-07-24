@@ -27,3 +27,12 @@ validationでは5 model平均を全suffix行へ適用する。固定primaryはwe
 
 Stage 30AはGPU学習。L4またはA100推奨、T4でも実行可能。Kaggle提出は生成しない。
 
+## 実測結果
+
+固定weight 0.20は`8.9038 -> 8.8102`（`-0.0936`）。standard/spatial/branch/fractionは
+通過したが、bootstrap上限`+0.0160`、P90`+0.2877`、typewell `3/5`、
+事前基準`-0.10`で昇格しなかった。診断weight 0.30は`-0.1334`だが、そのまま採用しない。
+
+Stage 31Aで保存済み5 checkpointsのensemble spreadを使い、weight 0.30の補正を
+target-freeに縮小する。予約120 wellsは引き続き未使用。
+
