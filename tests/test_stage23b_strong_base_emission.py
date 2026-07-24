@@ -149,8 +149,9 @@ def test_stage23b_notebook_is_clean_and_compiles() -> None:
     path = ROOT / "notebooks" / "580_run_stage23b_learned_emission.ipynb"
     payload = json.loads(path.read_text(encoding="utf-8"))
     text = "\n".join("".join(cell.get("source", [])) for cell in payload["cells"])
-    assert "rogii-strong-base-emission" in text
-    assert "'--device','auto'" in text
+    assert "'-m','rogii.cli.strong_base_emission'" in text
+    assert "'--device','cuda'" in text
+    assert "PYTHONPATH" in text and "_driver.log" in text
     assert payload["metadata"]["stage23b"]["submission"] is False
     for cell in payload["cells"]:
         if cell.get("cell_type") == "code":
