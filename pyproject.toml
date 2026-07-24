@@ -58,6 +58,7 @@ rogii-trajectory-residual = "rogii.cli.trajectory_residual:main"
 rogii-trajectory-package = "rogii.cli.trajectory_package:main"
 rogii-trajectory-inference-package = "rogii.cli.trajectory_inference_package:main"
 rogii-trajectory-base-alignment = "rogii.cli.trajectory_base_alignment:main"
+rogii-prefix-router = "rogii.cli.prefix_router:main"
 
 [build-system]
 requires = ["hatchling"]

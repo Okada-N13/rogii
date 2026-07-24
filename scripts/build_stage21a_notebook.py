@@ -1,0 +1,110 @@
+"""Build the standalone Stage 21A visible-prefix router notebook."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+OUTPUT=Path("notebooks/540_run_stage21a_prefix_router.ipynb")
+
+
+def markdown(source:str)->dict:
+    return {"cell_type":"markdown","metadata":{},"source":source.splitlines(keepends=True)}
+
+
+def code(source:str)->dict:
+    return {"cell_type":"code","execution_count":None,"metadata":{},"outputs":[],"source":source.splitlines(keepends=True)}
+
+
+def build()->None:
+    cells=[
+        markdown(
+            "# Stage 21A: visible-prefix candidate router\n\n"
+            "Stage 19/20の3係数残差を終了し、well自身の既知prefix内backtestで候補を選びます。"
+            "A100/A130/A160 PF、top-PF blend、public OOF、U多項式を2つのinternal cutsで評価し、"
+            "選ばれた候補を固定25%・12 ft上限でbaseへ混ぜます。Stage 20A/Bの全discovery wellsを"
+            "除外し、Kaggle提出は作りません。CPUランタイムを使用してください。\n"
+        ),
+        code("from google.colab import drive\ndrive.mount('/content/drive')\n"),
+        code(
+            "from pathlib import Path\nimport json,os,shutil,subprocess\n"
+            "REPOSITORY_URL='https://github.com/Okada-N13/rogii.git'\n"
+            "repo_dir=Path('/content/ROGII'); drive_root=Path('/content/drive/MyDrive/kaggle/rogii')\n"
+            "artifact_dir=drive_root/'artifacts'; data_dir=drive_root/'data'\n"
+            "if not (repo_dir/'.git').is_dir(): subprocess.run(['git','clone',REPOSITORY_URL,str(repo_dir)],check=True)\n"
+            "else: subprocess.run(['git','-C',str(repo_dir),'pull','--ff-only','origin','main'],check=True)\n"
+            "if shutil.which('uv') is None: subprocess.run(['bash','-lc','curl -LsSf https://astral.sh/uv/install.sh | sh'],check=True)\n"
+            "os.environ['PATH']='/root/.local/bin:'+os.environ['PATH']\n"
+            "subprocess.run(['uv','sync','--frozen'],cwd=repo_dir,check=True)\n"
+            "assert (data_dir/'train').is_dir(),data_dir\n"
+            "def run_checked(command):\n"
+            "    result=subprocess.run(command,cwd=repo_dir,text=True,capture_output=True)\n"
+            "    if result.stdout: print(result.stdout,flush=True)\n"
+            "    if result.returncode:\n"
+            "        print(result.stderr,flush=True); raise RuntimeError(f'command failed: {command}')\n"
+        ),
+        markdown(
+            "## 固定artifactと除外well\n\nStage 17Aのtarget-safe cut定義と、Stage 7のwell-isolated"
+            "`base_oof.parquet`を使います。Stage 20A/Bで使ったwellは両方除外します。\n"
+        ),
+        code(
+            "stage16b_run=artifact_dir/'stage16b_testlike_validation_full_v003'\n"
+            "stage17a_run=artifact_dir/'stage17_public_replay_full_v002'\n"
+            "public_oof_run=artifact_dir/'stage7_public_residual_gate_full_v001'\n"
+            "stage20a_run=artifact_dir/'stage20a_top_pf_alignment_full_v001'\n"
+            "stage20b_run=artifact_dir/'stage20b_disjoint_confirmation_full_v001'\n"
+            "for path,name in [(stage16b_run/'well_assignments.parquet','stage16b'),"
+            "(stage17a_run/'cut_report.parquet','stage17a'),(public_oof_run/'base_oof.parquet','public_oof'),"
+            "(stage20a_run/'cut_features.parquet','stage20a'),(stage20b_run/'cut_features.parquet','stage20b')]:\n"
+            "    assert path.is_file(),f'{name}: {path}'\n"
+            "print(stage16b_run,stage17a_run,public_oof_run,stage20a_run,stage20b_run,sep='\\n')\n"
+        ),
+        markdown(
+            "## Prefix backtest router\n\n各outer cutでouter PF 3本とinternal PF 6本を計算します。"
+            "Stage 20より1 cutあたりの計算は多いですが、particles/seeds/stepsをscreen用に縮小しています。"
+            "10 cutsごとに進捗を表示します。\n"
+        ),
+        code(
+            "RUN_ID='stage21a_prefix_router_full_v001'; run_dir=artifact_dir/RUN_ID\n"
+            "if not (run_dir/'summary.json').is_file():\n"
+            "    run_checked(['uv','run','rogii-prefix-router','--config','configs/experiment/stage21a_prefix_router.yaml',"
+            "'--stage16b-run',str(stage16b_run),'--stage17a-run',str(stage17a_run),"
+            "'--public-oof-run',str(public_oof_run),'--exclude-run',str(stage20a_run),"
+            "'--exclude-run',str(stage20b_run),'--data-dir',str(data_dir),"
+            "'--artifact-dir',str(artifact_dir),'--run-id',RUN_ID])\n"
+            "summary=json.loads((run_dir/'summary.json').read_text())\n"
+            "{key:summary[key] for key in ['stage21a_complete','promoted_to_stage21b','sample_cuts',"
+            "'sample_wells','excluded_discovery_wells','discovery_well_overlap','candidate_count',"
+            "'rank_correlation','top1_oracle_match_fraction','base_rmse','guarded_router_rmse',"
+            "'guarded_router_delta','raw_router_rmse','oracle_rmse','oracle_delta','well_p90_delta',"
+            "'bootstrap_95pct','gates','next_step']}\n"
+        ),
+        code(
+            "import pandas as pd\n"
+            "candidates=pd.read_parquet(run_dir/'candidate_report.parquet')\n"
+            "candidates.groupby('candidate').agg(cuts=('cut_id','nunique'),"
+            "inner_rmse=('inner_rmse','mean'),outer_rmse=('outer_rmse','mean'),"
+            "selected=('selected','sum')).sort_values('outer_rmse')"
+        ),
+        markdown(
+            "最後の辞書とcandidate表を共有してください。全gate通過時だけ、別wellかつ高PF解像度の"
+            "Stage 21Bへ進みます。このscreenから直接router modelやsubmissionを作りません。\n"
+        ),
+    ]
+    notebook={
+        "cells":cells,
+        "metadata":{
+            "accelerator":"CPU","colab":{"provenance":[]},
+            "kernelspec":{"display_name":"Python 3","language":"python","name":"python3"},
+            "language_info":{"name":"python"},
+            "stage21a":{"submission":False,"standalone_setup":True,"internal_cuts":2,
+                        "candidate_count":10,"discovery_well_exclusion":True},
+        },
+        "nbformat":4,"nbformat_minor":5,
+    }
+    OUTPUT.write_text(json.dumps(notebook,ensure_ascii=False,indent=1)+"\n",encoding="utf-8")
+
+
+if __name__=="__main__":
+    build()

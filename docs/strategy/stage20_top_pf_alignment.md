@@ -111,3 +111,24 @@ Colab CPU:
 Stage 20Bが全gateを通過した場合も直接提出しない。Stage 20Cで全remaining eligible cutsと、
 public OOFを安全にreplayできないshort-prefixに対する独立proxyを確認する。不合格なら
 6.589 base向け3係数trajectory residualを終了する。
+
+## Stage 20B実測と終了判断
+
+Stage 20Aの158 wellsを完全除外し、別139 wells・163 cuts・842,785 rowsで確認した。
+discovery well overlapはゼロだった。
+
+- base: `9.49547`
+- 固定weight 0.05: `9.46591`（`-0.02956`）
+- standard 5/5 folds、5/5 fractions改善
+- bootstrap 95%: `[-0.05161, +0.00350]`
+- well P90: `-0.1719`
+- spatial: `+0.00921`悪化
+- typewell: `+0.02826`悪化
+- branch-group: `-0.06319`改善
+
+minimum gain `0.03`、bootstrap、spatial、typewellで不合格。診断weight 0.10はstandard gainを
+増やすが、結果を見た後の選択であり、distribution robustnessも解決しない。
+
+Stage 19CのLB悪化、Stage 20A/Bの独立確認を合わせ、6.589 base向け3係数trajectory residualを
+終了する。Stage 20Cは実施しない。次はvisible-prefix内の実測backtestから候補pathを選ぶ
+Stage 21 candidate routingへ移る。
