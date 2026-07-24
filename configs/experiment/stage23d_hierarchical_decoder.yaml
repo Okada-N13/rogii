@@ -1,0 +1,31 @@
+experiment_name: stage23d_hierarchical_emission_decoder
+seed: 42
+
+provenance:
+  stage16b_manifest_sha256: af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c
+
+decoder_profiles:
+  - {name: h_c001_a1000_w075, classifier_c: 0.01, magnitude_alpha: 1000.0, move_threshold_ft: 3.0, magnitude_cap_ft: 16.0, move_power: 1.0, direction_power: 1.0, decoder_weight: 0.75}
+  - {name: h_c003_a1000_w075, classifier_c: 0.03, magnitude_alpha: 1000.0, move_threshold_ft: 3.0, magnitude_cap_ft: 16.0, move_power: 1.0, direction_power: 1.0, decoder_weight: 0.75}
+  - {name: h_c003_a10000_w100, classifier_c: 0.03, magnitude_alpha: 10000.0, move_threshold_ft: 3.0, magnitude_cap_ft: 16.0, move_power: 2.0, direction_power: 1.0, decoder_weight: 1.0}
+  - {name: h_c010_a1000_w050, classifier_c: 0.10, magnitude_alpha: 1000.0, move_threshold_ft: 3.0, magnitude_cap_ft: 16.0, move_power: 1.0, direction_power: 1.0, decoder_weight: 0.50}
+
+correction:
+  cap_ft: 12.0
+  ramp_rows: 64.0
+
+selection:
+  bootstrap_resamples: 2000
+  minimum_gain: 0.10
+  minimum_improved_folds: 4
+  maximum_worst_fold_delta: 0.05
+  require_p90_nonworse: true
+
+validation:
+  bootstrap_resamples: 3000
+  minimum_gain: 0.10
+  minimum_improved_folds: 4
+  minimum_improved_fractions: 3
+  minimum_spatial_folds: 4
+  minimum_typewell_folds: 4
+  minimum_branch_folds: 4

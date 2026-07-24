@@ -587,17 +587,22 @@ Stage 23Bはrankerとして成功した。外部validationでtop10 `30.70%→70.
 ただし固定posterior mean decoderはRMSE `-0.0889`、bootstrap上限`+0.0345`、
 P90 `+0.2636`でprimary gate不通過。TCNを棄却せずdecoderだけを修正する。
 
-現在のactive taskは **Stage 23C: nested OOF emission decoder** である。
+Stage 23Cは棄却した。training OOF最良の`summary_a1000`はRMSE `-0.1408`、P90
+`-1.2421`だったが、worst fold `+0.2387`、bootstrap上限`+0.1968`でeligible profileは
+0件だった。Stage 21Bへ補正を適用しなかったためvalidation deltaは`0.0`。TCN rankerは
+維持するが、連続offsetを直接回帰するdecoder familyは終了する。
 
-1. Colab T4/L4 GPUで`notebooks/590_run_stage23c_oof_decoder.ipynb`を実行する。
-2. Stage 23Bの5 checkpointsを再利用しTCNを再学習しない。
-3. Stage 21A training OOF logitsを各held-out modelから生成する。
-4. direct/affine/summary decoderをtraining OOF内でnested cross-fitする。
-5. gain、bootstrap、fold、P90を通るprofileだけを全training OOFでrefitする。
-6. profile固定後にStage 21B validationへ一度だけ適用する。
-7. validationの全gate通過時だけ別well確認へ進む。
+現在のactive taskは **Stage 23D: hierarchical emission decoder** である。
 
-Stage 23CからKaggle submissionを作らない。
+1. CPUで`notebooks/600_run_stage23d_hierarchical_decoder.ipynb`を実行する。
+2. Stage 23Cのtraining OOF/validation parquetを再利用し、NCC/TCNを再実行しない。
+3. offsetを移動有無、方向、絶対量へ分解して強く正則化する。
+4. 4 profileをStage 21A training OOF内だけでnested選択する。
+5. eligible profileだけをStage 21B design validationへ適用する。
+6. 通過しても提出せず、Stage 23Eの新しいdisjoint well確認へ進む。
+
+Stage 21BはStage 23B/Cで結果を観測済みなので、今後「 untouched validation」とは扱わない。
+Stage 23DからKaggle submissionを作らない。
 
 ## 15. 決定ログ
 
@@ -639,3 +644,4 @@ Stage 23CからKaggle submissionを作らない。
 - 2026-07-24: Stage 22Aは完全非重複wellでprimary `+0.18158`、最小weightも悪化、branch 0/5、P90 `+0.7580`。rowwise residual fieldを終了し、strong-base周囲のGR offset-state信号を先に監査するStage 23Aへ移行。
 - 2026-07-24: Stage 23Aはoracle `-6.3401`、top10はrandomの1.90倍、全standard/spatial/typewell/branch/fraction groupsでrank信号を確認。raw decoderは未改善のため採用せず、完全非重複validationのStage 23B learned emissionへ昇格。
 - 2026-07-24: Stage 23Bはrankerとしてtop10 `+0.3962`、top5 `+0.3138`、全group改善。ただしdirect posterior decoderは`-0.0889`、bootstrap/P90不合格。TCNを固定しtraining OOFだけでdecoderをnested校正するStage 23Cへ移行。
+- 2026-07-24: Stage 23Cはtraining OOF最良`-0.1408`だがworst fold `+0.2387`、bootstrap上限`+0.1968`で全profile不合格。連続decoderを棄却し、移動・方向・量を分けるCPU Stage 23Dへ移行。
