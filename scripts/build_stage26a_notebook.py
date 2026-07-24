@@ -33,7 +33,7 @@ def build() -> None:
         ),
         code("from google.colab import drive\ndrive.mount('/content/drive')\n"),
         code(
-            "from pathlib import Path\nimport json,os,shutil,subprocess\n"
+            "from pathlib import Path\nimport json,os,shutil,subprocess,sys\n"
             "REPOSITORY_URL='https://github.com/Okada-N13/rogii.git'\n"
             "repo_dir=Path('/content/ROGII'); drive_root=Path('/content/drive/MyDrive/kaggle/rogii')\n"
             "artifact_dir=drive_root/'artifacts'; data_dir=drive_root/'data'\n"
@@ -68,12 +68,14 @@ def build() -> None:
             "    assert resolved==expected and resolved.parent==artifact_dir.resolve(),resolved\n"
             "    print('Removing incomplete prior run:',resolved); shutil.rmtree(resolved)\n"
             "if not (run_dir/'summary.json').is_file():\n"
-            "    command=['uv','run','rogii-affine-path-state','--config',"
+            "    command=[sys.executable,'-m','rogii.cli.affine_path_state','--config',"
             "'configs/experiment/stage26a_affine_path_state.yaml','--stage16b-run',str(stage16b_run),"
             "'--stage17a-run',str(stage17a_run),'--public-oof-run',str(public_oof_run),"
             "'--stage24a-run',str(stage24a_run),'--validation-run',str(stage21b_run),"
             "'--data-dir',str(data_dir),'--artifact-dir',str(artifact_dir),'--run-id',RUN_ID]\n"
-            "    result=subprocess.run(command,cwd=repo_dir,text=True,capture_output=True)\n"
+            "    audit_env=os.environ.copy()\n"
+            "    audit_env['PYTHONPATH']=str(repo_dir/'src')+':'+audit_env.get('PYTHONPATH','')\n"
+            "    result=subprocess.run(command,cwd=repo_dir,env=audit_env,text=True,capture_output=True)\n"
             "    if result.stdout: print(result.stdout)\n"
             "    if result.stderr: print(result.stderr)\n"
             "    if result.returncode: raise RuntimeError(f'Stage 26A failed: {command}')\n"

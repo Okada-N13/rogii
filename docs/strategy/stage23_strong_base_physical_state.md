@@ -225,4 +225,8 @@ Stage 26A（CPU）:
 
 `notebooks/630_run_stage26a_affine_path_state.ipynb`
 
+初版Notebookは`uv run`を使ったため、torchを依存に持たないproject venvから共有特徴生成
+moduleをimportできず停止した。計算開始前の環境エラーである。修正版はColab標準Pythonの
+CPU torchを使い、repository `src`を`PYTHONPATH`へ追加して起動する。
+
 Kaggle submissionは生成しない。

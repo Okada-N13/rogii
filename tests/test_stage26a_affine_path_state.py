@@ -38,7 +38,8 @@ def test_stage26a_notebook_is_clean_and_cpu_only() -> None:
     path = ROOT / "notebooks" / "630_run_stage26a_affine_path_state.ipynb"
     payload = json.loads(path.read_text(encoding="utf-8"))
     text = "\n".join("".join(cell.get("source", [])) for cell in payload["cells"])
-    assert "rogii-affine-path-state" in text
+    assert "'-m','rogii.cli.affine_path_state'" in text
+    assert "PYTHONPATH" in text
     assert "stage26a_affine_path_state.yaml" in text
     assert payload["metadata"]["stage26a"]["submission"] is False
     assert payload["metadata"]["stage26a"]["training"] is False
