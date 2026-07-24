@@ -567,17 +567,22 @@ internal/outer rank correlation `0.2754`に対しtop-1 oracle一致率は`5.19%`
 2 internal cutsの最小scoreで候補を直接選ぶ規則は一般化しなかった。raw router
 `450.64`を生んだ多項式候補は今後使用しない。一方oracle `5.4550`の候補多様性は確認できた。
 
-現在のactive taskは **Stage 21B: disjoint prefix-confidence gate** である。
+Stage 21Bも棄却した。Stage 21Aと重複ゼロの62 cuts・58 wellsで、base `8.90381`に対し
+primaryは`+0.00945`、weight 0.05も`+0.00205`だった。bootstrap上限は正で、
+standard 3/5、spatial 3/6、typewell 1/5、branch 3/5。候補別楽観バイアス補正でも
+改善方向にならないため、Stage 21Cは実施せずvisible-prefix candidate routingを終了する。
 
-1. Colab CPUで`notebooks/550_run_stage21b_prefix_confidence.ipynb`を単独実行する。
-2. Stage 21Aの63 wellsは候補別inner→outer楽観バイアス校正だけに使う。
-3. Stage 20A/BとStage 21Aの全wellを除外した別sampleで評価する。
-4. 多項式を除いた7候補へrisk-adjusted penaltyを適用する。
-5. 2 internal cutsの両方でA130に勝ち、補正後margin `0.50`も満たす場合だけ代替を受理する。
-6. 固定weight `0.10`・cap `8 ft`・ramp `96 rows`でprimary gateを判定する。
-7. 全gate通過時だけ高解像度all-cut Stage 21Cへ進む。不通過ならprefix routerを終了する。
+現在のactive taskは **Stage 22A: disjoint candidate-disagreement residual field** である。
 
-Stage 21BからKaggle submissionを作らない。
+1. Colab CPUで`notebooks/560_run_stage22a_residual_field.ipynb`を単独実行する。
+2. Stage 21Aの63 wellsだけを学習、Stage 21Bの58 wellsだけを固定検証に使う。
+3. A130に対するA100/A160・selector・public OOFのrowwise差とtarget-free軌跡特徴を作る。
+4. HistGradientBoostingでclipped residual fieldを学習する。
+5. primary weight `0.25`・cap `8 ft`・ramp `96 rows`を結果を見る前に固定する。
+6. hidden-target invariance、bootstrap、全fold family、fraction、P90を判定する。
+7. 全gate通過時だけ別wellのStage 22Bへ進む。不通過なら物理alignment stateを再設計する。
+
+Stage 22AからKaggle submissionを作らない。
 
 ## 15. 決定ログ
 
@@ -615,3 +620,4 @@ Stage 21BからKaggle submissionを作らない。
 - 2026-07-24: Stage 20Aは194 cutsで固定weight 0.10が`-0.1199`、5/5 folds/fractions改善したがbootstrap上限`+0.00625`・P90悪化で不合格。診断weight 0.05を別wellだけで固定確認するStage 20Bへ移行。
 - 2026-07-24: Stage 20Bはdiscovery overlapゼロでstandard `-0.02956`だがbootstrap/spatial/typewell不合格。3係数残差を終了し、visible-prefix実測backtestで候補を選ぶStage 21Aへ移行。
 - 2026-07-24: Stage 21Aは`+0.6621`悪化、bootstrap下限も正、standard 1/5で棄却。oracle余地はあるがtop-1一致率`5.19%`。多項式を廃止し、候補別楽観バイアスを別wellへ転送するStage 21B disjoint confidence gateへ移行。
+- 2026-07-24: Stage 21Bは完全非重複wellでprimary `+0.00945`、weight 0.05も`+0.00205`、typewell 1/5。prefix routingを終了し、候補間rowwise disagreementから非線形residualを学ぶStage 22Aへ移行。

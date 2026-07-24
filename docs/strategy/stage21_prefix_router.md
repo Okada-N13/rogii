@@ -72,6 +72,19 @@ Stage 21Bもhidden-target invariance、bootstrap、standard/fraction/spatial/typ
 branch-group consistency、well P90をすべて通過した場合だけStage 21Cへ進む。不通過なら
 prefix candidate routing自体を終了する。
 
+## Stage 21B実測結果
+
+2026-07-24にStage 21Aとwell重複ゼロの62 cuts・58 wellsで完了したが棄却した。
+base `8.90381`に対しprimary weight 0.10は`8.91326`（`+0.00945`）だった。
+weight 0.05も`+0.00205`で、weightを下げても改善方向にならない。bootstrap 95%は
+`[-0.0585,+0.0782]`、standard 3/5、spatial 3/6、typewell 1/5、branch 3/5だった。
+候補別楽観バイアスを補正しても26/62 cutsで代替候補を受理し、安定改善しなかった。
+Stage 21Cは実施せず、visible-prefix candidate routingを終了する。
+
+次はStage 22Aで候補を選ばず、候補間の行ごとの不一致を特徴とする非線形residual fieldを
+Stage 21A wellsで学習し、Stage 21B wellsだけで固定評価する。これは3係数trajectory residualや
+候補routerとは異なるtarget/model familyである。
+
 ## 制約
 
 470のfold-safe learned branch modelは公開されていないため、well-isolated public OOFで代用する。
