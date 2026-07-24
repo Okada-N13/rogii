@@ -193,4 +193,36 @@ Stage 25A（T4/L4、TCN再学習なし）:
 
 `notebooks/620_run_stage25a_temporal_path_decoder.ipynb`
 
+## Stage 25A実測結果
+
+smooth posterior meanの最良はRMSE `-0.0110`、bootstrap上限`+0.0408`、standard 3/5、
+fraction 2/4、branch 2/5だった。posterior medianは`-0.0057`、Viterbi 3 profileは
+`+0.0395`から`+0.1118`悪化した。eligible profileは0件で、500-cut OOF再生成や
+予約120 wells確認へ進まない。
+
+Stage 23～25を通じ、GR rowwise offset stateには一貫したrank信号があるが、mean/median、
+階層decoder、時間平滑、Viterbiのどれでも安定したRMSE補正へ変換できなかった。rowwise
+offset state familyを終了する。
+
+## Stage 26A
+
+stateをcut全体のaffine trajectoryへ変更する。開始offsetと終了offsetをそれぞれ
+`-20..20 ft`、4 ft刻みの11値とし、合計121 pathsを作る。各pathはStage 24と同じraw GR
+cost volumeの連続offset列を通り、そのmedian costとcoverage penaltyでcut-level scoreを得る。
+
+62 design-validation cutsで次だけを監査する。
+
+- affine path oracle RMSE gain
+- oracle pathのraw score top5/top10 rank
+- valid path coverage
+- standard/spatial/typewell/branch/fraction groupでrandom top10を上回る一貫性
+
+raw argmin/soft decoderは診断値であり、Stage 26Bへのgateにはしない。全signal gateを通った
+場合だけ、500 training cutsでcut-level learned path rankerを学習する。Stage 26AはCPU、
+学習なし、予約120 wells未使用である。
+
+Stage 26A（CPU）:
+
+`notebooks/630_run_stage26a_affine_path_state.ipynb`
+
 Kaggle submissionは生成しない。
