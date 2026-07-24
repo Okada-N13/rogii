@@ -46,6 +46,32 @@ oracle candidate RMSE、raw router RMSE、top1 oracle一致率は診断であり
 全gate通過時だけ、別wellかつ高PF解像度のStage 21Bへ進む。Stage 21Aからlearned routerや
 Kaggle submissionを作らない。
 
+## Stage 21A実測結果
+
+2026-07-24に77 cuts・63 wellsで完了したが棄却した。base RMSE `9.1901`に対して
+guarded routerは`9.8522`（`+0.6621`）、bootstrap 95%は`[+0.1895,+1.7333]`、
+standard fold改善は1/5だった。internal/outer rank correlationは`0.2754`だが、
+top-1 oracle一致率は`5.19%`に留まった。raw router RMSE `450.64`は多項式候補の
+catastrophic extrapolationによる。oracle RMSE `5.4550`という候補多様性はあるが、
+2点のinternal scoreから直接候補を選ぶ規則には一般化能力がなかった。
+
+## Stage 21B disjoint confidence gate
+
+Stage 21Aの63 wellsは候補固有のinner→outer楽観バイアス校正にのみ使用する。Stage 20A/Bと
+Stage 21Aの全wellを除いた別sampleを評価するため、Stage 21A結果上での再最適化ではない。
+
+- degree 1/2/3の多項式候補をすべて除外する。
+- public OOF、selector A100/A130/A160、top-PF A100/A130/A160の7候補だけを使う。
+- Stage 21Aで候補別の`outer_rmse - inner_rmse`中央値とrobust MADを推定する。
+- 新sampleではrisk-adjusted scoreを使い、A130より補正後`0.50`以上良いことを要求する。
+- 2 internal cutsの両方でA130より良い場合だけ代替候補を受理する。
+- primary correctionはweight `0.10`、cap `8 ft`、ramp `96 rows`に固定する。
+- diagnostic weight `0.05/0.10/0.15/0.20`は報告するがprimary gateを後付け変更しない。
+
+Stage 21Bもhidden-target invariance、bootstrap、standard/fraction/spatial/typewell/
+branch-group consistency、well P90をすべて通過した場合だけStage 21Cへ進む。不通過なら
+prefix candidate routing自体を終了する。
+
 ## 制約
 
 470のfold-safe learned branch modelは公開されていないため、well-isolated public OOFで代用する。
@@ -57,6 +83,10 @@ Kaggle submissionを作らない。
 Colab CPU:
 
 `notebooks/540_run_stage21a_prefix_router.ipynb`
+
+Stage 21B:
+
+`notebooks/550_run_stage21b_prefix_confidence.ipynb`
 
 必要artifact:
 
