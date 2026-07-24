@@ -1,8 +1,8 @@
-experiment_name: stage28a_expanded_strong_base_residual_field
-stage_name: stage28a
-promotion_key: promoted_to_stage28b_reserved_confirmation
-promoted_next_step: Run exactly one Stage 28B audit on the frozen 120 confirmation wells.
-rejected_next_step: Reject expanded rowwise residual learning and keep the confirmation reserve sealed.
+experiment_name: stage29a_multicut_strong_base_residual_field
+stage_name: stage29a
+promotion_key: promoted_to_stage29b_reserved_confirmation
+promoted_next_step: Run exactly one Stage 29B audit on the frozen 120 confirmation wells.
+rejected_next_step: Reject multi-cut rowwise residual learning and keep the confirmation reserve sealed.
 seed: 42
 
 provenance:
@@ -30,7 +30,7 @@ features:
 
 model:
   base_candidate: top_pf_a130
-  training_stride: 8
+  training_stride: 32
   target_smoothing_rows: 101
   target_cap_ft: 24.0
   learning_rate: 0.04
@@ -48,3 +48,4 @@ correction:
 validation:
   bootstrap_resamples: 4000
   minimum_gain: 0.10
+

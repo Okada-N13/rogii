@@ -37,3 +37,14 @@ P90非悪化、standard/typewell/branch 4 groups、spatial 4 groups、fraction 3
 
 全gate通過時のみ、事前固定した同一profileを予約120 wellsへ一度だけ適用する。
 
+## 実測結果
+
+500 cuts・500 wells・297,725 sampled rowsで完了した。固定weight 0.20は
+`8.9038 -> 8.8342`（`-0.0696`）、standard `4/5`、branch `4/5`だった。
+しかしbootstrap 95%上限`+0.0299`、cut P90 `+0.0728`、spatial/typewell各`3 groups`、
+fraction gate不合格で昇格しなかった。予約120 wellsは未使用。
+
+Stage 22より明確に改善したため残差信号自体は残すが、weightの事後変更は行わない。
+Stage 29Aでは同じ500 wellsの全安全short-prefix cutsへ学習を拡張し、fraction不安定性だけを
+検証する。
+

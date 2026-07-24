@@ -304,9 +304,13 @@ def main(argv: list[str] | None = None) -> None:
     }
     promoted = bool(all(gates.values()))
     report.to_parquet(output / "expanded_residual_cut_report.parquet", index=False)
+    stage_name = str(config.get("stage_name", "stage28a"))
+    promotion_key = str(
+        config.get("promotion_key", "promoted_to_stage28b_reserved_confirmation")
+    )
     summary = {
-        "stage28a_complete": True,
-        "promoted_to_stage28b_reserved_confirmation": promoted,
+        f"{stage_name}_complete": True,
+        promotion_key: promoted,
         "stage16b_manifest_sha256": expected_hash,
         "training_cuts": len(training), "training_wells": len(training_wells),
         "validation_cuts": len(validation), "validation_wells": len(validation_wells),
@@ -318,9 +322,9 @@ def main(argv: list[str] | None = None) -> None:
         "family_reports": family_reports, "weight_report": weight_report,
         "gates": gates, "reserved_confirmation_used": False,
         "next_step": (
-            "Run exactly one Stage 28B audit on the frozen 120 confirmation wells."
-            if promoted else
-            "Reject expanded rowwise residual learning and keep the confirmation reserve sealed."
+            str(config.get("promoted_next_step", "Run exactly one reserved confirmation audit."))
+            if promoted
+            else str(config.get("rejected_next_step", "Reject this residual experiment and keep the confirmation reserve sealed."))
         ),
     }
     write_json(output / "summary.json", summary)
@@ -337,4 +341,3 @@ def main(argv: list[str] | None = None) -> None:
 
 if __name__ == "__main__":
     main()
-
