@@ -48,9 +48,21 @@ def residual_features(
     if len(base) != expected:
         raise ValueError("base prediction length mismatch")
     md = suffix["MD"].to_numpy(float)
-    gr = suffix["GR"].to_numpy(float)
     z = suffix["Z"].to_numpy(float)
-    prefix_gr = prefix["GR"].to_numpy(float)
+    # Every competition well contains GR gaps. Interpolate the observed input
+    # curve across the full well (which is available at inference), then use a
+    # finite observed-value fallback. This never reads TVT at/after the cut.
+    gr_series = pd.to_numeric(horizontal["GR"], errors="coerce")
+    observed_gr = gr_series.to_numpy(float)
+    finite_gr = observed_gr[np.isfinite(observed_gr)]
+    gr_fallback = float(np.median(finite_gr)) if len(finite_gr) else 0.0
+    filled_gr = (
+        gr_series.interpolate(method="linear", limit_direction="both")
+        .fillna(gr_fallback)
+        .to_numpy(float)
+    )
+    prefix_gr = filled_gr[:cut_index]
+    gr = filled_gr[cut_index:]
     prefix_u = prefix["TVT"].to_numpy(float) + prefix["Z"].to_numpy(float)
     prefix_md = prefix["MD"].to_numpy(float)
     origin = float(md[0])
@@ -104,7 +116,8 @@ def residual_features(
     names.extend(["delta_mean_10ft", "delta_std_10ft", "delta_absmax_10ft"])
     matrix = np.column_stack(values).astype(np.float32)
     if not np.isfinite(matrix).all():
-        raise RuntimeError("Residual feature matrix contains non-finite values")
+        bad_columns = [names[index] for index in np.flatnonzero(~np.isfinite(matrix).all(axis=0))]
+        raise RuntimeError(f"Residual feature matrix contains non-finite values: {bad_columns}")
     return matrix, names
 
 

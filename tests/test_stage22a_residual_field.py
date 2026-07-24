@@ -26,6 +26,8 @@ def _horizontal(rows: int = 100) -> pd.DataFrame:
 
 def test_residual_features_are_hidden_target_invariant() -> None:
     horizontal = _horizontal()
+    horizontal.loc[5:15, "GR"] = np.nan
+    horizontal.loc[55:70, "GR"] = np.nan
     cut = 40
     suffix = len(horizontal) - cut
     base = np.linspace(5016.0, 5040.0, suffix)
@@ -43,6 +45,7 @@ def test_residual_features_are_hidden_target_invariant() -> None:
     np.testing.assert_array_equal(first, second)
     assert names == changed_names
     assert first.shape == (suffix, len(names))
+    assert np.isfinite(first).all()
 
 
 def test_correction_is_ramped_capped_and_finite() -> None:
