@@ -1,0 +1,13 @@
+experiment_name: stage32a_tcn_uncertainty_profile_lock
+seed: 42
+
+profiles:
+  - confidence_w030_p100
+  - confidence_w030_p050
+  - confidence_w030_p200
+  - agreement_w030_a060
+
+gates:
+  bootstrap_resamples: 4000
+  minimum_gain: 0.10
+
