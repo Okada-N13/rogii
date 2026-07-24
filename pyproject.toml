@@ -68,6 +68,7 @@ rogii-emission-hierarchical-decoder = "rogii.cli.emission_hierarchical_decoder:m
 rogii-scaled-emission-manifest = "rogii.cli.scaled_emission_manifest:main"
 rogii-emission-path-decoder = "rogii.cli.emission_path_decoder:main"
 rogii-affine-path-state = "rogii.cli.affine_path_state:main"
+rogii-spatial-surface-state = "rogii.cli.spatial_surface_state:main"
 
 [build-system]
 requires = ["hatchling"]

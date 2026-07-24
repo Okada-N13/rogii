@@ -1,0 +1,43 @@
+experiment_name: stage27a_spatial_surface_state_audit
+seed: 42
+bootstrap_resamples: 4000
+
+provenance:
+  stage16b_manifest_sha256: af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c
+
+candidates:
+  gr_sigma_multipliers: [1.3]
+  polynomial_degrees: []
+  selector:
+    particles: 64
+    seeds: 4
+    seed_base: 0
+    maximum_tracking_steps: 384
+    typewell_grid_step: 0.2
+  top_pf_proxy:
+    ridge_weight: 0.30
+    selector_weight: 0.70
+    projection_degree: 3
+    projection_blend_weight: 0.75
+    final_sp45_weight: 0.60
+
+base_candidate: top_pf_a130
+plane_profiles:
+  - {name: xy_w0600, window_ft: 600.0, ridge: 0.05}
+  - {name: xy_w1200, window_ft: 1200.0, ridge: 0.05}
+  - {name: xy_w2400, window_ft: 2400.0, ridge: 0.05}
+
+primary_profile: xy1200_w010_cap8
+blend_profiles:
+  - {name: xy1200_w010_cap8, plane: xy_w1200, weight: 0.10, cap_ft: 8.0, ramp_rows: 96}
+  - {name: xy0600_w005_cap4, plane: xy_w0600, weight: 0.05, cap_ft: 4.0, ramp_rows: 96}
+  - {name: xy0600_w010_cap8, plane: xy_w0600, weight: 0.10, cap_ft: 8.0, ramp_rows: 96}
+  - {name: xy1200_w005_cap4, plane: xy_w1200, weight: 0.05, cap_ft: 4.0, ramp_rows: 96}
+  - {name: xy1200_w020_cap12, plane: xy_w1200, weight: 0.20, cap_ft: 12.0, ramp_rows: 96}
+  - {name: xy2400_w010_cap8, plane: xy_w2400, weight: 0.10, cap_ft: 8.0, ramp_rows: 96}
+
+gates:
+  minimum_end_change_correlation: 0.15
+  minimum_oracle_gain: 0.10
+  minimum_primary_gain: 0.03
+
