@@ -50,7 +50,8 @@ def build() -> None:
         ),
         markdown(
             "## 固定split manifest\n\n"
-            "foldごと100 training wellsと24 reserved confirmation wellsをhashで固定します。"
+            "foldごと24 reserved confirmation wellsをhashで固定し、trainingは合計500 wellsになるよう"
+            "eligible wellsのfold間差を決定論的に再配分します。"
             "3集合のwell overlapが0であることを確認します。\n"
         ),
         code(
@@ -63,14 +64,18 @@ def build() -> None:
             "public_oof_run/'base_oof.parquet',stage21b_run/'confidence_cut_report.parquet',"
             "stage23a_run/'summary.json']\n"
             "for path in required: assert path.is_file(),path\n"
-            "MANIFEST_ID='stage24a_scaled_emission_manifest_v002'; manifest_dir=artifact_dir/MANIFEST_ID\n"
+            "MANIFEST_ID='stage24a_scaled_emission_manifest_v003'; manifest_dir=artifact_dir/MANIFEST_ID\n"
             "if manifest_dir.exists() and not (manifest_dir/'summary.json').is_file():\n"
             "    resolved=manifest_dir.resolve(); expected=(artifact_dir/MANIFEST_ID).resolve()\n"
             "    assert resolved==expected and resolved.parent==artifact_dir.resolve(); shutil.rmtree(resolved)\n"
             "if not (manifest_dir/'summary.json').is_file():\n"
-            "    subprocess.run(['uv','run','rogii-scaled-emission-manifest',"
+            "    manifest_command=['uv','run','rogii-scaled-emission-manifest',"
             "'--stage17a-run',str(stage17a_run),'--design-validation-run',str(stage21b_run),"
-            "'--artifact-dir',str(artifact_dir),'--run-id',MANIFEST_ID],cwd=repo_dir,check=True)\n"
+            "'--artifact-dir',str(artifact_dir),'--run-id',MANIFEST_ID]\n"
+            "    result=subprocess.run(manifest_command,cwd=repo_dir,text=True,capture_output=True)\n"
+            "    if result.stdout: print(result.stdout)\n"
+            "    if result.stderr: print(result.stderr)\n"
+            "    if result.returncode: raise RuntimeError(f'Manifest failed: {manifest_command}')\n"
             "manifest=json.loads((manifest_dir/'summary.json').read_text())\n"
             "assert manifest['public_replay_eligible_only'] is True,manifest\n"
             "assert manifest['training_wells']==500 and manifest['confirmation_wells']==120,manifest\n"

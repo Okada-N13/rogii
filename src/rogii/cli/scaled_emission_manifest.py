@@ -27,6 +27,44 @@ def _stable_order(well_id: str, seed: int) -> str:
     return hashlib.sha256(f"{seed}:{well_id}".encode()).hexdigest()
 
 
+def _allocate_training_quotas(
+    availability: dict[int, int],
+    training_per_fold: int,
+    confirmation_per_fold: int,
+) -> dict[int, int]:
+    target = int(training_per_fold) * len(availability)
+    capacity = {
+        fold: max(0, int(count) - int(confirmation_per_fold))
+        for fold, count in availability.items()
+    }
+    if any(count < int(confirmation_per_fold) for count in availability.values()):
+        raise RuntimeError(
+            f"Not enough wells for confirmation reserve: availability={availability}"
+        )
+    if sum(capacity.values()) < target:
+        raise RuntimeError(
+            f"Not enough replay-eligible wells for {target} training plus "
+            f"{confirmation_per_fold} confirmation per fold: availability={availability}"
+        )
+    quota = {
+        fold: min(int(training_per_fold), capacity[fold])
+        for fold in sorted(capacity)
+    }
+    remaining = target - sum(quota.values())
+    while remaining:
+        progressed = False
+        for fold in sorted(capacity):
+            if quota[fold] < capacity[fold]:
+                quota[fold] += 1
+                remaining -= 1
+                progressed = True
+                if remaining == 0:
+                    break
+        if not progressed:
+            raise RuntimeError("Training quota allocation stalled")
+    return quota
+
+
 def main(argv: list[str] | None = None) -> None:
     args = build_parser().parse_args(argv)
     stage17 = args.stage17a_run.resolve()
@@ -64,18 +102,31 @@ def main(argv: list[str] | None = None) -> None:
         lambda value: _stable_order(value, int(args.seed))
     )
 
+    groups = {
+        int(fold): group.sort_values(["_stable_order", "well_id"])
+        for fold, group in one_per_well.groupby("stage16_fold", sort=True)
+    }
+    availability = {fold: len(group) for fold, group in groups.items()}
+    training_quota = _allocate_training_quotas(
+        availability,
+        int(args.training_wells_per_fold),
+        int(args.confirmation_wells_per_fold),
+    )
+    print(
+        {"replay_eligible_wells_by_fold": availability, "training_quota": training_quota},
+        flush=True,
+    )
     training_parts = []
     confirmation_parts = []
     fold_report = []
-    for fold, group in one_per_well.groupby("stage16_fold", sort=True):
-        ordered = group.sort_values(["_stable_order", "well_id"])
-        training = ordered.head(int(args.training_wells_per_fold))
-        confirmation = ordered.iloc[
-            int(args.training_wells_per_fold) :
-            int(args.training_wells_per_fold) + int(args.confirmation_wells_per_fold)
+    for fold, ordered in groups.items():
+        confirmation = ordered.head(int(args.confirmation_wells_per_fold))
+        training = ordered.iloc[
+            int(args.confirmation_wells_per_fold) :
+            int(args.confirmation_wells_per_fold) + training_quota[fold]
         ]
-        if len(training) != int(args.training_wells_per_fold):
-            raise RuntimeError(f"Fold {fold} has only {len(training)} training wells")
+        if len(training) != training_quota[fold]:
+            raise RuntimeError(f"Fold {fold} has only {len(training)} allocated training wells")
         if len(confirmation) != int(args.confirmation_wells_per_fold):
             raise RuntimeError(f"Fold {fold} has only {len(confirmation)} confirmation wells")
         training_parts.append(training)
@@ -83,6 +134,7 @@ def main(argv: list[str] | None = None) -> None:
         fold_report.append(
             {
                 "fold": int(fold),
+                "available_replay_eligible_wells": int(availability[fold]),
                 "training_wells": int(training["well_id"].nunique()),
                 "confirmation_wells": int(confirmation["well_id"].nunique()),
             }
@@ -114,6 +166,10 @@ def main(argv: list[str] | None = None) -> None:
         "design_validation_cuts": len(validation),
         "design_validation_wells": len(validation_wells),
         "fold_report": fold_report,
+        "training_quota_reallocated": any(
+            value != int(args.training_wells_per_fold)
+            for value in training_quota.values()
+        ),
         "overlaps": overlaps,
         "target_fraction": float(args.target_fraction),
         "next_step": "Train soft-ordinal expected-offset TCN on training_cut_ids only.",

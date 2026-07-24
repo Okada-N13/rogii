@@ -614,6 +614,10 @@ Stage 24A初回実行は学習開始前にprediction length mismatchで停止し
 public OOF連続suffix・開始位置・長さをloaderでも二重監査する。失敗runからモデル結果は
 生成されておらず、実験選択への影響はない。
 
+v002 manifestは詳細stderrがNotebookに表示されないまま停止した。v003では一律fold quotaを
+廃止し、24 confirmation wells/foldを固定したままtraining総数500をfold余剰へwater-fill
+再配分する。以後manifest失敗時はstdout/stderrをNotebookへ必ず表示する。
+
 ## 15. 決定ログ
 
 - 2026-07-22: V599 A130 branch-conservative sanitized frontierの実測`6.685`をbest controlに決定。

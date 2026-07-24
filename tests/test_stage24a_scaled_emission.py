@@ -72,6 +72,19 @@ def test_scaled_manifest_reserves_disjoint_wells(tmp_path: Path) -> None:
     assert all(not values for values in summary["overlaps"].values())
 
 
+def test_training_quota_reallocates_fold_shortage() -> None:
+    from rogii.cli.scaled_emission_manifest import _allocate_training_quotas
+
+    quota = _allocate_training_quotas(
+        {0: 110, 1: 130, 2: 130, 3: 130, 4: 130},
+        training_per_fold=100,
+        confirmation_per_fold=24,
+    )
+    assert sum(quota.values()) == 500
+    assert quota[0] == 86
+    assert all(quota[fold] <= 106 for fold in range(1, 5))
+
+
 def test_soft_ordinal_loss_prefers_nearby_state() -> None:
     torch = pytest.importorskip("torch")
     from rogii.models.emission_tcn import _loss
@@ -97,7 +110,7 @@ def test_stage24a_notebook_is_clean_and_uses_reserved_split() -> None:
     text = "\n".join("".join(cell.get("source", [])) for cell in payload["cells"])
     assert "rogii-scaled-emission-manifest" in text
     assert "stage24a_scaled_ordinal_emission.yaml" in text
-    assert "stage24a_scaled_emission_manifest_v002" in text
+    assert "stage24a_scaled_emission_manifest_v003" in text
     assert "training_cut_ids.parquet" in text
     assert payload["metadata"]["stage24a"]["submission"] is False
     assert payload["metadata"]["stage24a"]["reserved_confirmation_wells"] == 120
