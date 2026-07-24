@@ -61,11 +61,11 @@ def test_stage28a_notebook_is_clean_and_reserve_safe() -> None:
     text = "\n".join("".join(cell.get("source", [])) for cell in payload["cells"])
     assert "rogii-expanded-residual-field" in text
     assert "stage28a_expanded_residual_field.yaml" in text
-    assert "stage24a_scaled_emission_manifest_v003" in text
+    assert "stage28a_split_manifest_v001" in text
+    assert "rogii-scaled-emission-manifest" in text
     assert payload["metadata"]["stage28a"]["reserved_confirmation_used"] is False
     assert payload["metadata"]["stage28a"]["submission"] is False
     for cell in payload["cells"]:
         if cell.get("cell_type") == "code":
             assert cell["execution_count"] is None and cell["outputs"] == []
             compile("".join(cell.get("source", [])), str(path), "exec")
-
