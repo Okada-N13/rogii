@@ -552,16 +552,19 @@ Stage 19Bは全gateを通過した。3,865 cuts、773 wells、66特徴、15 HGB 
 Stage 19CはKaggle interactive監査を正常通過したが、Public LBは`6.958`で6.589 controlから
 `+0.369`悪化した。Stage 19Cを棄却し、weightだけを下げた再提出は行わない。
 
-現在のactive taskは **Stage 20A: top-PF-aligned target-safe residual screen** である。
+Stage 20Aはprimary gate不通過だった。固定weight 0.10は`9.9810 → 9.8611`で5/5 folds、
+5/5 fractionsを改善したが、bootstrap上限`+0.00625`、well P90`+0.1006`で不合格。
+weight 0.50は2/5 foldsしか改善せず、Stage 19CのLB悪化と整合した。
 
-1. Colab CPUで`notebooks/520_run_stage20a_top_pf_alignment.ipynb`を単独実行する。
-2. well-isolated public OOFとA130 PFから固定200-cut top-PF proxyを作る。
-3. weight 0.10、cap 8 ftの弱い3係数補正を4 fold familyでcross-fitする。
-4. 最後の辞書とweight表を共有する。
-5. 全gate通過時だけ全eligible/short-prefixのStage 20Bへ進む。
+現在のactive taskは **Stage 20B: disjoint-well confirmation** である。
 
-完全な470 OOFではない。公開learned packageのfold modelが存在しないため、public OOFで代用している。
-この制約を隠さず、Stage 20Aから直接提出しない。
+1. Colab CPUで`notebooks/530_run_stage20b_disjoint_confirmation.ipynb`を単独実行する。
+2. Stage 20Aの158 wellsをwell単位で完全除外する。
+3. 別well sampleでweight 0.05、cap 8 ftを固定cross-fitする。
+4. overlap zero、bootstrap、fold、P90、4 family gateを確認する。
+5. 全gate通過時だけStage 20C全remaining eligible + short-prefixへ進む。
+
+Stage 20Bから直接Kaggleへ提出しない。診断表を見て別weightへ変更して同じsampleを再利用しない。
 
 ## 15. 決定ログ
 
@@ -596,3 +599,4 @@ Stage 19CはKaggle interactive監査を正常通過したが、Public LBは`6.95
 - 2026-07-23: Stage 19B全gate通過。66特徴parity差`0.0`、hidden 200 wells推定158.32秒。active taskをStage 19C portable inferenceへ更新。
 - 2026-07-23: Stage 19Cを実装。HGBをNumPy NPZへlossless変換し、実test `TVT_input`だけのstandalone特徴生成、Colab package Notebook、470統合Kaggle Notebookを追加。
 - 2026-07-24: Stage 19C実測`6.958`。6.589から`+0.369`悪化のため棄却。代理base alignment仮説を棄却し、A130/SP45/projection/final blendを含むStage 20A固定200-cut screenへ移行。
+- 2026-07-24: Stage 20Aは194 cutsで固定weight 0.10が`-0.1199`、5/5 folds/fractions改善したがbootstrap上限`+0.00625`・P90悪化で不合格。診断weight 0.05を別wellだけで固定確認するStage 20Bへ移行。

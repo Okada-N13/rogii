@@ -43,17 +43,29 @@ def test_top_pf_proxy_ignores_hidden_target_and_is_finite() -> None:
 
 
 def test_stage20a_notebook_is_clean_standalone_and_compiles() -> None:
-    path = ROOT / "notebooks" / "520_run_stage20a_top_pf_alignment.ipynb"
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    text = "\n".join("".join(cell.get("source", [])) for cell in payload["cells"])
-    assert "rogii-trajectory-base-alignment" in text
-    assert "stage17_public_replay_full_v002" in text
-    assert payload["metadata"]["stage20a"]["submission"] is False
-    assert payload["metadata"]["stage20a"]["a130_gr_sigma_multiplier"] == 1.3
-    for cell in payload["cells"]:
-        if cell.get("cell_type") == "code":
-            assert cell["execution_count"] is None and cell["outputs"] == []
-            compile("".join(cell.get("source", [])), str(path), "exec")
+    for name in [
+        "520_run_stage20a_top_pf_alignment.ipynb",
+        "530_run_stage20b_disjoint_confirmation.ipynb",
+    ]:
+        path = ROOT / "notebooks" / name
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        text = "\n".join("".join(cell.get("source", [])) for cell in payload["cells"])
+        assert "rogii-trajectory-base-alignment" in text
+        assert "stage17_public_replay_full_v002" in text
+        for cell in payload["cells"]:
+            if cell.get("cell_type") == "code":
+                assert cell["execution_count"] is None and cell["outputs"] == []
+                compile("".join(cell.get("source", [])), str(path), "exec")
+    stage20a = json.loads(
+        (ROOT/"notebooks"/"520_run_stage20a_top_pf_alignment.ipynb").read_text(encoding="utf-8")
+    )
+    stage20b = json.loads(
+        (ROOT/"notebooks"/"530_run_stage20b_disjoint_confirmation.ipynb").read_text(encoding="utf-8")
+    )
+    assert stage20a["metadata"]["stage20a"]["submission"] is False
+    assert stage20a["metadata"]["stage20a"]["a130_gr_sigma_multiplier"] == 1.3
+    assert stage20b["metadata"]["stage20b"]["discovery_well_exclusion"] is True
+    assert stage20b["metadata"]["stage20b"]["fixed_weight"] == .05
 
 
 def test_stage20a_cli_writes_alignment_artifacts(tmp_path: Path) -> None:
@@ -126,3 +138,27 @@ def test_stage20a_cli_writes_alignment_artifacts(tmp_path: Path) -> None:
     for name in ["base_comparison.parquet","top_pf_proxy_predictions.parquet",
                  "cut_features.parquet","weight_report.parquet","standard_cut_metrics.parquet"]:
         assert (run/name).is_file(),name
+
+    exclusion = artifacts/"discovery"
+    exclusion.mkdir()
+    pd.DataFrame({"well_id":[f"w{i:07d}" for i in range(5)]}).to_parquet(
+        exclusion/"cut_features.parquet",index=False
+    )
+    confirmation_config = {
+        **config, "stage_name":"stage20b", "promotion_key":"promoted_to_stage20c",
+        "sample":{"cuts_per_stratum":2}, "profile":{"weight":.05,"cap_ft":8,"ramp_rows":20},
+    }
+    confirmation_path=tmp_path/"stage20b.yaml"
+    confirmation_path.write_text(yaml.safe_dump(confirmation_config),encoding="utf-8")
+    main([
+        "--config",str(confirmation_path),"--stage16b-run",str(stage16),
+        "--stage17a-run",str(stage17),"--exclude-run",str(exclusion),
+        "--data-dir",str(data),"--artifact-dir",str(artifacts),"--run-id","stage20b-test",
+    ])
+    confirmation=json.loads((artifacts/"stage20b-test"/"summary.json").read_text(encoding="utf-8"))
+    assert confirmation["stage20b_complete"] is True
+    assert confirmation["excluded_discovery_wells"] == 5
+    assert confirmation["discovery_well_overlap"] == []
+    assert confirmation["gates"]["discovery_well_overlap_zero"] is True
+    selected_wells=set(pd.read_parquet(artifacts/"stage20b-test"/"cut_features.parquet").well_id)
+    assert selected_wells.isdisjoint({f"w{i:07d}" for i in range(5)})

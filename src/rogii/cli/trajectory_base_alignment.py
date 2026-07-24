@@ -37,6 +37,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--artifact-dir", type=Path, required=True)
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--limit-cuts", type=int)
+    parser.add_argument(
+        "--exclude-run", type=Path,
+        help="Optional prior alignment run; every well in its cut_features.parquet is excluded",
+    )
     return parser
 
 
@@ -120,12 +124,28 @@ def main(argv: list[str] | None = None) -> None:
 
     cuts = pd.read_parquet(stage17a / "cut_report.parquet")
     eligible = cuts[(cuts["evaluation_role"] == "primary") & cuts["replay_eligible"]].copy()
+    excluded_wells: set[str] = set()
+    if args.exclude_run is not None:
+        exclusion_path = args.exclude_run.resolve() / "cut_features.parquet"
+        if not exclusion_path.is_file():
+            raise FileNotFoundError(exclusion_path)
+        excluded_wells = set(
+            pd.read_parquet(exclusion_path, columns=["well_id"])["well_id"].astype(str)
+        )
+        eligible = eligible[~eligible["well_id"].astype(str).isin(excluded_wells)].copy()
+        if eligible.empty:
+            raise AssertionError("Discovery-well exclusion removed every eligible cut")
     selected = stable_stratified_sample(
         eligible, int(config.get("sample", {}).get("cuts_per_stratum", 8))
     )
     if args.limit_cuts is not None:
         selected = selected.head(int(args.limit_cuts)).copy()
     selected = selected.sort_values(["well_id", "cut_index"], kind="stable").reset_index(drop=True)
+    selected_well_overlap = sorted(
+        set(selected["well_id"].astype(str)).intersection(excluded_wells)
+    )
+    if selected_well_overlap:
+        raise AssertionError(f"Discovery well leakage: {selected_well_overlap[:5]}")
     cut_ids = selected["cut_id"].astype(str).tolist()
     public = pd.read_parquet(
         stage17a / "replay_predictions.parquet",
@@ -252,10 +272,17 @@ def main(argv: list[str] | None = None) -> None:
         "branch_group_gain": family_reports["branch_group_fold"]["rmse_delta"] < 0,
         "well_p90_nonworse": standard["well_rmse_p90_delta"] <= 0,
     }
+    if args.exclude_run is not None:
+        gates["discovery_well_overlap_zero"] = len(selected_well_overlap) == 0
+    promoted = bool(all(gates.values()))
+    stage_name = str(config.get("stage_name", "stage20a"))
+    promotion_key = str(config.get("promotion_key", "promoted_to_stage20b"))
     summary = {
-        "stage20a_complete": True, "promoted_to_stage20b": bool(all(gates.values())),
+        f"{stage_name}_complete": True, promotion_key: promoted,
         "stage16b_manifest_sha256": expected_hash, "sample_cuts": len(records),
         "sample_wells": int(records["well_id"].nunique()), "feature_count": len(features),
+        "excluded_discovery_wells": len(excluded_wells),
+        "discovery_well_overlap": selected_well_overlap,
         "feature_columns": features, "feature_schema_hash": feature_schema_hash(features),
         "top_pf_proxy_limitations": [
             "public OOF substitutes for the unavailable fold-safe learned 470 branch",
@@ -269,9 +296,15 @@ def main(argv: list[str] | None = None) -> None:
         "profile": profile, "standard_report": standard, "family_reports": family_reports,
         "bootstrap_95pct": bootstrap, "gates": gates,
         "next_step": (
-            "Run the aligned residual on all eligible cuts and a separate short-prefix proxy."
-            if all(gates.values()) else
-            "Do not submit another trajectory residual; redesign the base-aligned target or model."
+            str(config.get(
+                "next_step_if_promoted",
+                "Run the aligned residual on all eligible cuts and a separate short-prefix proxy.",
+            ))
+            if promoted else
+            str(config.get(
+                "next_step_if_rejected",
+                "Do not submit another trajectory residual; redesign the base-aligned target or model.",
+            ))
         ),
     }
     records.to_parquet(output / "cut_features.parquet", index=False)
@@ -280,11 +313,14 @@ def main(argv: list[str] | None = None) -> None:
     config["resolved"] = {
         "stage16b_run": str(stage16), "stage17a_run": str(stage17a),
         "data_dir": str(args.data_dir.resolve()), "run_id": args.run_id,
+        "exclude_run": str(args.exclude_run.resolve()) if args.exclude_run is not None else None,
     }
     write_yaml(output / "config.yaml", config)
     print({
-        "stage20a_complete": True, "promoted_to_stage20b": summary["promoted_to_stage20b"],
+        f"{stage_name}_complete": True, promotion_key: summary[promotion_key],
         "sample_cuts": summary["sample_cuts"], "sample_wells": summary["sample_wells"],
+        "excluded_discovery_wells": summary["excluded_discovery_wells"],
+        "discovery_well_overlap": summary["discovery_well_overlap"],
         "base_comparison": summary["base_comparison"],
         "standard_base_rmse": standard["base_rmse"],
         "standard_candidate_rmse": standard["candidate_rmse"],

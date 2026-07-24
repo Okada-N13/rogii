@@ -1,0 +1,64 @@
+experiment_name: stage20b_disjoint_well_confirmation
+stage_name: stage20b
+promotion_key: promoted_to_stage20c
+seed: 42
+
+provenance:
+  stage16b_manifest_sha256: af748e7092b8a605a756f478ebad80a95286631d8214a32d48f6af59b82b579c
+
+sample:
+  cuts_per_stratum: 8
+
+selector:
+  particles: 128
+  seeds: 12
+  seed_base: 0
+  maximum_tracking_steps: 768
+  typewell_grid_step: 0.2
+  gr_sigma_multiplier: 1.30
+
+top_pf_proxy:
+  ridge_weight: 0.30
+  selector_weight: 0.70
+  projection_degree: 3
+  projection_blend_weight: 0.75
+  final_sp45_weight: 0.60
+
+features:
+  prefix_window_ft: 800.0
+  typewell_shift_grid_ft: [-40, -30, -20, -10, 0, 10, 20, 30, 40]
+
+target:
+  ramp_rows: 96.0
+  ridge: 1.0
+
+model:
+  learning_rate: 0.04
+  max_iter: 160
+  max_leaf_nodes: 11
+  max_depth: 3
+  min_samples_leaf: 12
+  l2_regularization: 6.0
+
+# Frozen from the Stage 20A diagnostic before looking at this disjoint-well set.
+profile:
+  weight: 0.05
+  cap_ft: 8.0
+  ramp_rows: 96.0
+
+# Diagnostic only. Promotion is always decided by the fixed profile above.
+diagnostics:
+  weights: [0.025, 0.05, 0.075, 0.10]
+
+validation:
+  n_typewell_folds: 5
+  bootstrap_resamples: 3000
+  minimum_standard_gain: 0.03
+  minimum_improved_fold_fraction: 0.80
+
+next_step_if_promoted: >-
+  Run Stage 20C on all remaining eligible cuts and an independently defined
+  short-prefix proxy; do not submit from Stage 20B.
+next_step_if_rejected: >-
+  Abandon the three-coefficient trajectory residual for the 6.589 base and
+  move to a different target/model family.

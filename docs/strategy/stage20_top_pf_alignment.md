@@ -74,3 +74,40 @@ Colab CPUで次を単独実行する。
 - competition train data
 
 途中で25 cutsごとに進捗を表示する。最後の辞書とweight診断表を共有する。
+
+## Stage 20A実測
+
+194 cuts、158 wells、1,114,472 suffix rowsで実行した。200未満なのは一部stratumに8 cuts
+存在しなかったためで、選択規則は変更していない。
+
+- public OOF: `12.1803`
+- A130 selector: `10.3820`
+- top-PF proxy: `9.9810`
+- 固定weight 0.10: `9.9810 → 9.8611`（`-0.1199`）
+- standard/spatial/typewell/branch-groupはすべて全体改善
+- standard 5/5 folds、5/5 fractions改善
+- bootstrap 95%: `[-0.1044, +0.00625]`
+- well P90: `+0.1006`悪化
+
+bootstrap上限とwell P90で不合格のため、事前固定weight 0.10はStage 20Bへ昇格しない。
+weight 0.35/0.50はpooled gainが大きくてもfold consistencyが3/5、2/5へ崩れ、
+Stage 19C weight 0.50のLB悪化と整合する。
+
+診断weight 0.05は5/5 folds、5/5 fractions、cut P90/max、worst-tailを改善し、
+well P90悪化が`+0.0084`だけだった。ただし結果を見て選んだ値なので、同じsampleで昇格させない。
+
+## Stage 20B: disjoint-well confirmation
+
+Stage 20Aの`cut_features.parquet`に含まれる158 wellsを候補poolから先に完全除外する。
+残った別wellから同じfold × fraction規則で固定sampleを作る。cutの重複だけでなくwell重複をゼロにする。
+
+Stage 20Bのprimary profileはweight `0.05`、cap `8 ft`、ramp `96 rows`に事前固定した。
+診断weightは昇格判断へ使わない。追加gateとして`discovery_well_overlap_zero`を必須にする。
+
+Colab CPU:
+
+`notebooks/530_run_stage20b_disjoint_confirmation.ipynb`
+
+Stage 20Bが全gateを通過した場合も直接提出しない。Stage 20Cで全remaining eligible cutsと、
+public OOFを安全にreplayできないshort-prefixに対する独立proxyを確認する。不合格なら
+6.589 base向け3係数trajectory residualを終了する。
